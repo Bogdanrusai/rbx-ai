@@ -1,0 +1,195 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  * {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-bg text-ink font-sans overflow-x-hidden;
+    position: relative;
+  }
+  h1,
+  h2 {
+    text-wrap: balance;
+  }
+  section[id] {
+    scroll-margin-top: 96px;
+  }
+  ::selection {
+    background: #fafafa;
+    color: #0a0a0b;
+  }
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+}
+
+@layer components {
+  /* ambient atmosphere */
+  .glow {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background:
+      radial-gradient(120% 80% at 50% -10%, rgba(255, 255, 255, 0.05), transparent 60%),
+      radial-gradient(80% 50% at 80% 0%, rgba(255, 255, 255, 0.03), transparent 55%);
+  }
+  .grain {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.05;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .section {
+    @apply relative z-[5] mx-auto max-w-content;
+    padding: clamp(96px, 15vh, 168px) clamp(20px, 5vw, 64px);
+  }
+
+  .eyebrow {
+    @apply flex items-center gap-[14px] text-faint uppercase;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+  }
+  .eyebrow::before {
+    content: "";
+    width: 26px;
+    height: 1px;
+    @apply bg-line-strong;
+  }
+
+  /* the signature: white highlight block (from the carousels) */
+  .mark {
+    display: inline-block;
+    background: #fafafa;
+    color: #0a0a0b;
+    padding: 0.02em 0.28em 0.11em;
+    margin: 0 0.02em;
+    border-radius: 4px;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center gap-[9px] rounded-full font-semibold text-bg;
+    background: #fafafa;
+    font-size: 15px;
+    padding: 14px 26px;
+    transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 40px rgba(255, 255, 255, 0.1);
+  }
+  .btn-primary svg {
+    transition: transform 0.3s var(--ease);
+  }
+  .btn-primary:hover svg {
+    transform: translateX(3px);
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center gap-2 text-muted;
+    font-size: 15px;
+    font-weight: 500;
+    transition: color 0.3s var(--ease);
+  }
+  .btn-ghost:hover {
+    @apply text-ink;
+  }
+
+  .card {
+    @apply border border-line bg-surface;
+    transition: border-color 0.45s var(--ease), background 0.45s var(--ease),
+      transform 0.45s var(--ease);
+  }
+  .card:hover {
+    @apply border-line-strong bg-surface2;
+    transform: translateY(-3px);
+  }
+}
+
+/* thin dark scrollbars inside widgets */
+.thin-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.14) transparent;
+}
+.thin-scroll::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+.thin-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.14);
+  border-radius: 9px;
+}
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+@keyframes drop {
+  0% {
+    transform: translateY(-14px);
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(34px);
+    opacity: 0;
+  }
+}
+
+@keyframes bubblePop {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes typingBlink {
+  0%,
+  60%,
+  100% {
+    opacity: 0.3;
+  }
+  30% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
