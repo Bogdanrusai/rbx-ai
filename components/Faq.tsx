@@ -5,24 +5,24 @@ import { AnimatePresence, motion } from "framer-motion";
 import Reveal from "./Reveal";
 import { site } from "@/lib/config";
 
-const EASE = [0.22, 1, 0.36, 1] as const;
+const EASE = [0.16, 1, 0.3, 1] as const;
 
 const items = [
   {
-    q: "Trebuie să mă pricep la tehnologie?",
-    a: "Nu. Mă ocup eu de tot — construcție, conectare, întreținere. Tu doar folosești rezultatul.",
+    q: "Trebuie să știu ceva despre tehnologie?",
+    a: "Nu. Tu îmi spui cum merge afacerea ta. Restul — construcție, conectare, întreținere — le fac eu. Tu folosești doar rezultatul.",
   },
   {
-    q: "Cât durează până e gata?",
-    a: "De obicei zile, nu luni. Începi să vezi rezultate rapid.",
+    q: "În cât timp văd rezultate?",
+    a: "De obicei în zile, nu luni. Primul lucru pe care îl simți e că mesajele primesc răspuns imediat — inclusiv cele de seara.",
   },
   {
-    q: "E și pentru o afacere mică?",
-    a: "Mai ales pentru ea. Un sistem bun contează cel mai mult când ești singur și trebuie să fii peste tot.",
+    q: "Merge și pentru afacerea mea mică?",
+    a: "Mai ales pentru ea. Când ești tu peste tot, un sistem care răspunde și programează în locul tău schimbă cel mai mult.",
   },
   {
     q: "Cât costă?",
-    a: "Începe de la o discuție, nu de la o factură. Vedem întâi dacă are sens — apoi vorbim de preț.",
+    a: "Începe de la o discuție, nu de la o factură. Vedem întâi dacă are sens pentru afacerea ta — apoi vorbim de preț.",
   },
 ];
 
@@ -31,13 +31,10 @@ export default function Faq() {
 
   return (
     <section id="faq" className="section">
-      <Reveal className="eyebrow mb-[30px]">Întrebări</Reveal>
-      <Reveal
-        as="h2"
-        className="max-w-[16ch] text-[clamp(30px,4.8vw,54px)] font-semibold leading-[1.06] tracking-[-0.022em]"
-      >
-        Ce te-ai putea întreba.
-      </Reveal>
+      <div className="eyebrow mb-8">Întrebări</div>
+      <h2 className="max-w-[16ch] text-[clamp(30px,4.8vw,54px)] font-semibold leading-[1.06] tracking-[-0.022em]">
+        Înainte să întrebi.
+      </h2>
 
       <div className="mt-[52px] max-w-[760px]">
         {items.map((it, i) => {
@@ -68,9 +65,7 @@ export default function Faq() {
                     transition={{ duration: 0.35, ease: EASE }}
                     className="overflow-hidden"
                   >
-                    <p className="max-w-[60ch] pb-6 text-[15.5px] leading-[1.6] text-muted">
-                      {it.a}
-                    </p>
+                    <p className="max-w-[60ch] pb-6 text-[15.5px] leading-[1.6] text-muted">{it.a}</p>
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -80,14 +75,9 @@ export default function Faq() {
       </div>
 
       <Reveal delay={0.1} className="mt-10">
-        <a
-          href={site.contactUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="btn-ghost group"
-        >
+        <a href={site.contactUrl} target="_blank" rel="noopener noreferrer" className="btn-ghost group">
           <span className="h-[5px] w-[5px] rounded-full bg-faint" />
-          Altă întrebare? Scrie-mi în DM
+          Altă întrebare? Scrie-mi direct
           <span className="transition-transform duration-300 ease-premium group-hover:translate-x-1">→</span>
         </a>
       </Reveal>

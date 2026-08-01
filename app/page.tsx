@@ -3,7 +3,7 @@ import Hero from "@/components/Hero";
 import Vsl from "@/components/Vsl";
 import Problema from "@/components/Problema";
 import WhyLosing from "@/components/WhyLosing";
-import Reframe from "@/components/Reframe";
+import Solutia from "@/components/Solutia";
 import Sisteme from "@/components/Sisteme";
 import Demonstratie from "@/components/Demonstratie";
 import DovadaSociala from "@/components/DovadaSociala";
@@ -21,7 +21,7 @@ export default function Home() {
       <Vsl />
       <Problema />
       <WhyLosing />
-      <Reframe />
+      <Solutia />
       <Sisteme />
       <Demonstratie />
       <DovadaSociala />

@@ -12,15 +12,7 @@ export const site = {
   // 👇 change this one value to reroute every CTA
   contactUrl: "https://ig.me/m/bogdanrus.ai", // Instagram DM
 
-  ctaLabel: "Hai să vorbim",
-
-  /**
-   * Website VSL video (separate from the Instagram carousel posts below).
-   * Paste an embed URL when ready — YouTube: https://www.youtube.com/embed/ID,
-   * Vimeo: https://player.vimeo.com/video/ID. Until then, the VSL section
-   * shows a premium "se pregătește" state. No other change needed.
-   */
-  vslUrl: "",
+  ctaLabel: "Vreau o demonstrație",
 } as const;
 
 export type Post = {

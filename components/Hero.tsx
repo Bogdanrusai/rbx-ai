@@ -53,7 +53,7 @@ export default function Hero() {
           transition={{ duration: 0.8, ease: EASE, delay: 0.1 }}
           className="eyebrow mb-10 justify-center"
         >
-          Sisteme AI pentru afaceri
+          Mai mulți clienți. Mai puțin timp pierdut.
         </motion.div>
 
         <h1 className="max-w-[19ch] text-[clamp(40px,7.4vw,92px)] font-semibold leading-[1.01] tracking-[-0.035em]">
@@ -70,11 +70,11 @@ export default function Hero() {
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, ease: EASE, delay: 0.6 }}
-          className="mt-10 max-w-[46ch] text-[clamp(16px,1.7vw,19px)] leading-[1.55] text-muted"
+          className="mt-10 max-w-[44ch] text-[clamp(16px,1.7vw,19px)] leading-[1.55] text-muted"
         >
-          Construiesc sisteme AI care răspund, programează și fac follow-up
-          non-stop — ca să nu mai pierzi niciun client care scrie când tu nu
-          ești acolo.
+          Un sistem care răspunde clienților, umple calendarul și aduce
+          programări — non-stop, fără să miști un deget. Tu vezi doar rezultatul:
+          mai mulți clienți, mai puțin timp pierdut.
         </motion.p>
 
         <motion.div
@@ -91,7 +91,7 @@ export default function Hero() {
           </Magnetic>
           <a href="#vsl" className="btn-ghost">
             <span className="h-[5px] w-[5px] rounded-full bg-faint" />
-            Vezi demonstrația
+            Vezi cum funcționează
           </a>
         </motion.div>
       </div>
