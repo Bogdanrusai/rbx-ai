@@ -1,31 +1,31 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
-import { AnimatePresence, motion } from "framer-motion";
 import Reveal from "./Reveal";
-import { site } from "@/lib/config";
+import { posts, slidesOf } from "@/lib/config";
 
-const EASE = [0.22, 1, 0.36, 1] as const;
+const vslPost = posts.find((p) => p.id === "vsl")!;
+const slides = slidesOf(vslPost);
 
 export default function Vsl() {
-  const [open, setOpen] = useState(false);
-  const hasVideo = site.vslUrl.length > 0;
+  const [idx, setIdx] = useState(0);
+
+  const next = useCallback(() => setIdx((i) => (i + 1) % slides.length), []);
+  const prev = useCallback(() => setIdx((i) => (i - 1 + slides.length) % slides.length), []);
 
   useEffect(() => {
-    if (!open) return;
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
-    document.body.style.overflow = "hidden";
-    window.addEventListener("keydown", onKey);
-    return () => {
-      document.body.style.overflow = "";
-      window.removeEventListener("keydown", onKey);
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "ArrowRight") next();
+      if (e.key === "ArrowLeft") prev();
     };
-  }, [open]);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [next, prev]);
 
   return (
     <section id="vsl" className="section">
-      <Reveal className="eyebrow mb-[30px]">În 2 minute</Reveal>
+      <Reveal className="eyebrow mb-[30px]">VSL · pas cu pas</Reveal>
       <Reveal
         as="h2"
         className="max-w-[16ch] text-[clamp(30px,4.8vw,54px)] font-semibold leading-[1.06] tracking-[-0.022em]"
@@ -37,93 +37,93 @@ export default function Vsl() {
         delay={0.08}
         className="mt-[22px] max-w-[46ch] text-[clamp(16px,1.7vw,19px)] leading-[1.55] text-muted"
       >
-        Fără jargon. Îți arăt, pas cu pas, cum un sistem RBX.AI preia
-        conversațiile și programările afacerii tale.
+        Aceeași poveste pe care o spun pe Instagram, în 8 cadre — pas cu pas, fără
+        jargon.
       </Reveal>
 
       <Reveal delay={0.12} className="mt-[52px]">
-        <button
-          onClick={() => hasVideo && setOpen(true)}
-          disabled={!hasVideo}
-          className={`group relative block aspect-video w-full overflow-hidden rounded-[24px] border border-line-strong bg-[#0E0E10] ${
-            hasVideo ? "cursor-pointer" : "cursor-default"
-          }`}
-          aria-label={hasVideo ? "Redă video-ul" : "Video în curând"}
-        >
-          <Image
-            src="/vsl-poster.jpg"
-            alt="RBX.AI — cum funcționează"
-            fill
-            sizes="(max-width:1024px) 100vw, 1100px"
-            className={`object-cover opacity-[0.65] grayscale transition-transform duration-[900ms] ease-premium ${
-              hasVideo ? "group-hover:scale-[1.03]" : ""
-            }`}
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-black/30" />
+        <div className="mx-auto grid max-w-[880px] grid-cols-1 gap-6 sm:grid-cols-[1fr_auto_1fr] sm:items-center">
+          {/* prev (desktop) */}
+          <button
+            onClick={prev}
+            aria-label="Slide anterior"
+            className="hidden h-11 w-11 place-self-end place-items-center rounded-full border border-line-strong text-muted transition-colors hover:border-white/35 hover:text-ink sm:grid"
+          >
+            <svg width="17" height="17" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M10 3l-5 5 5 5" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
 
-          {/* play / soon */}
-          <div className="absolute inset-0 grid place-items-center">
-            {hasVideo ? (
-              <span className="grid h-[76px] w-[76px] place-items-center rounded-full border border-white/25 bg-black/40 backdrop-blur-md transition-all duration-300 ease-premium group-hover:scale-110 group-hover:border-white/50 group-hover:bg-black/55">
-                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                  <path d="M8 5.5v13l11-6.5-11-6.5Z" fill="#fff" />
-                </svg>
+          {/* stage */}
+          <div className="relative mx-auto aspect-[4/5] w-full max-w-[380px] overflow-hidden rounded-[22px] border border-line-strong bg-[#0E0E10] shadow-[0_40px_120px_rgba(0,0,0,0.55)]">
+            <Image
+              src={slides[idx]}
+              alt={`${vslPost.title} — cadrul ${idx + 1}`}
+              fill
+              sizes="380px"
+              className="object-cover transition-opacity duration-300 ease-premium"
+              priority={idx === 0}
+            />
+            <div className="pointer-events-none absolute inset-x-0 top-0 flex items-center justify-between p-4">
+              <span className="rounded-full border border-white/15 bg-black/40 px-3 py-1 text-[11px] font-semibold tracking-[0.1em] text-white backdrop-blur-sm">
+                RBX.AI
               </span>
-            ) : (
-              <span className="rounded-full border border-white/20 bg-black/40 px-5 py-2.5 text-[12.5px] uppercase tracking-[0.18em] text-white/80 backdrop-blur-md">
-                Video în curând
+              <span className="rounded-full border border-white/15 bg-black/40 px-3 py-1 text-[11px] text-white/80 backdrop-blur-sm">
+                {idx + 1} / {slides.length}
               </span>
-            )}
+            </div>
+
+            {/* mobile arrows overlay */}
+            <button
+              onClick={prev}
+              aria-label="Slide anterior"
+              className="absolute left-2 top-1/2 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full border border-white/15 bg-black/45 text-white backdrop-blur-sm sm:hidden"
+            >
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M10 3l-5 5 5 5" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+            <button
+              onClick={next}
+              aria-label="Slide următor"
+              className="absolute right-2 top-1/2 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full border border-white/15 bg-black/45 text-white backdrop-blur-sm sm:hidden"
+            >
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M6 3l5 5-5 5" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
           </div>
 
-          <span className="absolute bottom-5 left-6 text-[12px] uppercase tracking-[0.16em] text-white/60">
-            RBX.AI · {site.handle}
-          </span>
-        </button>
-      </Reveal>
-
-      <AnimatePresence>
-        {open && hasVideo && (
-          <motion.div
-            role="dialog"
-            aria-modal="true"
-            aria-label="Player video RBX.AI"
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 px-4 backdrop-blur-md"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.28, ease: EASE }}
-            onClick={() => setOpen(false)}
+          {/* next (desktop) */}
+          <button
+            onClick={next}
+            aria-label="Slide următor"
+            className="hidden h-11 w-11 place-self-start place-items-center rounded-full border border-line-strong text-muted transition-colors hover:border-white/35 hover:text-ink sm:grid"
           >
-            <motion.div
-              className="relative aspect-video w-full max-w-[960px] overflow-hidden rounded-[18px] border border-line-strong bg-black"
-              initial={{ opacity: 0, scale: 0.96 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.97 }}
-              transition={{ duration: 0.32, ease: EASE }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <button
-                onClick={() => setOpen(false)}
-                aria-label="Închide player-ul"
-                autoFocus
-                className="absolute right-3 top-3 z-10 grid h-9 w-9 place-items-center rounded-full border border-white/20 bg-black/50 text-white backdrop-blur-sm transition-colors hover:border-white/45"
-              >
-                <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                  <path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-                </svg>
-              </button>
-              <iframe
-                src={`${site.vslUrl}${site.vslUrl.includes("?") ? "&" : "?"}autoplay=1`}
-                title="RBX.AI VSL"
-                allow="autoplay; fullscreen; picture-in-picture"
-                allowFullScreen
-                className="h-full w-full"
-              />
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            <svg width="17" height="17" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M6 3l5 5-5 5" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
+        </div>
+
+        {/* dots */}
+        <div className="mt-6 flex items-center justify-center gap-1.5">
+          {slides.map((_, d) => (
+            <button
+              key={d}
+              onClick={() => setIdx(d)}
+              aria-label={`Cadrul ${d + 1}`}
+              className={`h-1.5 rounded-full transition-all ${
+                d === idx ? "w-6 bg-ink" : "w-1.5 bg-white/20 hover:bg-white/45"
+              }`}
+            />
+          ))}
+        </div>
+
+        <p className="mx-auto mt-5 max-w-[46ch] text-center text-[12.5px] leading-[1.5] text-faint">
+          Postare originală · {vslPost.title} · vezi restul mai jos, la „De pe Instagram”.
+        </p>
+      </Reveal>
     </section>
   );
 }

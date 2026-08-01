@@ -13,13 +13,6 @@ export const site = {
   contactUrl: "https://ig.me/m/bogdanrus.ai", // Instagram DM
 
   ctaLabel: "Hai să vorbim",
-
-  /**
-   * VSL video. Paste an EMBED url (YouTube: https://www.youtube.com/embed/ID,
-   * Vimeo: https://player.vimeo.com/video/ID). Leave "" until the video is ready —
-   * the section stays elegant and shows a discreet "în curând" state.
-   */
-  vslUrl: "",
 } as const;
 
 export type Post = {
