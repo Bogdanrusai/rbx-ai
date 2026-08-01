@@ -2,6 +2,7 @@ import Nav from "@/components/Nav";
 import Hero from "@/components/Hero";
 import Problema from "@/components/Problema";
 import Sisteme from "@/components/Sisteme";
+import Capabilitati from "@/components/Capabilitati";
 import Vsl from "@/components/Vsl";
 import Demo from "@/components/Demo";
 import Poveste from "@/components/Poveste";
@@ -17,6 +18,7 @@ export default function Home() {
       <Hero />
       <Problema />
       <Sisteme />
+      <Capabilitati />
       <Vsl />
       <Demo />
       <Poveste />
