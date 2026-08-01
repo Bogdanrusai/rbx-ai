@@ -34,6 +34,7 @@ export default function RootLayout({
     <html lang="ro" className={GeistSans.variable}>
       <body>
         <Providers>
+          <div className="hairline-grid" aria-hidden />
           <div className="glow" aria-hidden />
           <div className="grain" aria-hidden />
           {children}

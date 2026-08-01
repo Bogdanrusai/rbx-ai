@@ -7,13 +7,13 @@ import { site } from "@/lib/config";
 const EASE = [0.22, 1, 0.36, 1] as const;
 
 const links = [
-  { label: "Problema", href: "#problema" },
-  { label: "Sisteme", href: "#sisteme" },
-  { label: "Capabilități", href: "#capabilitati" },
   { label: "VSL", href: "#vsl" },
+  { label: "Problema", href: "#problema" },
+  { label: "Sistemele mele", href: "#sisteme" },
   { label: "Demonstrație", href: "#demo" },
-  { label: "Povestea", href: "#poveste" },
+  { label: "Dovada", href: "#dovada" },
   { label: "Instagram", href: "#showcase" },
+  { label: "Despre mine", href: "#poveste" },
   { label: "Întrebări", href: "#faq" },
 ];
 

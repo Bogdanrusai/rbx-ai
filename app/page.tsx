@@ -1,12 +1,14 @@
 import Nav from "@/components/Nav";
 import Hero from "@/components/Hero";
-import Problema from "@/components/Problema";
-import Sisteme from "@/components/Sisteme";
-import Capabilitati from "@/components/Capabilitati";
 import Vsl from "@/components/Vsl";
-import Demo from "@/components/Demo";
-import Poveste from "@/components/Poveste";
+import Problema from "@/components/Problema";
+import WhyLosing from "@/components/WhyLosing";
+import Reframe from "@/components/Reframe";
+import Sisteme from "@/components/Sisteme";
+import Demonstratie from "@/components/Demonstratie";
+import DovadaSociala from "@/components/DovadaSociala";
 import Showcase from "@/components/Showcase";
+import Poveste from "@/components/Poveste";
 import Cta from "@/components/Cta";
 import Faq from "@/components/Faq";
 import Footer from "@/components/Footer";
@@ -16,13 +18,15 @@ export default function Home() {
     <main>
       <Nav />
       <Hero />
-      <Problema />
-      <Sisteme />
-      <Capabilitati />
       <Vsl />
-      <Demo />
-      <Poveste />
+      <Problema />
+      <WhyLosing />
+      <Reframe />
+      <Sisteme />
+      <Demonstratie />
+      <DovadaSociala />
       <Showcase />
+      <Poveste />
       <Cta />
       <Faq />
       <Footer />
