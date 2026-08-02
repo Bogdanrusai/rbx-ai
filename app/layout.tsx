@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { GeistSans } from "geist/font/sans";
 import Providers from "@/components/Providers";
+import { WizardProvider } from "@/components/wizard/WizardContext";
+import Wizard from "@/components/wizard/Wizard";
 import "./globals.css";
 
 // 👉 La lansare: setează NEXT_PUBLIC_SITE_URL în Vercel (Settings → Environment Variables)
@@ -34,10 +36,13 @@ export default function RootLayout({
     <html lang="ro" className={GeistSans.variable}>
       <body>
         <Providers>
-          <div className="hairline-grid" aria-hidden />
-          <div className="glow" aria-hidden />
-          <div className="grain" aria-hidden />
-          {children}
+          <WizardProvider>
+            <div className="hairline-grid" aria-hidden />
+            <div className="glow" aria-hidden />
+            <div className="grain" aria-hidden />
+            {children}
+            <Wizard />
+          </WizardProvider>
         </Providers>
       </body>
     </html>

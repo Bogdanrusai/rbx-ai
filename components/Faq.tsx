@@ -14,7 +14,7 @@ const items = [
   },
   {
     q: "În cât timp văd rezultate?",
-    a: "De obicei în zile, nu luni. Primul lucru pe care îl simți e că mesajele primesc răspuns imediat — inclusiv cele de seara.",
+    a: "De obicei în zile, nu luni. Primul lucru pe care îl simți e că lucruri care îți mâncau timp se întâmplă acum singure.",
   },
   {
     q: "Merge și pentru afacerea mea mică?",

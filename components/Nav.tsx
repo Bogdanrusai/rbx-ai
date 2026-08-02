@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { site } from "@/lib/config";
+import { useWizard } from "./wizard/WizardContext";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -18,6 +19,7 @@ const links = [
 ];
 
 export default function Nav() {
+  const wizard = useWizard();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -103,14 +105,12 @@ export default function Nav() {
           </AnimatePresence>
         </div>
 
-        <a
-          href={site.contactUrl}
-          target="_blank"
-          rel="noopener noreferrer"
+        <button
+          onClick={wizard.open}
           className="hidden rounded-full border border-line-strong px-[18px] py-[9px] text-[13.5px] font-medium transition-[background,border-color] duration-300 ease-premium hover:border-white/35 hover:bg-white/[0.04] sm:inline-block"
         >
           {site.ctaLabel}
-        </a>
+        </button>
       </div>
     </nav>
   );

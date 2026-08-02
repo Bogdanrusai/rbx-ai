@@ -2,10 +2,9 @@
 
 import { motion } from "framer-motion";
 import { site } from "@/lib/config";
-import { Arrow } from "./Icons";
 import MaskReveal from "./MaskReveal";
-import Magnetic from "./Magnetic";
 import GhostWord from "./GhostWord";
+import CtaButton from "./CtaButton";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -50,12 +49,7 @@ export default function Cta() {
           transition={{ duration: 0.8, ease: EASE, delay: 0.5 }}
           className="mt-12 flex justify-center"
         >
-          <Magnetic strength={22}>
-            <a href={site.contactUrl} target="_blank" rel="noopener noreferrer" className="btn-primary !px-9 !py-[18px] !text-[16px]">
-              {site.ctaLabel}
-              <Arrow />
-            </a>
-          </Magnetic>
+          <CtaButton label={site.ctaLabel} magnetic strength={22} big />
         </motion.div>
 
         <motion.p

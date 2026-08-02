@@ -8,9 +8,9 @@ import GhostWord from "./GhostWord";
 const EASE = [0.16, 1, 0.3, 1] as const;
 
 const shifts = [
-  { from: "Clientul așteaptă ore", to: "Răspuns în câteva secunde" },
-  { from: "Tu prinzi mesajele când poți", to: "Sistemul le prinde pe toate" },
-  { from: "Programări pe telefon", to: "Calendarul se completează singur" },
+  { from: "Clientul așteaptă ore", to: "Răspuns și acțiune imediată" },
+  { from: "Faci totul manual, tu", to: "Sistemul face munca repetitivă" },
+  { from: "Lucruri care scapă printre degete", to: "Fiecare lead și task, sub control" },
 ];
 
 export default function Solutia() {

@@ -3,9 +3,9 @@
 import { useRef } from "react";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { site } from "@/lib/config";
-import { Arrow } from "./Icons";
 import MaskReveal from "./MaskReveal";
 import Magnetic from "./Magnetic";
+import CtaButton from "./CtaButton";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -84,10 +84,7 @@ export default function Hero() {
           className="mt-12 flex flex-wrap items-center justify-center gap-6"
         >
           <Magnetic>
-            <a href={site.contactUrl} target="_blank" rel="noopener noreferrer" className="btn-primary">
-              {site.ctaLabel}
-              <Arrow />
-            </a>
+            <CtaButton label={site.ctaLabel} />
           </Magnetic>
           <a href="#vsl" className="btn-ghost">
             <span className="h-[5px] w-[5px] rounded-full bg-faint" />

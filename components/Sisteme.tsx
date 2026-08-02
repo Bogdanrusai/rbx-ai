@@ -6,10 +6,10 @@ import MaskReveal from "./MaskReveal";
 const EASE = [0.16, 1, 0.3, 1] as const;
 
 const catalog = [
-  { cat: "Răspuns & mesagerie", items: ["WhatsApp", "Instagram", "Site"] },
-  { cat: "Voce & telefon", items: ["Preia apeluri", "Sună înapoi", "Programează"] },
-  { cat: "Clienți noi", items: ["Găsește-i", "Contactează-i", "Îi aduce la tine"] },
-  { cat: "Organizare", items: ["Sortare cereri", "Remindere", "Fără scăpări"] },
+  { cat: "Automatizări", items: ["n8n", "App-uri conectate", "Email & follow-up", "Lead management"] },
+  { cat: "AI Agents", items: ["Agenți AI dedicați", "Preluare cereri", "Calificare clienți"] },
+  { cat: "CRM & date", items: ["CRM Automation", "Programări automate", "Rapoarte"] },
+  { cat: "Sisteme interne", items: ["Procese interne", "WhatsApp & Instagram", "Construit la comandă"] },
 ];
 
 export default function Sisteme() {
@@ -17,9 +17,9 @@ export default function Sisteme() {
     <section id="sisteme" className="section">
       <div className="eyebrow mb-8">Sistemele RBX.AI</div>
       <h2 className="max-w-[16ch] text-[clamp(30px,5vw,56px)] font-semibold leading-[1.05] tracking-[-0.025em]">
-        <MaskReveal>Construit pe măsura</MaskReveal>
+        <MaskReveal>Sisteme complete,</MaskReveal>
         <MaskReveal delay={0.1}>
-          <span className="mark">afacerii tale</span>.
+          construite pe <span className="mark">afacerea ta</span>.
         </MaskReveal>
       </h2>
 
@@ -38,11 +38,12 @@ export default function Sisteme() {
                 Cel mai important
               </span>
               <h3 className="text-[clamp(26px,3.2vw,38px)] font-semibold leading-[1.1] tracking-[-0.02em]">
-                Niciun client nu mai așteaptă.
+                Un sistem care lucrează non-stop.
               </h3>
-              <p className="mt-3 max-w-[36ch] text-[14.5px] text-faint">
-                Răspunde în locul tău, instant, la orice oră. Clientul primește
-                atenție cât încă e interesat — și rămâne al tău.
+              <p className="mt-3 max-w-[38ch] text-[14.5px] text-faint">
+                Preia cereri, califică clienți, programează, trimite în CRM și
+                pornește follow-up — automat, la orice oră. Tu vezi doar
+                rezultatul.
               </p>
             </div>
             <div className="flex h-16 items-end gap-[5px]" aria-hidden="true">
@@ -173,7 +174,7 @@ export default function Sisteme() {
           className="col-span-1 rounded-[24px] border border-dashed border-line-strong p-8 md:col-span-6"
         >
           <p className="mb-6 text-[13px] uppercase tracking-[0.16em] text-faint">
-            Construiesc sistemul potrivit pentru afacerea ta
+            Construiesc orice sistem de care are nevoie afacerea ta
           </p>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {catalog.map((c) => (
