@@ -71,6 +71,7 @@ function submitAnswers(a: Answers) {
 
 export default function Wizard() {
   const { isOpen, close } = useWizard();
+  const [intro, setIntro] = useState(true);
   const [i, setI] = useState(0);
   const [done, setDone] = useState(false);
   const [a, setA] = useState<Answers>({});
@@ -89,6 +90,7 @@ export default function Wizard() {
   useEffect(() => {
     if (isOpen) return;
     const t = setTimeout(() => {
+      setIntro(true);
       setI(0);
       setDone(false);
       setA({});
@@ -127,7 +129,7 @@ export default function Wizard() {
   };
   const back = () => setI((n) => Math.max(0, n - 1));
 
-  const progress = done ? 100 : (i / TOTAL) * 100;
+  const progress = done ? 100 : intro ? 0 : (i / TOTAL) * 100;
 
   const labels = ["Afacerea", "Provocarea", "Volum", "AI & automatizări", "Datele tale"];
 
@@ -166,7 +168,7 @@ export default function Wizard() {
                 />
               </div>
               <span className="text-[12px] tabular-nums text-faint">
-                {done ? "Trimis" : `${i + 1} / ${TOTAL}`}
+                {done ? "Trimis" : intro ? "" : `${i + 1} / ${TOTAL}`}
               </span>
               <button
                 onClick={close}
@@ -178,7 +180,50 @@ export default function Wizard() {
             </div>
 
             <AnimatePresence mode="wait" initial={false}>
-              {!done ? (
+              {intro ? (
+                <motion.div
+                  key="intro"
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, x: -26 }}
+                  transition={{ duration: 0.4, ease: EASE }}
+                >
+                  <div className="mb-2 text-[12px] uppercase tracking-[0.2em] text-faint">Înainte să începem</div>
+                  <h3 className="text-[clamp(21px,3.4vw,28px)] font-semibold leading-[1.2] tracking-[-0.015em]">
+                    Ce primești din această analiză.
+                  </h3>
+                  <p className="mt-3 max-w-[46ch] text-[14.5px] leading-[1.55] text-faint">
+                    Câteva întrebări scurte despre afacerea ta. Pe baza lor, primești:
+                  </p>
+
+                  <ul className="mt-7 flex flex-col gap-3.5">
+                    {[
+                      "Analiza afacerii tale",
+                      "Oportunitățile de automatizare",
+                      "Recomandările personalizate",
+                      "Planul potrivit pentru afacerea ta",
+                    ].map((item) => (
+                      <li key={item} className="flex items-center gap-3.5 text-[15px] text-muted">
+                        <span className="grid h-6 w-6 flex-none place-items-center rounded-full border border-line-strong text-ink">
+                          <svg width="11" height="11" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8.5l3 3 7-7.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                        </span>
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+
+                  <p className="mt-7 text-[13px] leading-[1.5] text-faint">
+                    Răspunsurile ajung direct la mine — le analizez personal, nu automat.
+                  </p>
+
+                  <div className="mt-9 flex items-center justify-end">
+                    <button onClick={() => setIntro(false)} className="btn-primary">
+                      Începe analiza
+                      <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h9M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                    </button>
+                  </div>
+                </motion.div>
+              ) : !done ? (
                 <motion.div
                   key={i}
                   initial={{ opacity: 0, x: 26 }}
@@ -340,9 +385,11 @@ export default function Wizard() {
                   </motion.div>
 
                   <h3 className="mt-8 text-[clamp(24px,3.6vw,32px)] font-semibold tracking-[-0.02em]">Perfect.</h3>
-                  <p className="mx-auto mt-4 max-w-[44ch] text-[15.5px] leading-[1.65] text-muted">
-                    Am primit răspunsurile tale. Voi analiza personal afacerea și îți voi trimite un
-                    mesaj în cel mai scurt timp cu soluția potrivită pentru tine.
+                  <p className="mx-auto mt-4 max-w-[46ch] text-[15.5px] leading-[1.65] text-muted">
+                    Analizez personal fiecare răspuns și identific oportunitățile
+                    de automatizare potrivite pentru afacerea ta. Revin cu o
+                    soluție construită special pentru ea — nicio analiză
+                    automată, totul făcut manual, de mine.
                   </p>
                   <button
                     onClick={close}

@@ -22,12 +22,12 @@ export default function Cta() {
 
       <div className="relative mx-auto max-w-[900px] px-[clamp(20px,5vw,64px)] text-center">
         <h2 className="mx-auto max-w-[18ch] text-[clamp(32px,6.2vw,74px)] font-semibold leading-[1.05] tracking-[-0.03em]">
-          <MaskReveal className="mx-auto">Dacă și-a construit așa</MaskReveal>
+          <MaskReveal className="mx-auto">Nu trimit oferte standard.</MaskReveal>
           <MaskReveal delay={0.1} className="mx-auto">
-            propriul sistem —
+            Analizez fiecare afacere,
           </MaskReveal>
           <MaskReveal delay={0.2} className="mx-auto">
-            ce poate construi <span className="mark">pentru al tău?</span>
+            construiesc <span className="mark">sistemul potrivit</span>.
           </MaskReveal>
         </h2>
 
@@ -38,8 +38,8 @@ export default function Cta() {
           transition={{ duration: 0.8, ease: EASE, delay: 0.4 }}
           className="mx-auto mt-8 max-w-[38ch] text-[clamp(16px,1.8vw,19px)] text-muted"
         >
-          Lucrez cu un număr limitat de afaceri. Dacă ești serios, hai să
-          vedem ce poate face RBX.AI pentru tine.
+          Completezi analiza, îți spun clar dacă și cum te pot ajuta —
+          fără oferte generice, fără promisiuni goale.
         </motion.p>
 
         <motion.div

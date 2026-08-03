@@ -59,9 +59,9 @@ export default function Vsl() {
         <div>
           <div className="eyebrow mb-8">Prezentarea RBX.AI</div>
           <h2 className="max-w-[15ch] text-[clamp(30px,4.6vw,52px)] font-semibold leading-[1.06] tracking-[-0.025em]">
-            <MaskReveal>Trei minute.</MaskReveal>
+            <MaskReveal>Cadru cu cadru,</MaskReveal>
             <MaskReveal delay={0.1}>
-              Și înțelegi <span className="mark">tot</span>.
+              <span className="mark">povestea completă</span>.
             </MaskReveal>
           </h2>
           <motion.p

@@ -6,7 +6,7 @@ export default function Footer() {
       <div className="flex flex-col gap-1.5">
         <span className="text-[15px] font-semibold tracking-[0.14em]">RBX.AI</span>
         <span className="text-[13px] text-faint">
-          Sisteme AI pentru afaceri · România · Dubai · Global
+          Sisteme AI pentru afaceri · România
         </span>
       </div>
       <div className="flex items-center gap-[22px] text-[13px] text-faint">

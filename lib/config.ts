@@ -1,16 +1,14 @@
 /**
  * SINGLE SOURCE OF TRUTH.
  *
- * Every CTA on the site points to `site.contactUrl`.
- * To switch the destination later (WhatsApp, Calendly, cal.com, a form, …)
- * change ONLY this one line. Nothing else in the codebase needs editing.
+ * Every CTA on the site opens the qualification wizard (see
+ * components/wizard/). `contactUrl` is kept as the secondary, non-primary
+ * contact channel (used for Instagram links/proof, not as a CTA anymore).
  */
 export const site = {
   handle: "@bogdanrus.ai",
   instagramUrl: "https://instagram.com/bogdanrus.ai",
-
-  // 👇 change this one value to reroute every CTA
-  contactUrl: "https://ig.me/m/bogdanrus.ai", // Instagram DM
+  contactUrl: "https://ig.me/m/bogdanrus.ai", // secondary contact only — not wired to any CTA
 
   ctaLabel: "Vreau o analiză gratuită",
 } as const;

@@ -56,7 +56,7 @@ export default function Poveste() {
             transition={{ duration: 0.8, ease: EASE, delay: 0.24 }}
             className="mt-5 max-w-[52ch] text-[clamp(15.5px,1.6vw,18px)] leading-[1.65] text-muted"
           >
-            Sisteme AI pentru afaceri din România și Dubai. Fiecare sistem e
+            Sisteme AI pentru afaceri din România. Fiecare sistem e
             construit de la zero pentru afacerea respectivă — nu la
             fotocopiator.
           </motion.p>
