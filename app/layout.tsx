@@ -4,7 +4,7 @@ import Providers from "@/components/Providers";
 import { WizardProvider } from "@/components/wizard/WizardContext";
 import Wizard from "@/components/wizard/Wizard";
 import "./globals.css";
-import { Analytics } from "@vercel/analytics/react";
+import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
 // 👉 La lansare: setează NEXT_PUBLIC_SITE_URL în Vercel (Settings → Environment Variables)
