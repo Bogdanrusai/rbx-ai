@@ -150,13 +150,20 @@ export default function Vsl() {
             <div className="absolute inset-x-4 top-4 flex gap-1.5">
               {slides.map((_, i) => (
                 <div key={i} className="h-[3px] flex-1 overflow-hidden rounded-full bg-white/20">
-                  <motion.div
-                    className="h-full bg-white"
-                    initial={false}
-                    animate={{ width: i < idx ? "100%" : i === idx ? "100%" : "0%" }}
-                    transition={{ duration: i === idx && !paused ? AUTOPLAY / 1000 : 0.3, ease: "linear" }}
-                    key={`${i}-${idx}-${paused}`}
-                  />
+                  {i < idx ? (
+                    <div className="h-full w-full bg-white" />
+                  ) : i === idx ? (
+                    <div
+                      key={idx}
+                      className="h-full bg-white [animation:vslFill_linear_forwards]"
+                      style={{
+                        animationDuration: `${AUTOPLAY}ms`,
+                        animationPlayState: paused ? "paused" : "running",
+                      }}
+                    />
+                  ) : (
+                    <div className="h-full w-0 bg-white" />
+                  )}
                 </div>
               ))}
             </div>

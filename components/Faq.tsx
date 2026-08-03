@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Reveal from "./Reveal";
-import { site } from "@/lib/config";
+import { useWizard } from "./wizard/WizardContext";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -14,11 +14,11 @@ const items = [
   },
   {
     q: "În cât timp văd rezultate?",
-    a: "De obicei în zile, nu luni. Primul lucru pe care îl simți e că lucruri care îți mâncau timp se întâmplă acum singure.",
+    a: "De obicei în zile, nu luni. Simți diferența imediat — ce te consuma zilnic începe să se rezolve singur.",
   },
   {
     q: "Merge și pentru afacerea mea mică?",
-    a: "Mai ales pentru ea. Când ești tu peste tot, un sistem care răspunde și programează în locul tău schimbă cel mai mult.",
+    a: "Mai ales pentru ea. Când ești tu peste tot, un sistem care preia sarcinile repetitive în locul tău schimbă cel mai mult.",
   },
   {
     q: "Cât costă?",
@@ -27,6 +27,7 @@ const items = [
 ];
 
 export default function Faq() {
+  const { open: openWizard } = useWizard();
   const [open, setOpen] = useState<number | null>(null);
 
   return (
@@ -75,11 +76,11 @@ export default function Faq() {
       </div>
 
       <Reveal delay={0.1} className="mt-10">
-        <a href={site.contactUrl} target="_blank" rel="noopener noreferrer" className="btn-ghost group">
+        <button onClick={openWizard} className="btn-ghost group">
           <span className="h-[5px] w-[5px] rounded-full bg-faint" />
-          Altă întrebare? Scrie-mi direct
+          Ai altă întrebare? Cere o analiză gratuită
           <span className="transition-transform duration-300 ease-premium group-hover:translate-x-1">→</span>
-        </a>
+        </button>
       </Reveal>
     </section>
   );

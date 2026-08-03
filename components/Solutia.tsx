@@ -33,8 +33,9 @@ export default function Solutia() {
           transition={{ duration: 0.8, ease: EASE, delay: 0.2 }}
           className="mt-8 max-w-[46ch] text-[clamp(15.5px,1.6vw,18px)] leading-[1.65] text-muted"
         >
-          Nu îți vând o tehnologie. Îți construiesc o schimbare pe care o simți
-          în bani și în timp liber, din prima săptămână.
+          Nu îți vând un instrument. Îți construiesc infrastructura AI care
+          preia munca — și pe care o simți în bani și timp liber din prima
+          săptămână.
         </motion.p>
       </div>
 

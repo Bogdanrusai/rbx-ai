@@ -12,7 +12,7 @@ export const site = {
   // 👇 change this one value to reroute every CTA
   contactUrl: "https://ig.me/m/bogdanrus.ai", // Instagram DM
 
-  ctaLabel: "Vreau o demonstrație",
+  ctaLabel: "Vreau o analiză gratuită",
 } as const;
 
 export type Post = {

@@ -58,8 +58,8 @@ export default function Nav() {
       </a>
 
       <div className="flex items-center gap-3">
-        {/* category menu */}
-        <div ref={ref} className="relative">
+        {/* category menu — desktop only; on mobile the CTA takes priority and scroll covers navigation */}
+        <div ref={ref} className="relative hidden sm:block">
           <button
             onClick={() => setOpen((o) => !o)}
             aria-expanded={open}
@@ -107,9 +107,10 @@ export default function Nav() {
 
         <button
           onClick={wizard.open}
-          className="hidden rounded-full border border-line-strong px-[18px] py-[9px] text-[13.5px] font-medium transition-[background,border-color] duration-300 ease-premium hover:border-white/35 hover:bg-white/[0.04] sm:inline-block"
+          className="inline-block rounded-full border border-line-strong px-[14px] py-[8px] text-[12.5px] font-medium transition-[background,border-color] duration-300 ease-premium hover:border-white/35 hover:bg-white/[0.04] sm:px-[18px] sm:py-[9px] sm:text-[13.5px]"
         >
-          {site.ctaLabel}
+          <span className="sm:hidden">Analiză gratuită</span>
+          <span className="hidden sm:inline">{site.ctaLabel}</span>
         </button>
       </div>
     </nav>

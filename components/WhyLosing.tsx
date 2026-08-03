@@ -36,8 +36,8 @@ function Counter({ to, prefix = "", suffix = "" }: { to: number; prefix?: string
 }
 
 const costs = [
-  { to: 10, prefix: "", suffix: " clienți/lună", label: "care scriu seara și nu primesc răspuns la timp" },
-  { to: 8, prefix: "~", suffix: " ore/săptămână", label: "pierdute pe mesaje și „când sunteți liber?”" },
+  { to: 10, prefix: "", suffix: " clienți/lună", label: "care ajung la tine, dar se pierd fără un sistem în spate" },
+  { to: 8, prefix: "~", suffix: " ore/săptămână", label: "pierdute pe sarcini repetitive și organizare manuală" },
   { to: 0, prefix: "", suffix: " nopți libere", label: "cât timp afacerea depinde doar de tine" },
 ];
 
@@ -78,8 +78,8 @@ export default function WhyLosing() {
         transition={{ duration: 0.8, ease: EASE, delay: 0.1 }}
         className="mt-20 max-w-[30ch] text-[clamp(19px,2.4vw,27px)] font-medium leading-[1.35] tracking-[-0.015em]"
       >
-        Fiecare client care nu primește răspuns
-        <span className="text-faint"> merge la următorul care răspunde.</span>
+        Fiecare lead pe care nu-l prinzi la timp
+        <span className="text-faint"> merge la următorul care are un sistem.</span>
       </motion.p>
     </section>
   );

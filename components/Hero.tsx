@@ -53,7 +53,7 @@ export default function Hero() {
           transition={{ duration: 0.8, ease: EASE, delay: 0.1 }}
           className="eyebrow mb-10 justify-center"
         >
-          Mai mulți clienți. Mai puțin timp pierdut.
+          Infrastructură AI pentru afaceri
         </motion.div>
 
         <h1 className="max-w-[19ch] text-[clamp(40px,7.4vw,92px)] font-semibold leading-[1.01] tracking-[-0.035em]">
@@ -72,9 +72,9 @@ export default function Hero() {
           transition={{ duration: 0.9, ease: EASE, delay: 0.6 }}
           className="mt-10 max-w-[44ch] text-[clamp(16px,1.7vw,19px)] leading-[1.55] text-muted"
         >
-          Un sistem care răspunde clienților, umple calendarul și aduce
-          programări — non-stop, fără să miști un deget. Tu vezi doar rezultatul:
-          mai mulți clienți, mai puțin timp pierdut.
+          Sisteme AI complete care preiau clienții, automatizează procesele și
+          fac munca repetitivă în locul tău — non-stop. Tu vezi doar
+          rezultatul: mai mulți clienți, mai puțin timp pierdut.
         </motion.p>
 
         <motion.div

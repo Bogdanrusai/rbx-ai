@@ -9,7 +9,7 @@ const catalog = [
   { cat: "Automatizări", items: ["n8n", "App-uri conectate", "Email & follow-up", "Lead management"] },
   { cat: "AI Agents", items: ["Agenți AI dedicați", "Preluare cereri", "Calificare clienți"] },
   { cat: "CRM & date", items: ["CRM Automation", "Programări automate", "Rapoarte"] },
-  { cat: "Sisteme interne", items: ["Procese interne", "WhatsApp & Instagram", "Construit la comandă"] },
+  { cat: "Sisteme interne", items: ["Procese interne", "Integrări cu tool-urile tale", "Construit la comandă"] },
 ];
 
 export default function Sisteme() {
