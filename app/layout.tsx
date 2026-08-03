@@ -45,9 +45,10 @@ export default function RootLayout({
             {children}
             <Wizard />
           </WizardProvider>
+          <Analytics />
+          <SpeedInsights />
         </Providers>
-        <Analytics />
-<SpeedInsights />
+        
       </body>
     </html>
   );
