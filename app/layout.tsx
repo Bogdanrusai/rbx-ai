@@ -4,6 +4,8 @@ import Providers from "@/components/Providers";
 import { WizardProvider } from "@/components/wizard/WizardContext";
 import Wizard from "@/components/wizard/Wizard";
 import "./globals.css";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 // 👉 La lansare: setează NEXT_PUBLIC_SITE_URL în Vercel (Settings → Environment Variables)
 // cu domeniul tău real. Până atunci, valoarea de mai jos e doar un fallback local.
@@ -44,6 +46,8 @@ export default function RootLayout({
             <Wizard />
           </WizardProvider>
         </Providers>
+        <Analytics />
+<SpeedInsights />
       </body>
     </html>
   );
