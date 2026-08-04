@@ -63,10 +63,22 @@ const TOTAL = 5;
  * Keep this synchronous-looking from the UI's perspective — fire the
  * request but don't block the confirmation screen on its response.
  */
-function submitAnswers(a: Answers) {
-  // TODO: wire to n8n / Google Sheets / Notion / CRM.
-  // Example: fetch("/api/lead", { method: "POST", body: JSON.stringify(a) });
-  void a;
+async function submitAnswers(a: Answers) {
+  try {
+    const response = await fetch("/api/lead", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(a),
+    });
+
+    if (!response.ok) {
+      throw new Error("Trimiterea formularului a eșuat");
+    }
+  } catch (error) {
+    console.error("Eroare la trimiterea lead-ului:", error);
+  }
 }
 
 export default function Wizard() {
