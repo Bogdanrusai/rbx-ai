@@ -9,6 +9,7 @@ export async function POST(req: Request) {
     const data = await resend.emails.send({
       from: "RBX.AI <contact@rbxagency.com>",
       to: "bogdyrus9@gmail.com",
+      replyTo: body.email,
       subject: `Lead nou de la ${body.name}`,
       html: `
         <h2>Lead nou RBX.AI</h2>
