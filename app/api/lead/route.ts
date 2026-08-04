@@ -1,10 +1,20 @@
+
+
 import { Resend } from "resend";
+import { render } from "@react-email/render";
+import ConfirmationEmail from "@/emails/ConfirmationEmail";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
+
+
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
+
+    const confirmationHtml = await render(
+  ConfirmationEmail({ name: body.name })
+);
 
     const data = await resend.emails.send({
       from: "RBX.AI <contact@rbxagency.com>",
