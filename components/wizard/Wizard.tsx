@@ -33,7 +33,7 @@ const problems = [
   "Altceva",
 ];
 
-const volumes = ["Sub 20", "20 – 50", "50 – 100", "Peste 100"];
+const volumes = ["Sub 20", "20 - 50", "50 - 100", "Peste 100"];
 const usesAI = ["Da", "Nu"];
 
 type Answers = {
