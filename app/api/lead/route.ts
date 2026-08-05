@@ -8,6 +8,12 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
 
+    const profileUrl = body.instagram?.trim()
+      ? body.instagram.trim().startsWith("http")
+        ? body.instagram.trim()
+        : `https://${body.instagram.trim()}`
+      : "";
+
     const confirmationHtml = await render(
       ConfirmationEmail({
         name: body.name || "Salut",
@@ -22,7 +28,6 @@ export async function POST(req: Request) {
       html: `
         <div style="margin:0;padding:40px 16px;background:#eeeeee;font-family:Arial,sans-serif;">
           <div style="max-width:620px;margin:0 auto;background:#ffffff;border:1px solid #dddddd;">
-            
             <div style="padding:28px 36px;background:#090909;">
               <a
                 href="https://rbxagency.com"
@@ -60,9 +65,18 @@ export async function POST(req: Request) {
                   </a>
                 </p>
 
-                <p style="margin:0;color:#111111;">
+                <p style="margin:0 0 14px;color:#111111;">
                   <strong>Companie:</strong>
                   ${body.company || "Nespecificat"}
+                </p>
+
+                <p style="margin:0;color:#111111;">
+                  <strong>Website / Instagram:</strong>
+                  ${
+                    profileUrl
+                      ? `<a href="${profileUrl}" style="color:#111111;">${body.instagram}</a>`
+                      : "Nespecificat"
+                  }
                 </p>
               </div>
 
@@ -96,6 +110,17 @@ export async function POST(req: Request) {
                   RĂSPUNDE LEADULUI
                 </a>
 
+                ${
+                  profileUrl
+                    ? `<a
+                        href="${profileUrl}"
+                        style="display:inline-block;margin-right:10px;padding:14px 20px;background:#d9d9d9;color:#111111;text-decoration:none;font-size:13px;font-weight:700;"
+                      >
+                        ANALIZEAZĂ AFACEREA
+                      </a>`
+                    : ""
+                }
+
                 <a
                   href="https://rbxagency.com"
                   style="display:inline-block;padding:14px 20px;background:#eeeeee;color:#111111;text-decoration:none;font-size:13px;font-weight:700;"
@@ -111,7 +136,6 @@ export async function POST(req: Request) {
 
     if (internalEmail.error) {
       console.error("Internal email error:", internalEmail.error);
-
       return Response.json(
         { error: "Internal email failed" },
         { status: 500 }
@@ -127,7 +151,6 @@ export async function POST(req: Request) {
 
     if (confirmationEmail.error) {
       console.error("Confirmation email error:", confirmationEmail.error);
-
       return Response.json(
         { error: "Confirmation email failed" },
         { status: 500 }
@@ -141,7 +164,6 @@ export async function POST(req: Request) {
     });
   } catch (error) {
     console.error("Lead API error:", error);
-
     return Response.json(
       { error: "Email failed" },
       { status: 500 }
