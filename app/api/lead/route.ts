@@ -4,8 +4,9 @@ import { Resend } from "resend";
 import { render } from "@react-email/render";
 import ConfirmationEmail from "@/emails/ConfirmationEmail";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
 
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 
 export async function POST(req: Request) {
@@ -37,7 +38,12 @@ export async function POST(req: Request) {
         <p><b>Folosește AI:</b> ${body.ai}</p>
       `,
     });
-
+await resend.emails.send({
+  from: "RBX.AI <contact@rbxagency.com>",
+  to: body.email,
+  subject: "Am primit solicitarea ta - RBX.AI",
+  html: confirmationHtml,
+});
     return Response.json(data);
   } catch (error) {
     console.error(error);
