@@ -28,7 +28,7 @@ export default function ConfirmationEmail({ name }: Props) {
       <Body style={bodyStyle}>
         <Container style={containerStyle}>
           <Section style={headerStyle}>
-            <Link href="https://rbxagency.com" style={brandStyle}>
+            <Link href="https://www.rbxagency.com" style={brandStyle}>
               RBX.AI
             </Link>
 
@@ -40,9 +40,7 @@ export default function ConfirmationEmail({ name }: Props) {
 
             <Heading style={titleStyle}>Salut, {name}.</Heading>
 
-            <Text style={leadStyle}>
-              Formularul tău a ajuns cu succes.
-            </Text>
+            <Text style={leadStyle}>Formularul tău a ajuns cu succes.</Text>
 
             <Text style={paragraphStyle}>
               Începem analiza informațiilor trimise pentru a identifica
@@ -103,7 +101,7 @@ export default function ConfirmationEmail({ name }: Props) {
               înainte de formularea soluției.
             </Text>
 
-            <Button href="https://rbxagency.com" style={buttonStyle}>
+            <Button href="https://www.rbxagency.com" style={buttonStyle}>
               DESCOPERĂ RBX.AI
             </Button>
           </Section>
@@ -114,18 +112,46 @@ export default function ConfirmationEmail({ name }: Props) {
             <Text style={signatureStyle}>Bogdan Rus</Text>
 
             <Text style={footerTextStyle}>
-              Fondator RBX.AI
+              Fondator{" "}
+              <Link
+                href="https://www.rbxagency.com"
+                style={footerLinkStyle}
+              >
+                RBX.AI
+              </Link>
               <br />
-              contact@rbxagency.com
+              <Link
+                href="mailto:contact@rbxagency.com"
+                style={footerLinkStyle}
+              >
+                contact@rbxagency.com
+              </Link>
               <br />
-              <Link href="https://rbxagency.com" style={footerLinkStyle}>
+              <Link
+                href="https://www.rbxagency.com"
+                style={footerLinkStyle}
+              >
                 rbxagency.com
+              </Link>
+              <br />
+              <Link
+                href="https://www.instagram.com/bogdanrus.ai/"
+                style={footerLinkStyle}
+              >
+                @bogdanrus.ai
               </Link>
             </Text>
 
             <Text style={legalStyle}>
               Ai primit acest email deoarece ai completat formularul de analiză
-              de pe website-ul RBX.AI.
+              de pe website-ul{" "}
+              <Link
+                href="https://www.rbxagency.com"
+                style={legalLinkStyle}
+              >
+                RBX.AI
+              </Link>
+              .
             </Text>
           </Section>
         </Container>
@@ -308,4 +334,9 @@ const legalStyle = {
   color: "#999999",
   fontSize: "11px",
   lineHeight: "18px",
+};
+
+const legalLinkStyle = {
+  color: "#777777",
+  textDecoration: "underline",
 };
