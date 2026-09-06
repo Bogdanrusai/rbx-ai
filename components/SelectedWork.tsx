@@ -1,6 +1,11 @@
 "use client";
 
-import { useRef, useState } from "react";
+import {
+  useRef,
+  useState,
+  type KeyboardEvent as ReactKeyboardEvent,
+  type PointerEvent as ReactPointerEvent,
+} from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import MaskReveal from "./MaskReveal";
@@ -63,12 +68,12 @@ const projects: Project[] = [
   {
     id: "expert-instal-serv",
     name: "Expert Instal Serv.",
-    status: "Proiect pilot · în testare",
+    status: "Website · proiect pilot",
     summary:
-      "Firmă reală de instalații care pierdea cereri pe mesagerie în afara programului. Sistemul construit preia și califică automat mesajele primite, ca nimic să nu rămână fără răspuns.",
+      "Website realizat pentru Expert Instal Serv., o firmă reală din domeniul instalațiilor. Construit gratuit, în etapa pilot RBX.AI, pornind de la nevoile unei afaceri reale, nu de la un client de test.",
     points: [
-      "Sistem construit și implementat, folosit efectiv de firmă",
-      "Aflat acum în testare și feedback",
+      "Website live, folosit efectiv de firmă",
+      "Gândit ca fundație care poate evolua odată cu afacerea, nu doar o prezență online statică",
       "Rezultate și cifre confirmate se adaugă aici doar când există cu adevărat",
     ],
   },
@@ -79,31 +84,123 @@ export default function SelectedWork() {
   const trackRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
 
+  // Drag-to-scroll for desktop mouse users (trackpad/touch already scroll
+  // natively via overflow-x-auto). A small movement threshold keeps a plain
+  // click on a card's button from being swallowed as a "drag".
+  const dragRef = useRef<{ startX: number; startScroll: number; moved: boolean } | null>(null);
+
+  // True root cause (found by isolating the DOM in Playwright, bypassing
+  // React entirely): CSS `scroll-snap-type` on this track, combined with
+  // only 3 cards, made the browser's OWN native snap resolution override
+  // *any* scrollLeft — JS scrollTo(), a raw `scrollLeft =` assignment, even
+  // a real mouse-wheel gesture — back to whichever of just two reachable
+  // extremes (0 or max) was nearest. Cards 2 and 3's snap-aligned "start"
+  // offsets (e.g. 444px, 888px) exceed the track's actual max scroll
+  // distance (e.g. 236px), so the browser collapsed 3 intended stops into
+  // 2 and silently fought every attempt to land in between — confirmed by
+  // disabling `scroll-snap-type` in isolation and watching arbitrary
+  // scrollLeft values (0, 60, 118, 236) start working immediately.
+  //
+  // Fix: drop CSS scroll-snap entirely (no `snap-x` / `snap-start` below)
+  // and do 100% of the snapping in JS. The track scrolls freely — natively
+  // for trackpad/touch, via the pointer-drag handlers for desktop mouse —
+  // and a short scroll-end timer settles it onto the nearest of the
+  // proportional stops. Arrow clicks, drag, and swipe all go through the
+  // same math, so they can never disagree, and first/last are always
+  // exactly reachable since they're the track's own 0/max.
+  function maxScroll(track: HTMLDivElement) {
+    return Math.max(0, track.scrollWidth - track.clientWidth);
+  }
+
+  function indexToScrollLeft(track: HTMLDivElement, i: number) {
+    const max = maxScroll(track);
+    return projects.length > 1 ? (max * i) / (projects.length - 1) : 0;
+  }
+
+  function scrollLeftToIndex(track: HTMLDivElement, scrollLeft: number) {
+    const max = maxScroll(track);
+    if (max <= 0) return 0;
+    const idx = Math.round((scrollLeft / max) * (projects.length - 1));
+    return Math.max(0, Math.min(projects.length - 1, idx));
+  }
+
+  // Guards the settle-timer below from fighting a scroll that JS itself
+  // just started (arrow click, or the settle-snap firing) — without this,
+  // the "smooth" scroll animation's own intermediate onScroll events would
+  // restart the settle timer against a stale, mid-flight position.
+  const programmatic = useRef(false);
+  const settleTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   function scrollToIndex(i: number) {
     const track = trackRef.current;
     if (!track) return;
     const clamped = Math.max(0, Math.min(projects.length - 1, i));
-    const card = track.children[clamped] as HTMLElement | undefined;
-    card?.scrollIntoView({ behavior: "smooth", inline: "start", block: "nearest" });
+    if (settleTimer.current) clearTimeout(settleTimer.current);
+    programmatic.current = true;
+    track.scrollTo({ left: indexToScrollLeft(track, clamped), behavior: "smooth" });
     setActive(clamped);
+    // Smooth scrolls fire their own trailing onScroll events; release the
+    // guard once they've had time to settle rather than on the first one.
+    window.setTimeout(() => {
+      programmatic.current = false;
+    }, 500);
   }
 
   function onScroll() {
     const track = trackRef.current;
     if (!track) return;
-    // Nearest card to the track's left edge is the "active" one — drives
-    // the dot indicator without extra IntersectionObserver bookkeeping.
-    let closest = 0;
-    let closestDist = Infinity;
-    Array.from(track.children).forEach((child, i) => {
-      const el = child as HTMLElement;
-      const dist = Math.abs(el.offsetLeft - track.scrollLeft);
-      if (dist < closestDist) {
-        closestDist = dist;
-        closest = i;
-      }
-    });
-    setActive(closest);
+    setActive(scrollLeftToIndex(track, track.scrollLeft));
+
+    if (programmatic.current) return;
+    // Debounced settle: once the user's own drag/swipe/wheel has stopped
+    // moving the track for a moment, snap to the nearest proportional stop.
+    if (settleTimer.current) clearTimeout(settleTimer.current);
+    settleTimer.current = setTimeout(() => {
+      const t = trackRef.current;
+      if (!t) return;
+      const nearest = scrollLeftToIndex(t, t.scrollLeft);
+      t.scrollTo({ left: indexToScrollLeft(t, nearest), behavior: "smooth" });
+      setActive(nearest);
+    }, 120);
+  }
+
+  function onPointerDown(e: ReactPointerEvent<HTMLDivElement>) {
+    // Only the primary mouse button drags; touch/pen keep native scrolling.
+    if (e.pointerType !== "mouse" || e.button !== 0) return;
+    const track = trackRef.current;
+    if (!track) return;
+    if (settleTimer.current) clearTimeout(settleTimer.current);
+    programmatic.current = false;
+    dragRef.current = { startX: e.clientX, startScroll: track.scrollLeft, moved: false };
+    track.setPointerCapture(e.pointerId);
+  }
+
+  function onPointerMove(e: ReactPointerEvent<HTMLDivElement>) {
+    const drag = dragRef.current;
+    const track = trackRef.current;
+    if (!drag || !track) return;
+    const dx = e.clientX - drag.startX;
+    if (Math.abs(dx) > 4) drag.moved = true;
+    const max = maxScroll(track);
+    track.scrollLeft = Math.max(0, Math.min(max, drag.startScroll - dx));
+  }
+
+  function onPointerUp(e: ReactPointerEvent<HTMLDivElement>) {
+    const track = trackRef.current;
+    if (track && track.hasPointerCapture(e.pointerId)) track.releasePointerCapture(e.pointerId);
+    dragRef.current = null;
+    // onScroll's own debounced settle already handles the snap-to-nearest;
+    // nothing extra to do here beyond releasing the pointer capture.
+  }
+
+  function onKeyDown(e: ReactKeyboardEvent<HTMLDivElement>) {
+    if (e.key === "ArrowRight") {
+      e.preventDefault();
+      scrollToIndex(active + 1);
+    } else if (e.key === "ArrowLeft") {
+      e.preventDefault();
+      scrollToIndex(active - 1);
+    }
   }
 
   return (
@@ -156,7 +253,30 @@ export default function SelectedWork() {
       <div
         ref={trackRef}
         onScroll={onScroll}
-        className="mt-16 flex snap-x snap-mandatory gap-6 overflow-x-auto pb-4 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerUp}
+        onPointerCancel={onPointerUp}
+        onKeyDown={onKeyDown}
+        tabIndex={0}
+        role="region"
+        aria-label="Proiecte — derulează cu săgețile stânga/dreapta"
+        // No CSS scroll-snap here on purpose: with only 3 cards, the
+        // snap-aligned "start" offset of cards 2 and 3 exceeds the track's
+        // actual max scroll distance, and Chromium's native snap
+        // resolution collapsed EVERY scroll attempt (JS, drag, even a raw
+        // wheel gesture) down to just two reachable stops (0 and max),
+        // silently overriding anything in between — that was the real bug.
+        // Snapping is now done entirely in JS (see onScroll's debounced
+        // settle + scrollToIndex above), so nothing fights it.
+        // touch-action stays at its default (auto) so a finger swipe can
+        // scroll the track horizontally while a vertical swipe still
+        // passes through to the page's own scroll — an explicit `pan-y`
+        // here would have blocked native horizontal touch scrolling
+        // entirely. overscroll-behavior-x: contain stops a fast swipe at
+        // either end from bleeding into the page's own back-navigation
+        // gesture on mobile.
+        className="mt-16 flex gap-6 overflow-x-auto pb-4 [overscroll-behavior-x:contain] [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden active:cursor-grabbing sm:cursor-grab"
       >
         {projects.map((p, i) => (
           <motion.article
@@ -166,7 +286,7 @@ export default function SelectedWork() {
             viewport={{ once: true, margin: "0px 0px -12% 0px" }}
             transition={{ duration: 0.9, ease: EASE, delay: (i % 3) * 0.08 }}
             onViewportEnter={() => trackEvent("project_viewed", { project: p.id })}
-            className="card flex w-[85vw] max-w-[440px] flex-none snap-start flex-col overflow-hidden rounded-[24px] sm:w-[420px]"
+            className="card flex w-[85vw] max-w-[440px] flex-none flex-col overflow-hidden rounded-[24px] sm:w-[420px]"
           >
             {p.image && (
               <div className="relative aspect-[16/10] w-full overflow-hidden border-b border-line">

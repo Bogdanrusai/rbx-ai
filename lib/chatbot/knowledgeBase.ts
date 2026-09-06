@@ -116,7 +116,7 @@ export const RBX_KNOWLEDGE_BASE = {
     {
       nume: "Expert Instal Serv.",
       status:
-        "Proiect pilot real, aflat ACUM în testare/feedback. Sistemul a fost construit și e folosit efectiv, dar nu există încă rezultate/cifre/testimoniale confirmate de client — acelea se adaugă doar când sunt reale.",
+        "Website realizat pentru o firmă reală din domeniul instalațiilor, construit gratuit în etapa pilot RBX.AI. Website-ul e live și folosit efectiv de firmă; rezultate sau testimoniale confirmate se adaugă doar când sunt reale.",
     },
   ],
 

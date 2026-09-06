@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { site } from "@/lib/config";
 import { useWizard } from "./wizard/WizardContext";
@@ -61,9 +62,14 @@ export default function Nav() {
           wide viewports (the header used the full width, sections cap at
           1200px and center), reading as "not quite aligned". */}
       <div className="mx-auto flex max-w-content items-center justify-between px-[clamp(20px,5vw,64px)] py-[20px]">
-        <a href="#top" className="text-[15px] font-semibold leading-none tracking-[0.14em]">
+        {/* Plain "#top" would only jump within whatever page it's rendered
+            on — harmless on the homepage, but on /privacy or /terms it
+            silently does nothing (no #top element there), so the logo
+            never actually took visitors home from those pages. "/#top"
+            via next/link fixes it everywhere Nav is used. */}
+        <Link href="/#top" className="text-[15px] font-semibold leading-none tracking-[0.14em]">
           RBX.AI
-        </a>
+        </Link>
 
         <div className="flex items-center gap-2.5">
           <SocialLinks

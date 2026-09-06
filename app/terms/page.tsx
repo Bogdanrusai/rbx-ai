@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import { site } from "@/lib/config";
@@ -13,6 +14,9 @@ export default function TermsPage() {
     <>
       <Nav />
       <main className="section max-w-[760px] pt-[calc(clamp(90px,14vh,160px)+40px)]">
+        <Link href="/" className="mb-8 inline-flex items-center gap-2 text-[13.5px] text-faint transition-colors hover:text-ink">
+          <span aria-hidden="true">←</span> Înapoi la site
+        </Link>
         <div className="eyebrow mb-6">Termeni</div>
         <h1 className="text-[clamp(28px,4vw,42px)] font-semibold leading-[1.1] tracking-[-0.02em]">
           Termeni de utilizare
