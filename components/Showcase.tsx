@@ -102,7 +102,11 @@ export default function Showcase() {
     <section id="showcase" className="section overflow-hidden">
       <div className="flex flex-wrap items-end justify-between gap-6">
         <div>
-          <div className="eyebrow mb-8">De pe Instagram</div>
+          <div className="eyebrow mb-8">
+            <span className="tabular-nums text-muted">10</span>
+            <span aria-hidden="true">·</span>
+            De pe Instagram
+          </div>
           <h2 className="max-w-[16ch] text-[clamp(30px,4.8vw,54px)] font-semibold leading-[1.06] tracking-[-0.022em]">
             <MaskReveal>Procesul, documentat</MaskReveal>
             <MaskReveal delay={0.1}>

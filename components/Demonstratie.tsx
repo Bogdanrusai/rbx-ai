@@ -36,7 +36,11 @@ const stops = [
 export default function Demonstratie() {
   return (
     <section id="demo" className="section overflow-hidden">
-      <div className="eyebrow mb-8">Cum funcționează</div>
+      <div className="eyebrow mb-8">
+        <span className="tabular-nums text-muted">06</span>
+        <span aria-hidden="true">·</span>
+        Cum funcționează
+      </div>
       <h2 className="max-w-[15ch] text-[clamp(30px,4.8vw,54px)] font-semibold leading-[1.06] tracking-[-0.022em]">
         <MaskReveal>Nu-ți spun că funcționează.</MaskReveal>
         <MaskReveal delay={0.1}>

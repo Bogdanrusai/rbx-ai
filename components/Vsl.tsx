@@ -67,7 +67,11 @@ export default function Vsl() {
       <div className="relative grid grid-cols-1 items-center gap-[clamp(32px,6vw,80px)] lg:grid-cols-[0.9fr_1.1fr]">
         {/* left — narrative */}
         <div>
-          <div className="eyebrow mb-8">Prezentarea RBX.AI</div>
+          <div className="eyebrow mb-8">
+            <span className="tabular-nums text-muted">01</span>
+            <span aria-hidden="true">·</span>
+            Prezentarea RBX.AI
+          </div>
           <h2 className="max-w-[15ch] text-[clamp(30px,4.6vw,52px)] font-semibold leading-[1.06] tracking-[-0.025em]">
             <MaskReveal>Cadru cu cadru,</MaskReveal>
             <MaskReveal delay={0.1}>

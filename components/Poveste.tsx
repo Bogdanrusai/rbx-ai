@@ -33,7 +33,11 @@ export default function Poveste() {
         </motion.figure>
 
         <div>
-          <div className="eyebrow mb-8">Despre mine</div>
+          <div className="eyebrow mb-8">
+            <span className="tabular-nums text-muted">11</span>
+            <span aria-hidden="true">·</span>
+            Despre mine
+          </div>
           <h2 className="max-w-[18ch] text-[clamp(28px,4.4vw,50px)] font-semibold leading-[1.1] tracking-[-0.022em]">
             <MaskReveal>N-am construit RBX.AI ca să vând AI.</MaskReveal>
             <MaskReveal delay={0.1}>

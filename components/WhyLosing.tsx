@@ -44,7 +44,11 @@ const costs = [
 export default function WhyLosing() {
   return (
     <section id="cost" className="section">
-      <div className="eyebrow mb-8">Costul real</div>
+      <div className="eyebrow mb-8">
+        <span className="tabular-nums text-muted">03</span>
+        <span aria-hidden="true">·</span>
+        Costul real
+      </div>
       <h2 className="max-w-[17ch] text-[clamp(30px,4.8vw,54px)] font-semibold leading-[1.06] tracking-[-0.022em]">
         <MaskReveal>Fără un sistem,</MaskReveal>
         <MaskReveal delay={0.1}>

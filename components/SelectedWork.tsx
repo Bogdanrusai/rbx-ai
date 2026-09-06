@@ -207,7 +207,11 @@ export default function SelectedWork() {
     <section id="selected-work" className="section">
       <div className="flex flex-wrap items-end justify-between gap-6">
         <div>
-          <div className="eyebrow mb-8">Proiecte</div>
+          <div className="eyebrow mb-8">
+            <span className="tabular-nums text-muted">08</span>
+            <span aria-hidden="true">·</span>
+            Proiecte
+          </div>
           <h2 className="max-w-[18ch] text-[clamp(30px,4.8vw,54px)] font-semibold leading-[1.06] tracking-[-0.022em]">
             <MaskReveal>Nu portofoliu.</MaskReveal>
             <MaskReveal delay={0.1}>

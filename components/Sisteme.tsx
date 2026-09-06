@@ -18,7 +18,11 @@ export default function Sisteme() {
   const wizard = useWizard();
   return (
     <section id="sisteme" className="section">
-      <div className="eyebrow mb-8">Sistemele RBX.AI</div>
+      <div className="eyebrow mb-8">
+        <span className="tabular-nums text-muted">05</span>
+        <span aria-hidden="true">·</span>
+        Sistemele RBX.AI
+      </div>
       <h2 className="max-w-[16ch] text-[clamp(30px,5vw,56px)] font-semibold leading-[1.05] tracking-[-0.025em]">
         <MaskReveal>Sisteme complete,</MaskReveal>
         <MaskReveal delay={0.1}>

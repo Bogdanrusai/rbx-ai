@@ -19,7 +19,11 @@ export default function Solutia() {
       <GhostWord word="SISTEM" className="right-[-4%] bottom-[8%]" />
 
       <div className="relative max-w-[720px]">
-        <div className="eyebrow mb-8">Soluția</div>
+        <div className="eyebrow mb-8">
+          <span className="tabular-nums text-muted">04</span>
+          <span aria-hidden="true">·</span>
+          Soluția
+        </div>
         <h2 className="text-[clamp(30px,5vw,56px)] font-semibold leading-[1.05] tracking-[-0.025em]">
           <MaskReveal>Un sistem care lucrează</MaskReveal>
           <MaskReveal delay={0.1}>

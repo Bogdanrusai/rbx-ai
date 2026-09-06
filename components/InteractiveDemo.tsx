@@ -529,7 +529,11 @@ export default function InteractiveDemo() {
 
   return (
     <section id="demo-interactiv" className="section">
-      <div className="eyebrow mb-8">Testează sistemul</div>
+      <div className="eyebrow mb-8">
+        <span className="tabular-nums text-muted">07</span>
+        <span aria-hidden="true">·</span>
+        Testează sistemul
+      </div>
       <h2 className="max-w-[20ch] text-[clamp(30px,4.8vw,54px)] font-semibold leading-[1.06] tracking-[-0.022em]">
         <MaskReveal>Vezi ce se întâmplă</MaskReveal>
         <MaskReveal delay={0.1}>

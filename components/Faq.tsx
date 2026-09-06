@@ -61,7 +61,11 @@ export default function Faq() {
 
   return (
     <section id="faq" className="section">
-      <div className="eyebrow mb-8">Întrebări</div>
+      <div className="eyebrow mb-8">
+        <span className="tabular-nums text-muted">12</span>
+        <span aria-hidden="true">·</span>
+        Întrebări
+      </div>
       <h2 className="max-w-[16ch] text-[clamp(30px,4.8vw,54px)] font-semibold leading-[1.06] tracking-[-0.022em]">
         Înainte să întrebi.
       </h2>

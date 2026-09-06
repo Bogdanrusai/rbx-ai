@@ -14,7 +14,11 @@ const pains = [
 export default function Problema() {
   return (
     <section id="problema" className="section">
-      <div className="eyebrow mb-8">Problema</div>
+      <div className="eyebrow mb-8">
+        <span className="tabular-nums text-muted">02</span>
+        <span aria-hidden="true">·</span>
+        Problema
+      </div>
       <h2 className="max-w-[18ch] text-[clamp(30px,4.8vw,54px)] font-semibold leading-[1.06] tracking-[-0.022em]">
         <MaskReveal>Fiecare afacere pierde bani</MaskReveal>
         <MaskReveal delay={0.1}>în același loc:</MaskReveal>

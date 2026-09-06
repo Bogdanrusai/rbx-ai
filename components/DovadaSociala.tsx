@@ -14,7 +14,11 @@ const stats = [
 export default function DovadaSociala() {
   return (
     <section id="dovada" className="section">
-      <div className="eyebrow mb-8">Dovada</div>
+      <div className="eyebrow mb-8">
+        <span className="tabular-nums text-muted">09</span>
+        <span aria-hidden="true">·</span>
+        Dovada
+      </div>
       <h2 className="max-w-[18ch] text-[clamp(30px,4.8vw,54px)] font-semibold leading-[1.06] tracking-[-0.022em]">
         <MaskReveal>Nu-ți cer să crezi pe cuvânt.</MaskReveal>
         <MaskReveal delay={0.1}>
