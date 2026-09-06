@@ -45,6 +45,12 @@ export default function Poveste() {
             </MaskReveal>
           </h2>
 
+          {/* Previous copy's closing line ("Nu ador nimic ascuns într-o cutie
+              neagră") read as unnatural/abstract on a re-read against this
+              round's "zero AI knowledge" clarity test — everything else here
+              already passed. Rewritten to end on the same idea (problem
+              first, AI second) in plainer, more concrete Romanian; the
+              positioning concept and both photo/heading above are untouched. */}
           <motion.p
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -52,9 +58,9 @@ export default function Poveste() {
             transition={{ duration: 0.8, ease: EASE, delay: 0.15 }}
             className="mt-8 max-w-[52ch] text-[clamp(15.5px,1.6vw,18px)] leading-[1.65] text-muted"
           >
-            Construiesc RBX.AI în jurul unei idei simple: înainte să automatizezi ceva, trebuie să
-            înțelegi procesul. Procesele care consumă timp și pierd oportunități sunt ce rezolv,
-            nu AI de dragul AI-ului.
+            Înainte să automatizez ceva, vreau să înțeleg cum funcționează afacerea și unde se
+            pierde timp. Procesele care consumă timp și pierd oportunități sunt ce rezolv, nu AI
+            de dragul AI-ului.
           </motion.p>
           <motion.p
             initial={{ opacity: 0, y: 16 }}
@@ -63,8 +69,9 @@ export default function Poveste() {
             transition={{ duration: 0.8, ease: EASE, delay: 0.24 }}
             className="mt-5 max-w-[52ch] text-[clamp(15.5px,1.6vw,18px)] leading-[1.65] text-muted"
           >
-            Apoi construiesc sistemul potrivit pentru procesul respectiv, îl testez, adun feedback
-            real și îl îmbunătățesc. Documentez tot. Nu ador nimic ascuns într-o cutie neagră.
+            Apoi construiesc sistemul potrivit pentru problema respectivă, îl testez și îl
+            îmbunătățesc pe baza feedbackului real. Nu pun AI peste un proces prost — întâi
+            înțeleg problema, apoi construiesc soluția.
           </motion.p>
 
           <motion.div

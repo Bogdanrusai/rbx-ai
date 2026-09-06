@@ -633,10 +633,19 @@ export default function Wizard() {
                     Perfect.
                   </h3>
                   <p className="mx-auto mt-4 max-w-[46ch] text-[15.5px] leading-[1.65] text-muted">
-                    Analizez personal fiecare răspuns și identific oportunitățile de automatizare potrivite pentru afacerea ta. Revin cu o soluție construită special pentru ea — nicio analiză automată, totul făcut manual, de mine.
+                    Am primit răspunsurile tale. Următorul pas este să programăm un apel scurt în
+                    care discutăm situația afacerii tale și ce sistem ar avea sens pentru tine.
                   </p>
+                  {/* Single primary action on purpose — the visitor just finished
+                      qualifying, and the natural next step is booking the call, not
+                      choosing between that and closing the modal. The header's own
+                      X (above) stays as the escape hatch so this is never a trap;
+                      the old secondary "Închide" button here was a second, competing
+                      choice at the exact moment the funnel should feel obvious. If
+                      NEXT_PUBLIC_BOOKING_URL is ever unset, "Închide" is the fallback
+                      so the screen always has at least one footer action. */}
                   <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
-                    {BOOKING_URL && (
+                    {BOOKING_URL ? (
                       <a
                         href={BOOKING_URL}
                         target="_blank"
@@ -644,15 +653,16 @@ export default function Wizard() {
                         onClick={() => trackEvent("chatbot_booking_reached", { source })}
                         className="rounded-full bg-ink px-7 py-3 text-[14px] font-medium text-bg transition-opacity hover:opacity-90"
                       >
-                        Programează un apel
+                        Programează apelul →
                       </a>
+                    ) : (
+                      <button
+                        onClick={close}
+                        className="rounded-full border border-line-strong px-7 py-3 text-[14px] font-medium text-ink transition-colors hover:border-white/35 hover:bg-white/[0.04]"
+                      >
+                        Închide
+                      </button>
                     )}
-                    <button
-                      onClick={close}
-                      className="rounded-full border border-line-strong px-7 py-3 text-[14px] font-medium text-ink transition-colors hover:border-white/35 hover:bg-white/[0.04]"
-                    >
-                      Închide
-                    </button>
                   </div>
                 </motion.div>
               )}

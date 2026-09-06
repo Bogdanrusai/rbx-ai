@@ -54,14 +54,21 @@ const projects: Project[] = [
     liveUrl: "https://www.rbxagency.com",
   },
   {
+    // CORECTAT: varianta anterioară afirma că acest sistem gestionează
+    // lead-urile care vin chiar prin formularul de pe acest site — fals,
+    // verificat direct în app/api/lead/route.ts (doar email, fără niciun
+    // apel către un CRM/bază de date). Aceeași greșeală fusese deja găsită
+    // și corectată în baza de cunoștințe a chatbot-ului (lib/chatbot/
+    // knowledgeBase.ts) într-un pas anterior, dar rămăsese aici, pe pagina
+    // publică — corectată acum, sincronizată cu textul din chatbot.
     id: "rbx-ai-crm",
     name: "RBX.AI CRM",
     status: "Sistem intern · privat",
     summary:
-      "CRM-ul folosit intern pentru a gestiona lead-urile care intră prin formularul de analiză gratuită: de la primul mesaj, până la calificare și programare. Un sistem privat, nu un produs public, prezentat aici doar ca exemplu de ce poate fi construit.",
+      "Sistem intern pentru organizarea lead-urilor și a pipeline-ului RBX.AI — un exemplu de ce poate fi construit, nu un produs public. Formularul de pe acest site NU trimite automat lead-uri aici în acest moment; notificările merg direct la Bogdan, prin email.",
     points: [
-      "Centralizează lead-urile venite din formular, într-un singur loc",
-      "Urmărește statusul fiecărui lead, de la contact la programare",
+      "Organizează lead-urile și stadiul fiecăruia într-un singur loc",
+      "Gândit pentru urmărirea unui lead, de la contact la programare",
       "Sistem privat: fără login public, fără demo public, fără date reale expuse",
     ],
   },
