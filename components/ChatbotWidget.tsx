@@ -27,6 +27,12 @@ const WELCOME: UiMessage = {
   text: "Bună! Sunt asistentul RBX.AI. Te pot ajuta cu întrebări despre servicii, proces, proiecte sau cum începi. Cu ce te pot ajuta?",
 };
 
+// Shown only under the welcome message, to lower the barrier to the first
+// message — clicking one sends that exact text, same as typing it.
+const SUGGESTED_CHIPS = ["Cât costă?", "Cum funcționează?", "Vreau proiectele"];
+
+type BusinessType = { id: string; label: string };
+
 export default function ChatbotWidget() {
   const wizard = useWizard();
   const [open, setOpen] = useState(false);
@@ -36,6 +42,10 @@ export default function ChatbotWidget() {
   const [handoff, setHandoff] = useState(false);
   const [consent, setConsent] = useState(false);
   const [dimmed, setDimmed] = useState(false);
+  // Session-scoped only: kept in memory for this browser tab, sent back to
+  // the API on each message so the assistant doesn't re-ask, and never
+  // persisted anywhere (no localStorage, no CRM, no cookie).
+  const [businessType, setBusinessType] = useState<BusinessType | null>(null);
   const startedRef = useRef(false);
   const firstMessageSentRef = useRef(false);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -69,14 +79,22 @@ export default function ChatbotWidget() {
     }
   }
 
+  // Escape path from other parts of the page (e.g. FAQ's "Nu ai găsit
+  // răspunsul?") without lifting the whole widget into a shared context.
+  useEffect(() => {
+    const onExternalOpen = () => openWidget();
+    window.addEventListener("rbx:open-chatbot", onExternalOpen);
+    return () => window.removeEventListener("rbx:open-chatbot", onExternalOpen);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   function goToForm() {
     trackEvent("chatbot_form_started");
     setOpen(false);
     wizard.open("chatbot");
   }
 
-  async function send() {
-    const text = input.trim();
+  async function sendText(text: string) {
     if (!text || loading) return;
     setInput("");
     setMessages((m) => [...m, { role: "user", text }]);
@@ -95,6 +113,7 @@ export default function ChatbotWidget() {
           message: text,
           history: messages.map(({ role, text }) => ({ role, text })),
           contactConsent: consent,
+          businessType,
         }),
       });
       if (!res.ok) {
@@ -108,6 +127,7 @@ export default function ChatbotWidget() {
       const data = await res.json();
       setMessages((m) => [...m, { role: "assistant", text: data.text, suggestedAction: data.suggestedAction }]);
       if (data.handoff) setHandoff(true);
+      if (data.detectedBusinessType && !businessType) setBusinessType(data.detectedBusinessType);
     } catch {
       setMessages((m) => [
         ...m,
@@ -116,6 +136,10 @@ export default function ChatbotWidget() {
     } finally {
       setLoading(false);
     }
+  }
+
+  function send() {
+    return sendText(input.trim());
   }
 
   function onSuggestedAction(action: { label: string; href: string }) {
@@ -205,6 +229,19 @@ export default function ChatbotWidget() {
                   )}
                 </div>
               ))}
+              {messages.length === 1 && (
+                <div className="flex flex-wrap gap-1.5 pt-1">
+                  {SUGGESTED_CHIPS.map((c) => (
+                    <button
+                      key={c}
+                      onClick={() => sendText(c)}
+                      className="rounded-full border border-line-strong px-3 py-1.5 text-[12px] text-muted transition-colors hover:border-white/35 hover:text-ink"
+                    >
+                      {c}
+                    </button>
+                  ))}
+                </div>
+              )}
               {loading && <div className="text-left text-[12px] text-faint">Scrie…</div>}
               {handoff && (
                 <div className="pt-1 text-center text-[11.5px] text-faint">

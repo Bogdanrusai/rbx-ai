@@ -6,8 +6,8 @@ import MaskReveal from "./MaskReveal";
 const EASE = [0.16, 1, 0.3, 1] as const;
 
 const stats = [
-  { n: "0", t: "clienți ascunși", d: "Tot ce construiesc e vizibil, din prima zi." },
-  { n: "100%", t: "public", d: "Fiecare sistem, documentat pas cu pas pe Instagram." },
+  { n: "1", t: "proces documentat", d: "Fiecare sistem, construit și explicat pas cu pas pe Instagram." },
+  { n: "0", t: "rezultate inventate", d: "Niciun status sau proiect nu apare pe site dacă nu e real, azi." },
   { n: "1", t: "promisiune", d: "Nimic nu ajunge pe site dacă nu funcționează cu adevărat." },
 ];
 
@@ -16,9 +16,9 @@ export default function DovadaSociala() {
     <section id="dovada" className="section">
       <div className="eyebrow mb-8">Dovada</div>
       <h2 className="max-w-[18ch] text-[clamp(30px,4.8vw,54px)] font-semibold leading-[1.06] tracking-[-0.022em]">
-        <MaskReveal>Nu am clienți de arătat.</MaskReveal>
+        <MaskReveal>Nu-ți cer să crezi pe cuvânt.</MaskReveal>
         <MaskReveal delay={0.1}>
-          Am <span className="mark">procesul</span>.
+          Îți arăt <span className="mark">procesul</span>.
         </MaskReveal>
       </h2>
 

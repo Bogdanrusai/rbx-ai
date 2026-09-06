@@ -4,6 +4,7 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Reveal from "./Reveal";
 import { useWizard } from "./wizard/WizardContext";
+import { trackEvent } from "@/lib/analytics";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -31,6 +32,26 @@ const items = [
   {
     q: "Ce se întâmplă după ce trimit formularul?",
     a: "Analizez personal fiecare răspuns — nicio analiză automată. Revin cu o soluție construită special pentru afacerea ta, nu un pachet standard.",
+  },
+  {
+    q: "Am deja un website. Are sens să vorbim?",
+    a: "Da. Nu orice sistem înseamnă un website nou — de multe ori are mai mult sens să conectez ce ai deja (formulare, mesaje, programări) la un sistem care le preia automat.",
+  },
+  {
+    q: "Ce se întâmplă cu datele clienților mei?",
+    a: "Datele colectate prin formularul de analiză (nume, contact, informații despre afacere) sunt folosite doar pentru a pregăti analiza și soluția propusă — vezi pagina de Confidențialitate pentru detalii complete.",
+  },
+  {
+    q: "Ce se întâmplă dacă asistentul AI de pe site greșește ceva?",
+    a: "Asistentul răspunde strict din informații reale despre RBX.AI — nu inventează prețuri, rezultate sau garanții. Dacă nu știe un răspuns, spune clar asta și te trimite spre formular, în loc să ghicească.",
+  },
+  {
+    q: "Pot renunța sau opri sistemul dacă nu mai are sens pentru mine?",
+    a: "Da. Nu există un abonament ascuns sau o obligație pe termen lung impusă tehnic — discutăm condițiile exacte când vorbim despre soluția potrivită.",
+  },
+  {
+    q: "Nu am foarte mult trafic sau multe cereri. Are sens și pentru mine?",
+    a: "Contează mai mult cât de mult te costă fiecare cerere pierdută sau întârziată, nu volumul brut. Cel mai bun mod să afli e analiza gratuită — spun clar dacă chiar are sens sau nu.",
   },
 ];
 
@@ -83,10 +104,21 @@ export default function Faq() {
         })}
       </div>
 
-      <Reveal delay={0.1} className="mt-10">
+      <Reveal delay={0.1} className="mt-12 flex flex-wrap items-center gap-x-6 gap-y-4 border-t border-line pt-8">
+        <p className="text-[13.5px] text-faint">Nu ai găsit răspunsul?</p>
+        <button
+          onClick={() => {
+            trackEvent("faq_chatbot_open");
+            window.dispatchEvent(new CustomEvent("rbx:open-chatbot"));
+          }}
+          className="btn-ghost group"
+        >
+          <span className="h-[5px] w-[5px] rounded-full bg-faint" />
+          Întreabă asistentul
+        </button>
         <button onClick={() => openWizard()} className="btn-ghost group">
           <span className="h-[5px] w-[5px] rounded-full bg-faint" />
-          Ai altă întrebare? Cere o analiză gratuită
+          Cere o analiză gratuită
           <span className="transition-transform duration-300 ease-premium group-hover:translate-x-1">→</span>
         </button>
       </Reveal>

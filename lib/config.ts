@@ -20,9 +20,11 @@ export const site = {
   // placeholder.
   social: {
     instagram: "https://www.instagram.com/bogdanrus.ai/",
-    tiktok: null as string | null,
+    tiktok: "https://www.tiktok.com/@bogdanrus.ai",
+    // Facebook: a real account exists, but is deliberately left out until
+    // Bogdan explicitly asks for it to be added.
     facebook: null as string | null,
-    youtube: null as string | null,
+    youtube: "https://www.youtube.com/@Bogdanrusai",
   },
 } as const;
 

@@ -125,14 +125,35 @@ function isWebsiteValid(v: string | undefined) {
 // (manual, personal follow-up) is the current source of truth.
 const BOOKING_URL = process.env.NEXT_PUBLIC_BOOKING_URL;
 
-async function submitAnswers(a: Answers) {
+// Best-effort source attribution — reads only standard UTM params and the
+// referrer already present in the browser; never asks the visitor for
+// anything extra, and silently omits anything unavailable.
+function captureAttribution(wizardSource: string) {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const utm: Record<string, string> = {};
+    for (const key of ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"]) {
+      const v = params.get(key);
+      if (v) utm[key] = v;
+    }
+    return {
+      wizardSource,
+      referrer: document.referrer || undefined,
+      ...utm,
+    };
+  } catch {
+    return { wizardSource };
+  }
+}
+
+async function submitAnswers(a: Answers, wizardSource: string) {
   try {
     const response = await fetch("/api/lead", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(a),
+      body: JSON.stringify({ ...a, attribution: captureAttribution(wizardSource) }),
     });
 
     if (!response.ok) {
@@ -220,7 +241,7 @@ export default function Wizard() {
       setI((n) => n + 1);
       return;
     }
-    submitAnswers(a);
+    submitAnswers(a, source);
     setDone(true);
   };
 

@@ -105,6 +105,25 @@ export async function POST(req: Request) {
                 </p>
               </div>
 
+              ${
+                body.attribution
+                  ? `<div style="margin-top:24px;padding:20px 24px;background:#f5f5f5;border:1px solid #dddddd;">
+                      <p style="margin:0 0 8px;color:#777777;font-size:11px;font-weight:700;letter-spacing:1.5px;">SURSĂ</p>
+                      <p style="margin:0;color:#111111;font-size:13px;">
+                        ${[
+                          body.attribution.wizardSource && `Formular: ${body.attribution.wizardSource}`,
+                          body.attribution.utm_source && `utm_source: ${body.attribution.utm_source}`,
+                          body.attribution.utm_medium && `utm_medium: ${body.attribution.utm_medium}`,
+                          body.attribution.utm_campaign && `utm_campaign: ${body.attribution.utm_campaign}`,
+                          body.attribution.referrer && `Referrer: ${body.attribution.referrer}`,
+                        ]
+                          .filter(Boolean)
+                          .join(" · ") || "Direct"}
+                      </p>
+                    </div>`
+                  : ""
+              }
+
               <div style="margin-top:28px;">
                 <a
                   href="mailto:${body.email}"
@@ -137,38 +156,48 @@ export async function POST(req: Request) {
       `,
     });
 
+    // Failure-safety: the internal notification and the visitor's
+    // confirmation are independent. If Resend fails on one, we still attempt
+    // the other, so a single provider hiccup never silently drops the lead
+    // AND leaves the visitor with no confirmation. There is currently no
+    // CRM or database behind this route — see README / final report — so
+    // this internal email IS the lead record today; a failure here is
+    // logged (never surfaced to the visitor as a stack trace) so it can be
+    // caught in Vercel/Resend logs rather than only in the browser console.
     if (internalEmail.error) {
-      console.error("Internal email error:", internalEmail.error);
-      return Response.json(
-        { error: "Internal email failed" },
-        { status: 500 }
-      );
+      console.error("Internal email error (lead may not have reached Bogdan):", internalEmail.error);
     }
 
-    const confirmationEmail = await resend.emails.send({
-      from: "RBX.AI <contact@rbxagency.com>",
-      to: body.email,
-      subject: "Am primit solicitarea ta — RBX.AI",
-      html: confirmationHtml,
-    });
+    let confirmationEmail: Awaited<ReturnType<typeof resend.emails.send>> | null = null;
+    try {
+      confirmationEmail = await resend.emails.send({
+        from: "RBX.AI <contact@rbxagency.com>",
+        to: body.email,
+        subject: "Am primit solicitarea ta — RBX.AI",
+        html: confirmationHtml,
+      });
+      if (confirmationEmail.error) {
+        console.error("Confirmation email error:", confirmationEmail.error);
+      }
+    } catch (confirmErr) {
+      console.error("Confirmation email threw:", confirmErr);
+    }
 
-    if (confirmationEmail.error) {
-      console.error("Confirmation email error:", confirmationEmail.error);
-      return Response.json(
-        { error: "Confirmation email failed" },
-        { status: 500 }
-      );
+    if (internalEmail.error) {
+      // The visitor-facing error stays generic — no internal details, no
+      // stack trace — while the real cause is already in the server logs.
+      return Response.json({ error: "A apărut o eroare temporară. Încearcă din nou." }, { status: 500 });
     }
 
     return Response.json({
       success: true,
       internalEmailId: internalEmail.data?.id,
-      confirmationEmailId: confirmationEmail.data?.id,
+      confirmationEmailId: confirmationEmail?.data?.id,
     });
   } catch (error) {
     console.error("Lead API error:", error);
     return Response.json(
-      { error: "Email failed" },
+      { error: "A apărut o eroare temporară. Încearcă din nou." },
       { status: 500 }
     );
   }

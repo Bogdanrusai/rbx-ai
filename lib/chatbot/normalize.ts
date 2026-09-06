@@ -108,3 +108,27 @@ export function includesAnyPhrase(text: string, phrases: string[]): boolean {
   const norm = normalizeText(text);
   return phrases.some((p) => norm.includes(normalizeText(p)));
 }
+
+// --- Lightweight, session-scoped business-type detection --------------------
+// Purely a UX nicety: if a visitor already said "am o clinica" earlier in the
+// conversation, the assistant shouldn't ask again or answer as if it knows
+// nothing about them. This NEVER invents anything about the business beyond
+// the literal category the visitor typed, and it's never persisted anywhere
+// past the current browser session (see ChatbotWidget.tsx — kept in React
+// state only, sent back on each request, never written to a database).
+const BUSINESS_TYPES: { id: string; label: string; words: string[] }[] = [
+  { id: "clinica", label: "o clinică", words: ["clinica", "cabinet medical", "dentist", "stomatologie"] },
+  { id: "salon", label: "un salon", words: ["salon", "coafor", "frizerie", "barbershop"] },
+  { id: "imobiliare", label: "o agenție imobiliară", words: ["imobiliare", "imobiliara", "agentie imobiliara"] },
+  { id: "restaurant", label: "un restaurant", words: ["restaurant", "cafenea", "local"] },
+  { id: "ecommerce", label: "un magazin online", words: ["ecommerce", "magazin online", "shop online"] },
+  { id: "service-local", label: "o firmă de servicii", words: ["service", "instalatii", "constructii", "firma de servicii"] },
+];
+
+export function detectBusinessType(text: string): { id: string; label: string } | null {
+  const norm = normalizeText(text);
+  for (const bt of BUSINESS_TYPES) {
+    if (includesAnyPhrase(norm, bt.words)) return { id: bt.id, label: bt.label };
+  }
+  return null;
+}

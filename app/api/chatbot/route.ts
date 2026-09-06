@@ -12,8 +12,15 @@ function rateLimitKeyFor(req: NextRequest): string {
   return fwd?.split(",")[0]?.trim() || "anonymous";
 }
 
+type BusinessType = { id: string; label: string };
+
 export async function POST(req: NextRequest) {
-  let body: { message?: string; history?: ChatMessage[]; contactConsent?: boolean };
+  let body: {
+    message?: string;
+    history?: ChatMessage[];
+    contactConsent?: boolean;
+    businessType?: BusinessType | null;
+  };
   try {
     body = await req.json();
   } catch {
@@ -23,11 +30,16 @@ export async function POST(req: NextRequest) {
   const message = body.message ?? "";
   const history = Array.isArray(body.history) ? body.history : [];
   const contactConsent = Boolean(body.contactConsent);
+  const businessType =
+    body.businessType && typeof body.businessType.id === "string" && typeof body.businessType.label === "string"
+      ? body.businessType
+      : null;
 
   try {
     const reply = generateReply(message, history, {
       rateLimitKey: rateLimitKeyFor(req),
       contactConsent,
+      businessType,
     });
     return NextResponse.json(reply);
   } catch (err) {

@@ -104,9 +104,9 @@ export default function Showcase() {
         <div>
           <div className="eyebrow mb-8">De pe Instagram</div>
           <h2 className="max-w-[16ch] text-[clamp(30px,4.8vw,54px)] font-semibold leading-[1.06] tracking-[-0.022em]">
-            <MaskReveal>Tot ce construiesc</MaskReveal>
+            <MaskReveal>Procesul, documentat</MaskReveal>
             <MaskReveal delay={0.1}>
-              e <span className="mark">public</span>.
+              <span className="mark">public</span>.
             </MaskReveal>
           </h2>
         </div>

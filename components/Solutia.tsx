@@ -34,8 +34,8 @@ export default function Solutia() {
           className="mt-8 max-w-[46ch] text-[clamp(15.5px,1.6vw,18px)] leading-[1.65] text-muted"
         >
           Nu îți vând un instrument. Îți construiesc infrastructura AI care
-          preia munca, o simți în bani și timp liber încă din prima
-          săptămână.
+          preia munca repetitivă, ca tu să te ocupi de partea din afacere pe
+          care doar tu o poți face.
         </motion.p>
       </div>
 

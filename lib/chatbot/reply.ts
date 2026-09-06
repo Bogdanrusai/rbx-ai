@@ -22,7 +22,7 @@ import {
   checkRateLimit,
 } from "./guard";
 import { extractContactFromText } from "./contactExtraction";
-import { normalizeText, fuzzyHasAny, includesAnyPhrase } from "./normalize";
+import { normalizeText, fuzzyHasAny, includesAnyPhrase, detectBusinessType } from "./normalize";
 
 export type ChatRole = "user" | "assistant";
 export type ChatMessage = { role: ChatRole; text: string };
@@ -32,6 +32,7 @@ export type ChatReply = {
   handoff: boolean;
   suggestedAction?: { label: string; href: string };
   contactDetected?: { email?: string; phone?: string };
+  detectedBusinessType?: { id: string; label: string };
 };
 
 const WELCOME =
@@ -43,6 +44,7 @@ const FALLBACK =
 const FORM_ACTION = { label: "Deschide formularul de analiză gratuită", href: "#top" } as const;
 const VSL_ACTION = { label: "Vezi prezentarea (cadru cu cadru)", href: "#vsl" } as const;
 const PROJECTS_ACTION = { label: "Vezi Selected Work", href: "#selected-work" } as const;
+const DEMO_ACTION = { label: "Testează sistemul", href: "#demo-interactiv" } as const;
 
 // Doar un mesaj care e STRICT un salut (nimic altceva în el) primește
 // răspunsul generic de bun venit — un salut urmat de o întrebare reală
@@ -54,7 +56,7 @@ const PURE_GREETING = /^(salut|buna|buna ziua|hey|hei|neata|noroc|servus)[\s!.,?
 type Topic = {
   id: string;
   test: (norm: string, raw: string) => boolean;
-  answer: () => ChatReply;
+  answer: (businessType?: { id: string; label: string }) => ChatReply;
 };
 
 const kb = RBX_KNOWLEDGE_BASE;
@@ -108,7 +110,11 @@ const topics: Topic[] = [
     id: "pentru-cine",
     test: (norm) =>
       /(pentru cine|se potriveste|afacerea mea mica|orice afacere|orice domeniu)/.test(norm),
-    answer: () => ({ text: kb.pentruCine, handoff: false, suggestedAction: FORM_ACTION }),
+    answer: (businessType) => ({
+      text: businessType ? `Da, se potrivește și pentru ${businessType.label}. ${kb.pentruCine}` : kb.pentruCine,
+      handoff: false,
+      suggestedAction: FORM_ACTION,
+    }),
   },
   {
     id: "ce-e-rbx",
@@ -182,7 +188,7 @@ const topics: Topic[] = [
   {
     id: "proces",
     test: (norm) => /(proces|cum lucrezi|cum functioneaza|pasii)/.test(norm),
-    answer: () => ({ text: kb.proces.join(" "), handoff: false, suggestedAction: FORM_ACTION }),
+    answer: () => ({ text: kb.proces.join(" "), handoff: false, suggestedAction: DEMO_ACTION }),
   },
   {
     id: "cum-incep",
@@ -243,13 +249,18 @@ const NO_CTA_TOPICS = new Set(["dupa-formular", "pentru-cine", "ce-e-rbx"]);
 export function generateReply(
   message: string,
   history: ChatMessage[],
-  opts: { rateLimitKey: string; contactConsent: boolean }
+  opts: { rateLimitKey: string; contactConsent: boolean; businessType?: { id: string; label: string } | null }
 ): ChatReply {
   validateChatInput(message, history);
   checkRateLimit(opts.rateLimitKey);
 
   const trimmed = message.trim();
   const norm = normalizeText(trimmed);
+
+  // Session-scoped only (see normalize.ts) — never persisted, never sent
+  // anywhere but back to this same function on the next message.
+  const newlyDetected = opts.businessType ? undefined : detectBusinessType(trimmed) || undefined;
+  const knownBusinessType = opts.businessType || newlyDetected;
 
   if (looksLikePromptInjection(message)) {
     return {
@@ -286,20 +297,21 @@ export function generateReply(
   // caz separat, verificat după.
   const topic = matchTopic(norm, trimmed);
   if (topic) {
-    const reply = topic.answer();
+    const reply = topic.answer(knownBusinessType);
     const guarded = guardResponseText(reply.text);
     return {
       ...reply,
       text: guarded.text,
       suggestedAction: NO_CTA_TOPICS.has(topic.id) ? undefined : reply.suggestedAction,
+      detectedBusinessType: newlyDetected,
     };
   }
 
   if (PURE_GREETING.test(norm)) {
-    return { text: WELCOME, handoff: false };
+    return { text: WELCOME, handoff: false, detectedBusinessType: newlyDetected };
   }
 
-  return { text: FALLBACK, handoff: false, suggestedAction: FORM_ACTION };
+  return { text: FALLBACK, handoff: false, suggestedAction: FORM_ACTION, detectedBusinessType: newlyDetected };
 }
 
 // Exportat pentru eventuala conectare ulterioară a unui furnizor LLM real —

@@ -2,17 +2,20 @@
 
 import { motion } from "framer-motion";
 import MaskReveal from "./MaskReveal";
+import { useWizard } from "./wizard/WizardContext";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
 const catalog = [
+  { cat: "Website-uri", items: ["Website de conversie", "Formular de calificare", "Structură + copy"] },
   { cat: "Automatizări", items: ["n8n", "App-uri conectate", "Email & follow-up", "Lead management"] },
   { cat: "AI Agents", items: ["Agenți AI dedicați", "Preluare cereri", "Calificare clienți"] },
   { cat: "CRM & date", items: ["CRM Automation", "Programări automate", "Rapoarte"] },
-  { cat: "Sisteme interne", items: ["Procese interne", "Integrări cu tool-urile tale", "Construit la comandă"] },
+  { cat: "Sisteme interne", items: ["Procese interne", "Integrări cu tool-urile tale"] },
 ];
 
 export default function Sisteme() {
+  const wizard = useWizard();
   return (
     <section id="sisteme" className="section">
       <div className="eyebrow mb-8">Sistemele RBX.AI</div>
@@ -193,9 +196,9 @@ export default function Sisteme() {
           className="col-span-1 rounded-[24px] border border-dashed border-line-strong p-8 md:col-span-6"
         >
           <p className="mb-6 text-[13px] uppercase tracking-[0.16em] text-faint">
-            Construiesc orice sistem de care are nevoie afacerea ta
+            Câteva dintre sistemele construite până acum
           </p>
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-5">
             {catalog.map((c) => (
               <div key={c.cat}>
                 <div className="mb-3 text-[13px] font-medium text-muted">{c.cat}</div>
@@ -208,6 +211,20 @@ export default function Sisteme() {
                 </div>
               </div>
             ))}
+          </div>
+
+          <div className="mt-9 flex flex-wrap items-center justify-between gap-5 border-t border-line pt-7">
+            <p className="max-w-[38ch] text-[13.5px] leading-[1.5] text-faint">
+              Ai un proces care nu apare aici? De obicei tot pornește la fel:
+              înțeleg întâi cum lucrează afacerea ta, apoi văd ce sistem are
+              sens.
+            </p>
+            <button
+              onClick={() => wizard.open()}
+              className="btn-ghost shrink-0"
+            >
+              Arată-mi cum funcționează
+            </button>
           </div>
         </motion.div>
       </div>

@@ -4,6 +4,15 @@ import Link from "next/link";
 import { site } from "@/lib/config";
 import { useWizard } from "./wizard/WizardContext";
 import SocialLinks from "./SocialLinks";
+import { trackEvent } from "@/lib/analytics";
+
+// Phone architecture, prepared but inert until real values are provided.
+// Setting NEXT_PUBLIC_PHONE_NUMBER shows a real tap-to-call footer link —
+// no number is ever invented here. NEXT_PUBLIC_VOICE_AGENT_NUMBER is a
+// SEPARATE flag: only set it once the voice agent is actually live and
+// tested, since this line renders as a direct claim ("sună și testează").
+const PHONE_NUMBER = process.env.NEXT_PUBLIC_PHONE_NUMBER;
+const VOICE_AGENT_NUMBER = process.env.NEXT_PUBLIC_VOICE_AGENT_NUMBER;
 
 const navCols: { title: string; links: { label: string; href: string }[] }[] = [
   {
@@ -71,6 +80,24 @@ export default function Footer() {
             >
               {site.handle}
             </a>
+            {PHONE_NUMBER && (
+              <a
+                href={`tel:${PHONE_NUMBER}`}
+                onClick={() => trackEvent("phone_click", { from: "footer" })}
+                className="w-fit text-[13.5px] text-muted transition-colors hover:text-ink"
+              >
+                {PHONE_NUMBER}
+              </a>
+            )}
+            {VOICE_AGENT_NUMBER && (
+              <a
+                href={`tel:${VOICE_AGENT_NUMBER}`}
+                onClick={() => trackEvent("phone_click", { from: "footer_voice_agent" })}
+                className="w-fit text-[13.5px] text-muted transition-colors hover:text-ink"
+              >
+                Sună și testează agentul vocal RBX.AI
+              </a>
+            )}
             <SocialLinks from="footer" className="mt-1" />
           </div>
         </div>

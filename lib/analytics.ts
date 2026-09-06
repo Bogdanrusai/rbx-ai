@@ -18,7 +18,13 @@ export type AnalyticsEvent =
   | "chatbot_first_message"
   | "chatbot_cta_click"
   | "chatbot_form_started"
-  | "chatbot_booking_reached";
+  | "chatbot_booking_reached"
+  | "system_demo_interacted"
+  | "crm_demo_interacted"
+  | "faq_chatbot_open"
+  | "phone_click"
+  | "discovery_selected"
+  | "discovery_completed";
 
 export function trackEvent(event: AnalyticsEvent, props?: Record<string, string | number | boolean>) {
   try {
