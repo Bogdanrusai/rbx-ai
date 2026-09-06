@@ -7,6 +7,16 @@ import { site } from "@/lib/config";
 export const metadata: Metadata = {
   title: "Termeni de utilizare — RBX.AI",
   description: "Termenii de utilizare pentru rbxagency.com.",
+  // See app/privacy/page.tsx for why this is needed: without it, this page
+  // inherited the homepage's canonical URL and Open Graph title.
+  alternates: {
+    canonical: "/terms",
+  },
+  openGraph: {
+    title: "Termeni de utilizare — RBX.AI",
+    description: "Termenii de utilizare pentru rbxagency.com.",
+    url: "/terms",
+  },
 };
 
 export default function TermsPage() {

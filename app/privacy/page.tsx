@@ -7,6 +7,19 @@ import { site } from "@/lib/config";
 export const metadata: Metadata = {
   title: "Confidențialitate — RBX.AI",
   description: "Ce date colectează rbxagency.com, de ce și cum le poți cere ștearse.",
+  // Without its own alternates/openGraph, this page silently inherited the
+  // homepage's canonical URL and Open Graph title from app/layout.tsx —
+  // search engines would have seen /privacy as a duplicate of "/", and any
+  // social-media preview card would have shown the homepage's title instead
+  // of this page's own.
+  alternates: {
+    canonical: "/privacy",
+  },
+  openGraph: {
+    title: "Confidențialitate — RBX.AI",
+    description: "Ce date colectează rbxagency.com, de ce și cum le poți cere ștearse.",
+    url: "/privacy",
+  },
 };
 
 // Honest draft, written directly from what the site actually does today —
