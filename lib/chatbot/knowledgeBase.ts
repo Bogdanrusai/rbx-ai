@@ -26,13 +26,13 @@
 export const RBX_KNOWLEDGE_BASE = {
   // --- Identitate & filosofie ------------------------------------------
   identitate:
-    "RBX.AI e construit de Bogdan Rus, un antreprenor român care documentează procesul public, pe Instagram (@bogdanrus.ai). RBX.AI e la început de drum — nu pretinde ani de experiență sau un portofoliu mare de clienți.",
+    "RBX.AI e construit de Bogdan Rus, care documentează procesul public pe Instagram (@bogdanrus.ai). Fiecare sistem pornește de la înțelegerea procesului real al afacerii, nu de la o soluție AI gata făcută.",
 
   cePresupune:
-    "RBX.AI construiește sisteme AI practice pentru afaceri mici și mijlocii: preiau mesajele clienților, califică lead-urile, programează, trimit follow-up și fac munca repetitivă — non-stop, nu doar în program. Nu e „magie AI” și nu e o promisiune că AI-ul înlocuiește angajații — e infrastructură care rezolvă un proces concret, prost pus la punct.",
+    "RBX.AI construiește sisteme AI practice pentru afaceri mici și mijlocii. Preiau mesajele clienților, califică lead-urile, programează, trimit follow-up și fac munca repetitivă, non-stop, nu doar în program. Nu e o promisiune că AI-ul înlocuiește angajații. E infrastructura care rezolvă un proces concret, prost pus la punct.",
 
   filosofie:
-    "Nu se pune AI peste un proces prost. Primul pas e mereu să se înțeleagă cum lucrează afacerea; abia apoi se construiește sistemul, se testează și se documentează.",
+    "Nu se pune AI peste un proces prost. Se înțelege întâi cum lucrează afacerea, apoi se construiește sistemul potrivit, se testează și se îmbunătățește pe baza rezultatelor reale.",
 
   pentruCine:
     "RBX.AI e potrivit pentru afaceri mici și mijlocii din România care primesc cereri de la clienți (mesaje, telefoane, formulare) și simt că pierd lead-uri sau timp din cauza unui proces manual — clinici, saloane, imobiliare, restaurante, ecommerce sau servicii, indiferent de domeniu, atât timp cât există un flux real de clienți de gestionat.",
@@ -104,14 +104,19 @@ export const RBX_KNOWLEDGE_BASE = {
   // Ține sincronizat manual cu components/SelectedWork.tsx.
   proiecte: [
     {
+      nume: "RBX.AI — website-ul propriu",
+      status:
+        "Studiu de caz intern, live. Acest website e el însuși un proiect RBX.AI: strategie, arhitectură, copywriting, design, sistem de calificare a lead-urilor și asistentul cu care vorbești acum au fost construite și documentate ca sistem, nu doar ca site de prezentare.",
+    },
+    {
+      nume: "RBX.AI CRM",
+      status:
+        "Sistem intern, privat. Gestionează lead-urile venite din formularul de analiză gratuită, de la primul mesaj până la programare. Nu are login public, demo public sau acces din exterior — prezentat pe site doar ca exemplu de ce se poate construi.",
+    },
+    {
       nume: "Expert Instal Serv.",
       status:
         "Proiect pilot real, aflat ACUM în testare/feedback. Sistemul a fost construit și e folosit efectiv, dar nu există încă rezultate/cifre/testimoniale confirmate de client — acelea se adaugă doar când sunt reale.",
-    },
-    {
-      nume: "RBX.AI — website-ul propriu",
-      status:
-        "Studiu de caz intern: acest website e el însuși un proiect RBX.AI — strategie, arhitectură, copywriting, design, sistem de calificare a lead-urilor și asistentul cu care vorbești acum au fost construite și documentate ca sistem, nu doar ca site de prezentare.",
     },
   ],
 

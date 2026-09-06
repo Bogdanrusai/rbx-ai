@@ -8,6 +8,10 @@
 // `knowledgeBaseAsPromptContext()` ca sistem de referință și
 // `guardResponseText()` ca ultimă verificare, ca regulile să rămână identice
 // indiferent de furnizor.
+//
+// Potrivirea intențiilor trece prin lib/chatbot/normalize.ts — diacritice
+// lipsă, typo-uri mici și ordine diferită a cuvintelor nu mai schimbă
+// răspunsul. Vezi comentariile de acolo pentru detalii.
 
 import { RBX_KNOWLEDGE_BASE, knowledgeBaseAsPromptContext } from "./knowledgeBase";
 import {
@@ -18,6 +22,7 @@ import {
   checkRateLimit,
 } from "./guard";
 import { extractContactFromText } from "./contactExtraction";
+import { normalizeText, fuzzyHasAny, includesAnyPhrase } from "./normalize";
 
 export type ChatRole = "user" | "assistant";
 export type ChatMessage = { role: ChatRole; text: string };
@@ -39,24 +44,48 @@ const FORM_ACTION = { label: "Deschide formularul de analiză gratuită", href: 
 const VSL_ACTION = { label: "Vezi prezentarea (cadru cu cadru)", href: "#vsl" } as const;
 const PROJECTS_ACTION = { label: "Vezi Selected Work", href: "#selected-work" } as const;
 
+// Doar un mesaj care e STRICT un salut (nimic altceva în el) primește
+// răspunsul generic de bun venit — un salut urmat de o întrebare reală
+// ("Salut, cat costa un site?") trebuie să primească răspunsul la
+// întrebare, nu introducerea. Acesta a fost un bug real: orice mesaj care
+// ÎNCEPEA cu un salut ocolea complet potrivirea de subiecte.
+const PURE_GREETING = /^(salut|buna|buna ziua|hey|hei|neata|noroc|servus)[\s!.,?]*$/;
+
 type Topic = {
   id: string;
-  test: (lower: string) => boolean;
+  test: (norm: string, raw: string) => boolean;
   answer: () => ChatReply;
 };
 
 const kb = RBX_KNOWLEDGE_BASE;
 
+// --- Intenția de preț — cea mai importantă din tot fișierul -----------------
+// Trebuie să prindă întrebarea indiferent de diacritice, typo-uri, ordinea
+// cuvintelor sau alte cuvinte din jur ("Salut", "buna ziua", etc.).
+const PRICE_PHRASES = [
+  "cat e",
+  "cat ma costa",
+  "cat te costa",
+  "cat ar costa",
+  "cati bani",
+  "ce pret",
+  "ce preturi",
+];
+const PRICE_WORDS = ["pret", "cost", "costa", "tarif", "tarife", "pachet", "pachete", "oferta", "reducere", "reduceri"];
+
+function isPriceIntent(raw: string): boolean {
+  return includesAnyPhrase(raw, PRICE_PHRASES) || fuzzyHasAny(raw, PRICE_WORDS);
+}
+
 const topics: Topic[] = [
   {
     id: "pret",
-    // Verificat PRIMUL, dinaintea oricărui topic de servicii — o întrebare
-    // ca „Cât costă un website?” trebuie să primească mereu răspunsul de
-    // preț, nu descrierea generică a serviciului de website. Prinde
-    // intenționat orice formă de întrebare despre cost, tarif sau
-    // "pachete" — vezi kb.pricingPolicy pentru singurul răspuns permis.
-    // NU adăuga niciodată cifre aici, sub nicio formă.
-    test: (l) => /(pre[tț]|cost[aă]|cat cost|c[aâ]t cost|tarif|pachet|ofert[aă]|reducer[ei])/.test(l),
+    // Verificat PRIMUL, dinaintea oricărui alt subiect — o întrebare ca
+    // „Salut, cat costa un site?” trebuie să primească mereu răspunsul de
+    // preț, nu salutul generic și nici descrierea serviciului de website.
+    // Vezi kb.pricingPolicy pentru singurul răspuns permis. NU adăuga
+    // niciodată cifre aici, sub nicio formă.
+    test: (_norm, raw) => isPriceIntent(raw),
     answer: () => ({
       text: kb.pricingPolicy,
       handoff: false,
@@ -65,7 +94,9 @@ const topics: Topic[] = [
   },
   {
     id: "durata",
-    test: (l) => /(cat dureaz[aă]|cât dureaz[aă]|termen de livrare|in cat timp|în cât timp)/.test(l),
+    test: (_norm, raw) =>
+      includesAnyPhrase(raw, ["in cat timp", "cat dureaza", "termen de livrare", "cat ia"]) ||
+      fuzzyHasAny(raw, ["dureaza", "livrare"]),
     answer: () => ({
       text:
         "Durata depinde de complexitatea sistemului — nu dau un termen fix fără să înțeleg mai întâi afacerea. Cel mai bun pas e formularul de analiză gratuită.",
@@ -75,12 +106,17 @@ const topics: Topic[] = [
   },
   {
     id: "pentru-cine",
-    test: (l) => /(pentru cine|se potrive[sș]te|afacerea mea mic[aă]|orice afacere|orice domeniu)/.test(l),
+    test: (norm) =>
+      /(pentru cine|se potriveste|afacerea mea mica|orice afacere|orice domeniu)/.test(norm),
     answer: () => ({ text: kb.pentruCine, handoff: false, suggestedAction: FORM_ACTION }),
   },
   {
     id: "ce-e-rbx",
-    test: (l) => /(ce (e|este|face)(\s+rbx)?\??$|rbx\.?ai|cine (e[sș]ti|sunte[tț]i)|despre (rbx|tine|voi))/.test(l),
+    test: (norm) =>
+      // normalizeText turns punctuation into spaces, so "rbx.ai" becomes
+      // "rbx ai" — matching on the bare "rbx" token covers every spelling
+      // (rbx.ai, rbx ai, rbxai, RBX AI...).
+      /(ce (e|este|face)(\s+rbx)?\??$|\brbx\b|cine (esti|sunteti)|despre (rbx|tine|voi))/.test(norm),
     answer: () => ({
       text: `${kb.cePresupune} ${kb.filosofie}`,
       handoff: false,
@@ -89,7 +125,9 @@ const topics: Topic[] = [
   },
   {
     id: "servicii-website",
-    test: (l) => /website|site\b/.test(l),
+    // "site" e sinonimul cel mai des folosit pentru "website" în română
+    // vorbită — trebuie recunoscut la fel de bine.
+    test: (norm) => /\bwebsite\b|\bsite\b|\bsait\b/.test(norm),
     answer: () => ({
       text: `${kb.servicii.find((s) => s.nume === "Website-uri")?.descriere}`,
       handoff: false,
@@ -98,7 +136,7 @@ const topics: Topic[] = [
   },
   {
     id: "servicii-lead",
-    test: (l) => /lead|captare|formular de calificare/.test(l),
+    test: (norm) => /lead|captare|formular de calificare/.test(norm),
     answer: () => ({
       text: `${kb.servicii.find((s) => s.nume.includes("captare"))?.descriere}`,
       handoff: false,
@@ -107,7 +145,7 @@ const topics: Topic[] = [
   },
   {
     id: "servicii-automatizari",
-    test: (l) => /automati/.test(l),
+    test: (norm) => /automati/.test(norm),
     answer: () => ({
       text: `${kb.servicii.find((s) => s.nume === "Automatizări AI")?.descriere} ${kb.servicii.find((s) => s.nume === "Automatizări de proces")?.descriere}`,
       handoff: false,
@@ -116,7 +154,7 @@ const topics: Topic[] = [
   },
   {
     id: "servicii-mesagerie",
-    test: (l) => /mesagerie|whatsapp|instagram.*(mesaj|raspuns|răspuns)|chat\b/.test(l),
+    test: (norm) => /mesagerie|whatsapp|instagram.*(mesaj|raspuns)|chat\b/.test(norm),
     answer: () => ({
       text: `${kb.servicii.find((s) => s.nume.includes("mesagerie"))?.descriere}`,
       handoff: false,
@@ -125,7 +163,7 @@ const topics: Topic[] = [
   },
   {
     id: "servicii-integrari",
-    test: (l) => /integr[aă]/.test(l),
+    test: (norm) => /integr/.test(norm),
     answer: () => ({
       text: `${kb.servicii.find((s) => s.nume.includes("Integr"))?.descriere}`,
       handoff: false,
@@ -134,7 +172,7 @@ const topics: Topic[] = [
   },
   {
     id: "servicii-general",
-    test: (l) => /(serviciu|servicii|ce oferi|ce construie[sș]ti|ce faci)/.test(l),
+    test: (norm) => /(serviciu|servicii|ce oferi|ce construiesti|ce fac(i|eti))/.test(norm),
     answer: () => ({
       text: `RBX.AI lucrează pe: ${kb.servicii.map((s) => s.nume).join(", ")}. Despre care vrei mai multe detalii?`,
       handoff: false,
@@ -143,37 +181,37 @@ const topics: Topic[] = [
   },
   {
     id: "proces",
-    test: (l) => /(proces|cum lucrezi|cum funcționeaz[aă]|cum functioneaz[aă]|pa[sș]ii)/.test(l),
+    test: (norm) => /(proces|cum lucrezi|cum functioneaza|pasii)/.test(norm),
     answer: () => ({ text: kb.proces.join(" "), handoff: false, suggestedAction: FORM_ACTION }),
   },
   {
     id: "cum-incep",
-    test: (l) => /(cum incep|cum încep|de unde incep|de unde încep|primul pas)/.test(l),
+    test: (norm) => /(cum incep|de unde incep|primul pas)/.test(norm),
     answer: () => ({ text: kb.cumInceperea, handoff: false, suggestedAction: FORM_ACTION }),
   },
   {
     id: "analiza-gratuita",
-    test: (l) => /(ce (e|este|inseamna|înseamn[aă]).*(analiz[aă])|analiza gratuit[aă])/.test(l),
+    test: (norm) => /(ce (e|este|inseamna).*(analiza)|analiza gratuita)/.test(norm),
     answer: () => ({ text: kb.ceEsteAnalizaGratuita, handoff: false, suggestedAction: FORM_ACTION }),
   },
   {
     id: "dupa-formular",
-    test: (l) => /(dup[aă] (ce )?(trimit|completez).*formular|ce se intampl[aă]|ce se întâmpl[aă])/.test(l),
+    test: (norm) => /(dupa (ce )?(trimit|completez).*formular|ce se intampla)/.test(norm),
     answer: () => ({ text: kb.dupaFormular, handoff: false }),
   },
   {
     id: "programare",
-    test: (l) => /(programare|booking|apel|calendar|întâlnire|intalnire)/.test(l),
+    test: (norm) => /(programare|booking|apel|calendar|intalnire)/.test(norm),
     answer: () => ({ text: kb.programare, handoff: false, suggestedAction: FORM_ACTION }),
   },
   {
     id: "vsl",
-    test: (l) => /\bvsl\b|video|prezentare/.test(l),
+    test: (norm) => /\bvsl\b|video|prezentare/.test(norm),
     answer: () => ({ text: kb.vsl, handoff: false, suggestedAction: VSL_ACTION }),
   },
   {
     id: "proiecte",
-    test: (l) => /(proiect|expert instal|studiu de caz|case study|portofoliu|exemple)/.test(l),
+    test: (norm) => /(proiect|expert instal|studiu de caz|portofoliu|exemple)/.test(norm),
     answer: () => ({
       text: kb.proiecte.map((p) => `${p.nume}: ${p.status}`).join(" "),
       handoff: false,
@@ -182,7 +220,7 @@ const topics: Topic[] = [
   },
   {
     id: "rezultate",
-    test: (l) => /(rezultate|garan[tț]|testimonial|recenzii|clien[tț]i mul[tț]umi[tț])/.test(l),
+    test: (norm) => /(rezultate|garant|testimonial|recenzii|clienti multumit)/.test(norm),
     answer: () => ({
       text:
         "Nu public rezultate sau testimoniale inventate. Expert Instal Serv. e un proiect pilot real, aflat acum în testare — rezultatele confirmate se adaugă doar când există cu adevărat.",
@@ -192,9 +230,15 @@ const topics: Topic[] = [
   },
 ];
 
-function matchTopic(lower: string): Topic | undefined {
-  return topics.find((t) => t.test(lower));
+function matchTopic(norm: string, raw: string): Topic | undefined {
+  return topics.find((t) => t.test(norm, raw));
 }
+
+// Nu atașăm CTA-ul formularului la absolut fiecare mesaj — devine spam
+// vizual și scade impactul lui la momentele care chiar contează (preț,
+// proces, "cum încep"). Subiectele mici/laterale rămân fără buton propriu;
+// vizitatorul tot vede formularul principal pe pagină.
+const NO_CTA_TOPICS = new Set(["dupa-formular", "pentru-cine", "ce-e-rbx"]);
 
 export function generateReply(
   message: string,
@@ -204,7 +248,8 @@ export function generateReply(
   validateChatInput(message, history);
   checkRateLimit(opts.rateLimitKey);
 
-  const lower = message.trim().toLowerCase();
+  const trimmed = message.trim();
+  const norm = normalizeText(trimmed);
 
   if (looksLikePromptInjection(message)) {
     return {
@@ -235,15 +280,23 @@ export function generateReply(
     }
   }
 
-  if (/^(salut|buna|bună|hey|hei|neata|noroc)/.test(lower)) {
-    return { text: WELCOME, handoff: false };
-  }
-
-  const topic = matchTopic(lower);
+  // Potrivirea de subiecte rulează ÎNAINTE de verificarea de salut — un
+  // "Salut, cat costa?" trebuie să primească răspunsul la întrebare, nu
+  // introducerea generică. Salutul "gol" (fără nimic altceva) rămâne un
+  // caz separat, verificat după.
+  const topic = matchTopic(norm, trimmed);
   if (topic) {
     const reply = topic.answer();
     const guarded = guardResponseText(reply.text);
-    return { ...reply, text: guarded.text };
+    return {
+      ...reply,
+      text: guarded.text,
+      suggestedAction: NO_CTA_TOPICS.has(topic.id) ? undefined : reply.suggestedAction,
+    };
+  }
+
+  if (PURE_GREETING.test(norm)) {
+    return { text: WELCOME, handoff: false };
   }
 
   return { text: FALLBACK, handoff: false, suggestedAction: FORM_ACTION };

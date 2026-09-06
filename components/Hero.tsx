@@ -73,7 +73,7 @@ export default function Hero() {
           className="mt-10 max-w-[44ch] text-[clamp(16px,1.7vw,19px)] leading-[1.55] text-muted"
         >
           Sisteme AI complete care preiau clienții, automatizează procesele și
-          fac munca repetitivă în locul tău — non-stop. Tu vezi doar
+          fac munca repetitivă în locul tău, non-stop. Tu vezi doar
           rezultatul: mai mulți clienți, mai puțin timp pierdut.
         </motion.p>
 

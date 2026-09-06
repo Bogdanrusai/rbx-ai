@@ -42,7 +42,7 @@ export default function Sisteme() {
               </h3>
               <p className="mt-3 max-w-[38ch] text-[14.5px] text-faint">
                 Preia cereri, califică clienți, programează, trimite în CRM și
-                pornește follow-up — automat, la orice oră. Tu vezi doar
+                pornește follow-up, automat, la orice oră. Tu vezi doar
                 rezultatul.
               </p>
             </div>
@@ -57,6 +57,25 @@ export default function Sisteme() {
                 />
               ))}
             </div>
+          </div>
+
+          {/* A concrete, literal example of the flow above — turns "un
+              sistem care lucrează non-stop" from a claim into something a
+              business owner can picture step by step, without inventing a
+              result or a client. */}
+          <div className="mt-9 flex flex-wrap items-center gap-x-2 gap-y-3 border-t border-line pt-7">
+            {["Lead", "Răspuns instant", "Calificare", "Programare", "CRM", "Follow-up"].map((step, i, arr) => (
+              <div key={step} className="flex items-center gap-2">
+                <span className="rounded-full border border-line-strong px-3.5 py-1.5 text-[12.5px] font-medium text-muted">
+                  {step}
+                </span>
+                {i < arr.length - 1 && (
+                  <span className="text-faint" aria-hidden="true">
+                    →
+                  </span>
+                )}
+              </div>
+            ))}
           </div>
         </motion.div>
 
@@ -77,7 +96,7 @@ export default function Sisteme() {
             <path d="M4 8a8 8 0 0 1 14-3m2 3V4m0 4h-4M20 16a8 8 0 0 1-14 3m-2-3v4m0-4h4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
           </motion.svg>
           <h3 className="text-[21px] font-semibold tracking-[-0.015em]">Îți aduce clienții înapoi.</h3>
-          <p className="mt-2.5 text-[14px] text-faint">Revine automat la cei care n-au răspuns — până cumpără.</p>
+          <p className="mt-2.5 text-[14px] text-faint">Revine automat la cei care n-au răspuns, până cumpără.</p>
         </motion.div>
 
         {/* 3 */}
@@ -162,7 +181,7 @@ export default function Sisteme() {
         >
           <svg width="34" height="34" viewBox="0 0 24 24" fill="none" aria-hidden="true" className="mb-6"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" /></svg>
           <h3 className="text-[19px] font-semibold tracking-[-0.015em]">Totul, într-un sistem.</h3>
-          <p className="mt-2.5 text-[13.5px] text-faint">Nu funcții separate — o singură mașinărie care lucrează.</p>
+          <p className="mt-2.5 text-[13.5px] text-faint">Nu funcții separate, ci o singură mașinărie care lucrează.</p>
         </motion.div>
 
         {/* catalog */}

@@ -14,7 +14,7 @@ const items = [
   },
   {
     q: "În cât timp văd rezultate?",
-    a: "De obicei în zile, nu luni. Simți diferența imediat — ce te consuma zilnic începe să se rezolve singur.",
+    a: "Depinde de sistemul construit și de cât de complex e procesul din spate. Nu promit un termen fix înainte să înțeleg afacerea ta, dar odată ce sistemul e live, îl vezi lucrând din prima zi.",
   },
   {
     q: "Merge și pentru afacerea mea mică?",
@@ -22,7 +22,7 @@ const items = [
   },
   {
     q: "Cât costă?",
-    a: "Începe de la o discuție, nu de la o factură. Vedem întâi dacă are sens pentru afacerea ta — apoi vorbim de preț.",
+    a: "Costul depinde de ce trebuie construit și de complexitatea proiectului. Analizăm întâi procesul și ce are nevoie afacerea ta, apoi discutăm soluția potrivită. Primul pas e analiza gratuită.",
   },
   {
     q: "Pot construi doar un website, fără automatizări?",

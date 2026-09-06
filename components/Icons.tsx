@@ -87,3 +87,26 @@ export const Instagram = (p: SVGProps<SVGSVGElement>) => (
     <circle cx="17.3" cy="6.7" r="1.1" fill="currentColor" stroke="none" />
   </svg>
 );
+
+export const TikTok = (p: SVGProps<SVGSVGElement>) => (
+  <svg width="18" height="18" viewBox="0 0 24 24" {...s(p)} fill="currentColor" stroke="none">
+    <path d="M16.6 3c.3 2 1.6 3.5 3.7 3.8v2.6c-1.3 0-2.6-.4-3.7-1.1v6.6a5.6 5.6 0 1 1-4.8-5.5v2.7a2.9 2.9 0 1 0 2 2.8V3h2.8Z" />
+  </svg>
+);
+
+export const Facebook = (p: SVGProps<SVGSVGElement>) => (
+  <svg width="18" height="18" viewBox="0 0 24 24" {...s(p)}>
+    <path
+      d="M15.5 8.5h-2a1 1 0 0 0-1 1V12h3l-.4 3h-2.6v7h-3v-7H8v-3h2.5V9a4 4 0 0 1 4-4h2v3Z"
+      strokeWidth="1.4"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+export const YouTube = (p: SVGProps<SVGSVGElement>) => (
+  <svg width="18" height="18" viewBox="0 0 24 24" {...s(p)}>
+    <rect x="2.5" y="6" width="19" height="12" rx="3.5" strokeWidth="1.5" />
+    <path d="M10.5 9.5v5l4.5-2.5-4.5-2.5Z" fill="currentColor" stroke="none" />
+  </svg>
+);

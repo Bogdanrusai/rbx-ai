@@ -7,10 +7,23 @@
  */
 export const site = {
   handle: "@bogdanrus.ai",
-  instagramUrl: "https://instagram.com/bogdanrus.ai",
+  instagramUrl: "https://www.instagram.com/bogdanrus.ai/",
   contactUrl: "https://ig.me/m/bogdanrus.ai", // secondary contact only — not wired to any CTA
+  contactEmail: "contact@rbxagency.com",
 
   ctaLabel: "Vreau o analiză gratuită",
+
+  // Real URLs only, ever. Leave a channel `null` until Bogdan provides the
+  // real link — the social-link components below only render entries that
+  // are set, so an empty channel here simply doesn't show up anywhere
+  // (header, footer, founder section). Never fill these with a guess or a
+  // placeholder.
+  social: {
+    instagram: "https://www.instagram.com/bogdanrus.ai/",
+    tiktok: null as string | null,
+    facebook: null as string | null,
+    youtube: null as string | null,
+  },
 } as const;
 
 export type Post = {

@@ -38,8 +38,8 @@ export default function Cta() {
           transition={{ duration: 0.8, ease: EASE, delay: 0.4 }}
           className="mx-auto mt-8 max-w-[38ch] text-[clamp(16px,1.8vw,19px)] text-muted"
         >
-          Completezi analiza, îți spun clar dacă și cum te pot ajuta —
-          fără oferte generice, fără promisiuni goale.
+          Completezi analiza, îți spun clar dacă și cum te pot ajuta.
+          Fără oferte generice, fără promisiuni goale.
         </motion.p>
 
         <motion.div

@@ -13,6 +13,7 @@ export type AnalyticsEvent =
   | "vsl_interacted"
   | "project_viewed"
   | "instagram_outbound_click"
+  | "social_outbound_click"
   | "chatbot_opened"
   | "chatbot_first_message"
   | "chatbot_cta_click"

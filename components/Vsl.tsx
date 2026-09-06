@@ -5,7 +5,7 @@ import Image from "next/image";
 import { motion, useMotionValue, useTransform } from "framer-motion";
 import GhostWord from "./GhostWord";
 import MaskReveal from "./MaskReveal";
-import { posts, slidesOf } from "@/lib/config";
+import { posts, slidesOf, site } from "@/lib/config";
 import { trackEvent } from "@/lib/analytics";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
@@ -82,7 +82,8 @@ export default function Vsl() {
             className="mt-8 max-w-[42ch] text-[clamp(15.5px,1.6vw,18px)] leading-[1.65] text-muted"
           >
             Fără termeni tehnici. Doar povestea reală: unde pierzi bani acum și
-            cum îi recuperezi. Derulează cadrele — sau lasă-le să curgă singure.
+            cum îi recuperezi. Patru cadre, în ordine. Derulează-le sau lasă-le
+            să curgă singure.
           </motion.p>
 
           {/* chapter list, synced to carousel */}
@@ -114,6 +115,17 @@ export default function Vsl() {
               );
             })}
           </div>
+
+          <a
+            href={site.instagramUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => trackEvent("social_outbound_click", { from: "vsl", channel: "instagram" })}
+            className="mt-8 inline-flex items-center gap-2 text-[13.5px] text-faint transition-colors hover:text-ink"
+          >
+            Urmărește procesul pe Instagram
+            <span aria-hidden="true">→</span>
+          </a>
         </div>
 
         {/* right — real VSL video when available, premium carousel until then */}

@@ -34,7 +34,7 @@ export default function Solutia() {
           className="mt-8 max-w-[46ch] text-[clamp(15.5px,1.6vw,18px)] leading-[1.65] text-muted"
         >
           Nu îți vând un instrument. Îți construiesc infrastructura AI care
-          preia munca — și pe care o simți în bani și timp liber din prima
+          preia munca, o simți în bani și timp liber încă din prima
           săptămână.
         </motion.p>
       </div>

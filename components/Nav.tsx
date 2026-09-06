@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { site } from "@/lib/config";
 import { useWizard } from "./wizard/WizardContext";
+import SocialLinks from "./SocialLinks";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -48,19 +49,30 @@ export default function Nav() {
 
   return (
     <nav
-      className={`fixed inset-x-0 top-0 z-40 flex items-center justify-between px-[clamp(20px,5vw,64px)] py-[22px] transition-[background,border-color] duration-500 ease-premium ${
+      className={`fixed inset-x-0 top-0 z-40 transition-[background,border-color] duration-500 ease-premium ${
         scrolled
           ? "border-b border-line bg-bg/60 backdrop-blur-[14px] backdrop-saturate-150"
           : "border-b border-transparent"
       }`}
     >
-      <a href="#top" className="text-[15px] font-semibold tracking-[0.14em]">
-        RBX.AI
-      </a>
+      {/* Same max-w-content column as every section below — without this,
+          the header's edges drift away from the page content's edges on
+          wide viewports (the header used the full width, sections cap at
+          1200px and center), reading as "not quite aligned". */}
+      <div className="mx-auto flex max-w-content items-center justify-between px-[clamp(20px,5vw,64px)] py-[20px]">
+        <a href="#top" className="text-[15px] font-semibold leading-none tracking-[0.14em]">
+          RBX.AI
+        </a>
 
-      <div className="flex items-center gap-3">
-        {/* category menu — desktop only; on mobile the CTA takes priority and scroll covers navigation */}
-        <div ref={ref} className="relative hidden sm:block">
+        <div className="flex items-center gap-2.5">
+          <SocialLinks
+            from="header"
+            className="hidden md:flex"
+            iconClassName="h-8 w-8 border-transparent hover:border-line"
+          />
+
+          {/* category menu — desktop only; on mobile the CTA takes priority and scroll covers navigation */}
+          <div ref={ref} className="relative hidden sm:block">
           <button
             onClick={() => setOpen((o) => !o)}
             aria-expanded={open}
@@ -106,13 +118,14 @@ export default function Nav() {
           </AnimatePresence>
         </div>
 
-        <button
-          onClick={() => wizard.open()}
-          className="inline-block rounded-full border border-line-strong px-[14px] py-[8px] text-[12.5px] font-medium transition-[background,border-color] duration-300 ease-premium hover:border-white/35 hover:bg-white/[0.04] sm:px-[18px] sm:py-[9px] sm:text-[13.5px]"
-        >
-          <span className="sm:hidden">Analiză gratuită</span>
-          <span className="hidden sm:inline">{site.ctaLabel}</span>
-        </button>
+          <button
+            onClick={() => wizard.open()}
+            className="inline-block rounded-full border border-line-strong px-[14px] py-[8px] text-[12.5px] font-medium leading-none transition-[background,border-color] duration-300 ease-premium hover:border-white/35 hover:bg-white/[0.04] sm:px-[18px] sm:py-[9px] sm:text-[13.5px]"
+          >
+            <span className="sm:hidden">Analiză gratuită</span>
+            <span className="hidden sm:inline">{site.ctaLabel}</span>
+          </button>
+        </div>
       </div>
     </nav>
   );

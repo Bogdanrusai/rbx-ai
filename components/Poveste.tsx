@@ -4,6 +4,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import MaskReveal from "./MaskReveal";
 import { site } from "@/lib/config";
+import { trackEvent } from "@/lib/analytics";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -18,24 +19,25 @@ export default function Poveste() {
           transition={{ duration: 1, ease: EASE }}
           className="relative mx-auto aspect-[4/5] w-full max-w-[420px] overflow-hidden rounded-[22px] border border-line-strong bg-[#0E0E10]"
         >
+          <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/70 via-black/0 to-black/10" />
           <Image
             src="/portrait.jpg"
             alt="Bogdan Rus, fondator RBX.AI"
             fill
             sizes="(max-width:768px) 90vw, 40vw"
-            className="object-cover object-[center_20%] grayscale contrast-[1.05]"
+            className="object-cover object-[center_20%] grayscale contrast-[1.1] brightness-[0.96]"
           />
-          <figcaption className="absolute bottom-4 left-[18px] text-[12px] uppercase tracking-[0.14em] text-white [text-shadow:0_1px_12px_rgba(0,0,0,0.7)]">
+          <figcaption className="absolute bottom-4 left-[18px] z-10 text-[12px] uppercase tracking-[0.14em] text-white [text-shadow:0_1px_12px_rgba(0,0,0,0.7)]">
             <b className="font-semibold">Bogdan Rus</b> · RBX.AI
           </figcaption>
         </motion.figure>
 
         <div>
           <div className="eyebrow mb-8">Despre mine</div>
-          <h2 className="max-w-[16ch] text-[clamp(30px,4.8vw,54px)] font-semibold leading-[1.06] tracking-[-0.022em]">
-            <MaskReveal>Sunt la început.</MaskReveal>
+          <h2 className="max-w-[18ch] text-[clamp(28px,4.4vw,50px)] font-semibold leading-[1.1] tracking-[-0.022em]">
+            <MaskReveal>N-am construit RBX.AI ca să vând AI.</MaskReveal>
             <MaskReveal delay={0.1}>
-              Și arăt <span className="mark">tot</span>.
+              L-am construit ca să <span className="mark">rezolv procese</span>.
             </MaskReveal>
           </h2>
 
@@ -46,8 +48,9 @@ export default function Poveste() {
             transition={{ duration: 0.8, ease: EASE, delay: 0.15 }}
             className="mt-8 max-w-[52ch] text-[clamp(15.5px,1.6vw,18px)] leading-[1.65] text-muted"
           >
-            Nu am moștenit o agenție. Am ales să construiesc una — în public,
-            fără filtru, fără să pretind că sunt mai departe decât sunt.
+            Procese care consumă timp și pierd oportunități. Asta rezolv, nu vând AI de dragul AI-ului.
+            Fiecare sistem pornește de la același pas: înțeleg cum lucrează afacerea înainte să scriu
+            o linie de cod.
           </motion.p>
           <motion.p
             initial={{ opacity: 0, y: 16 }}
@@ -56,20 +59,29 @@ export default function Poveste() {
             transition={{ duration: 0.8, ease: EASE, delay: 0.24 }}
             className="mt-5 max-w-[52ch] text-[clamp(15.5px,1.6vw,18px)] leading-[1.65] text-muted"
           >
-            Sisteme AI pentru afaceri din România. Fiecare sistem e
-            construit de la zero pentru afacerea respectivă — nu la
-            fotocopiator.
+            Apoi construiesc sistemul potrivit pentru procesul respectiv, îl testez, adun feedback
+            real și îl îmbunătățesc. Documentez tot. Nu ador nimic ascuns într-o cutie neagră.
           </motion.p>
 
-          <motion.p
+          <motion.div
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, ease: EASE, delay: 0.34 }}
-            className="mt-8 text-[14px] tracking-[0.02em] text-faint"
+            className="mt-9 flex flex-wrap items-center gap-4"
           >
-            <b className="font-medium text-muted">{site.handle}</b> · construit în public, pas cu pas
-          </motion.p>
+            <a
+              href={site.instagramUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => trackEvent("social_outbound_click", { from: "poveste", channel: "instagram" })}
+              className="btn-ghost group"
+            >
+              <span className="h-[5px] w-[5px] rounded-full bg-faint" />
+              Urmărește procesul pas cu pas pe Instagram
+              <span className="transition-transform duration-300 ease-premium group-hover:translate-x-1">→</span>
+            </a>
+          </motion.div>
         </div>
       </div>
     </section>

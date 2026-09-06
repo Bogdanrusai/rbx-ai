@@ -13,7 +13,7 @@ const stops = [
   },
   {
     t: "Sistemul lucrează",
-    d: "Răspunde, califică, trimite în CRM și pornește follow-up — singur.",
+    d: "Răspunde, califică, trimite în CRM și pornește follow-up, singur.",
     icon: (
       <>
         <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="1.5" />
@@ -23,7 +23,7 @@ const stops = [
   },
   {
     t: "Rezultatul ajunge la tine",
-    d: "Programare confirmată, client nou, task rezolvat — fără efort din partea ta.",
+    d: "Programare confirmată, client nou, task rezolvat, fără efort din partea ta.",
     icon: (
       <>
         <rect x="3.5" y="5" width="17" height="15" rx="2.5" stroke="currentColor" strokeWidth="1.5" fill="none" />
@@ -89,7 +89,7 @@ export default function Demonstratie() {
         transition={{ duration: 0.8, delay: 0.3 }}
         className="mx-auto mt-20 max-w-[48ch] text-center text-[15px] leading-[1.6] text-muted"
       >
-        Același principiu, în orice sistem pe care ți-l construiesc — de la
+        Același principiu, în orice sistem pe care ți-l construiesc: de la
         preluarea unui lead până la task-ul rezolvat automat în firma ta.
       </motion.p>
     </section>
