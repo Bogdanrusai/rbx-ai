@@ -14,6 +14,7 @@ const links = [
   { label: "Soluția", href: "#solutia" },
   { label: "Sistemele mele", href: "#sisteme" },
   { label: "Demonstrație", href: "#demo" },
+  { label: "Selected Work", href: "#selected-work" },
   { label: "Instagram", href: "#showcase" },
   { label: "Despre mine", href: "#poveste" },
 ];
@@ -106,7 +107,7 @@ export default function Nav() {
         </div>
 
         <button
-          onClick={wizard.open}
+          onClick={() => wizard.open()}
           className="inline-block rounded-full border border-line-strong px-[14px] py-[8px] text-[12.5px] font-medium transition-[background,border-color] duration-300 ease-premium hover:border-white/35 hover:bg-white/[0.04] sm:px-[18px] sm:py-[9px] sm:text-[13.5px]"
         >
           <span className="sm:hidden">Analiză gratuită</span>

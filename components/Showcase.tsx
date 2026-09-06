@@ -6,6 +6,7 @@ import { AnimatePresence, motion, useMotionValue, useTransform } from "framer-mo
 import MaskReveal from "./MaskReveal";
 import { Instagram, Arrow } from "./Icons";
 import { posts, slidesOf, site, type Post } from "@/lib/config";
+import { trackEvent } from "@/lib/analytics";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 const offsets = ["md:mt-0", "md:mt-16", "md:mt-6"];
@@ -72,6 +73,7 @@ export default function Showcase() {
   const open = (p: Post) => {
     setActive(p);
     setIdx(0);
+    trackEvent("project_viewed", { project: `instagram-${p.id}` });
   };
   const close = useCallback(() => setActive(null), []);
 
@@ -136,7 +138,7 @@ export default function Showcase() {
       </div>
 
       <div className="mt-6">
-        <a href={site.instagramUrl} target="_blank" rel="noopener noreferrer" className="btn-ghost group">
+        <a href={site.instagramUrl} target="_blank" rel="noopener noreferrer" onClick={() => trackEvent("instagram_outbound_click", { from: "showcase" })} className="btn-ghost group">
           <Instagram />
           Urmărește construcția zi de zi pe {site.handle}
           <span className="transition-transform duration-300 ease-premium group-hover:translate-x-1">→</span>
@@ -209,7 +211,7 @@ export default function Showcase() {
                 <span className="text-[12px] text-faint">{idx + 1} / {slides.length}</span>
               </div>
 
-              <a href={site.instagramUrl} target="_blank" rel="noopener noreferrer" className="mt-5 flex w-full items-center justify-center gap-2 rounded-full border border-line-strong py-3 text-[14px] font-medium text-ink transition-colors hover:border-white/35 hover:bg-white/[0.04]">
+              <a href={site.instagramUrl} target="_blank" rel="noopener noreferrer" onClick={() => trackEvent("instagram_outbound_click", { from: "modal" })} className="mt-5 flex w-full items-center justify-center gap-2 rounded-full border border-line-strong py-3 text-[14px] font-medium text-ink transition-colors hover:border-white/35 hover:bg-white/[0.04]">
                 <Instagram />
                 Vezi tot pe {site.handle}
                 <Arrow />

@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useWizard } from "./WizardContext";
+import { trackEvent } from "@/lib/analytics";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -65,6 +66,13 @@ type Answers = {
 
 const TOTAL = 5;
 
+// Booking slot — intentionally empty until a real calendar provider
+// (Calendly/Cal.com) and API key are connected. Set NEXT_PUBLIC_BOOKING_URL
+// in Vercel to add a "Programează un apel" button to the success screen; no
+// fake/mock calendar is rendered in its absence — the honest copy below
+// (manual, personal follow-up) is the current source of truth.
+const BOOKING_URL = process.env.NEXT_PUBLIC_BOOKING_URL;
+
 async function submitAnswers(a: Answers) {
   try {
     const response = await fetch("/api/lead", {
@@ -78,13 +86,14 @@ async function submitAnswers(a: Answers) {
     if (!response.ok) {
       throw new Error("Trimiterea formularului a eșuat");
     }
+    trackEvent("form_submitted");
   } catch (error) {
     console.error("Eroare la trimiterea lead-ului:", error);
   }
 }
 
 export default function Wizard() {
-  const { isOpen, close } = useWizard();
+  const { isOpen, close, source } = useWizard();
   const [intro, setIntro] = useState(true);
   const [i, setI] = useState(0);
   const [done, setDone] = useState(false);
@@ -92,6 +101,7 @@ export default function Wizard() {
 
   useEffect(() => {
     if (!isOpen) return;
+    trackEvent("form_started", { source });
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && close();
     document.body.style.overflow = "hidden";
     window.addEventListener("keydown", onKey);
@@ -99,7 +109,12 @@ export default function Wizard() {
       document.body.style.overflow = "";
       window.removeEventListener("keydown", onKey);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, close]);
+
+  useEffect(() => {
+    if (done && source === "chatbot") trackEvent("chatbot_form_started", { stage: "qualified" });
+  }, [done, source]);
 
   useEffect(() => {
     if (isOpen) return;
@@ -485,12 +500,25 @@ export default function Wizard() {
                   <p className="mx-auto mt-4 max-w-[46ch] text-[15.5px] leading-[1.65] text-muted">
                     Analizez personal fiecare răspuns și identific oportunitățile de automatizare potrivite pentru afacerea ta. Revin cu o soluție construită special pentru ea — nicio analiză automată, totul făcut manual, de mine.
                   </p>
-                  <button
-                    onClick={close}
-                    className="mt-9 rounded-full border border-line-strong px-7 py-3 text-[14px] font-medium text-ink transition-colors hover:border-white/35 hover:bg-white/[0.04]"
-                  >
-                    Închide
-                  </button>
+                  <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
+                    {BOOKING_URL && (
+                      <a
+                        href={BOOKING_URL}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={() => trackEvent("chatbot_booking_reached", { source })}
+                        className="rounded-full bg-ink px-7 py-3 text-[14px] font-medium text-bg transition-opacity hover:opacity-90"
+                      >
+                        Programează un apel
+                      </a>
+                    )}
+                    <button
+                      onClick={close}
+                      className="rounded-full border border-line-strong px-7 py-3 text-[14px] font-medium text-ink transition-colors hover:border-white/35 hover:bg-white/[0.04]"
+                    >
+                      Închide
+                    </button>
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>

@@ -3,6 +3,7 @@
 import { useWizard } from "./wizard/WizardContext";
 import { Arrow } from "./Icons";
 import Magnetic from "./Magnetic";
+import { trackEvent } from "@/lib/analytics";
 
 export default function CtaButton({
   label,
@@ -20,7 +21,10 @@ export default function CtaButton({
   const { open } = useWizard();
   const btn = (
     <button
-      onClick={open}
+      onClick={() => {
+        trackEvent("cta_click", { label });
+        open();
+      }}
       className={`btn-primary ${big ? "!px-9 !py-[18px] !text-[16px]" : ""} ${className}`}
     >
       {label}

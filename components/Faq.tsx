@@ -24,6 +24,14 @@ const items = [
     q: "Cât costă?",
     a: "Începe de la o discuție, nu de la o factură. Vedem întâi dacă are sens pentru afacerea ta — apoi vorbim de preț.",
   },
+  {
+    q: "Pot construi doar un website, fără automatizări?",
+    a: "Da. Un website bun stă și singur — restul (lead capture, automatizări, CRM) se adaugă doar dacă are sens pentru afacerea ta, nu pentru că există în meniu.",
+  },
+  {
+    q: "Ce se întâmplă după ce trimit formularul?",
+    a: "Analizez personal fiecare răspuns — nicio analiză automată. Revin cu o soluție construită special pentru afacerea ta, nu un pachet standard.",
+  },
 ];
 
 export default function Faq() {
@@ -76,7 +84,7 @@ export default function Faq() {
       </div>
 
       <Reveal delay={0.1} className="mt-10">
-        <button onClick={openWizard} className="btn-ghost group">
+        <button onClick={() => openWizard()} className="btn-ghost group">
           <span className="h-[5px] w-[5px] rounded-full bg-faint" />
           Ai altă întrebare? Cere o analiză gratuită
           <span className="transition-transform duration-300 ease-premium group-hover:translate-x-1">→</span>

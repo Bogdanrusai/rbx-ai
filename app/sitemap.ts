@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://rbx-ai.vercel.app";
+  process.env.NEXT_PUBLIC_SITE_URL || "https://www.rbxagency.com";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [

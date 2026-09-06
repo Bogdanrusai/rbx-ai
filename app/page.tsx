@@ -6,6 +6,7 @@ import WhyLosing from "@/components/WhyLosing";
 import Solutia from "@/components/Solutia";
 import Sisteme from "@/components/Sisteme";
 import Demonstratie from "@/components/Demonstratie";
+import SelectedWork from "@/components/SelectedWork";
 import DovadaSociala from "@/components/DovadaSociala";
 import Showcase from "@/components/Showcase";
 import Poveste from "@/components/Poveste";
@@ -24,6 +25,7 @@ export default function Home() {
       <Solutia />
       <Sisteme />
       <Demonstratie />
+      <SelectedWork />
       <DovadaSociala />
       <Showcase />
       <Poveste />

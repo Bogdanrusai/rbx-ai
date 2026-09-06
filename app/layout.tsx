@@ -3,13 +3,23 @@ import { GeistSans } from "geist/font/sans";
 import Providers from "@/components/Providers";
 import { WizardProvider } from "@/components/wizard/WizardContext";
 import Wizard from "@/components/wizard/Wizard";
+import ChatbotWidget from "@/components/ChatbotWidget";
+import VoiceflowWidget from "@/components/VoiceflowWidget";
 import "./globals.css";
+
+// Chatbot provider switch. Voiceflow is the intended production assistant
+// (see components/VoiceflowWidget.tsx) — set NEXT_PUBLIC_VOICEFLOW_PROJECT_ID
+// in Vercel once the real agent is published and the site switches to it
+// automatically. Until then, the rule-based interim assistant
+// (components/ChatbotWidget.tsx) covers the same funnel so the site never
+// ships without a chatbot. Only one ever renders — never both.
+const VOICEFLOW_CONFIGURED = Boolean(process.env.NEXT_PUBLIC_VOICEFLOW_PROJECT_ID);
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
 // 👉 La lansare: setează NEXT_PUBLIC_SITE_URL în Vercel (Settings → Environment Variables)
 // cu domeniul tău real. Până atunci, valoarea de mai jos e doar un fallback local.
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://rbx.ai";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.rbxagency.com";
 
 export const metadata: Metadata = {
   title: "RBX.AI — Sisteme AI pentru afaceri",
@@ -44,6 +54,7 @@ export default function RootLayout({
             <div className="grain" aria-hidden />
             {children}
             <Wizard />
+            {VOICEFLOW_CONFIGURED ? <VoiceflowWidget /> : <ChatbotWidget />}
           </WizardProvider>
           <Analytics />
           <SpeedInsights />

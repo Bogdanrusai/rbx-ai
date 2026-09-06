@@ -6,11 +6,20 @@ import { motion, useMotionValue, useTransform } from "framer-motion";
 import GhostWord from "./GhostWord";
 import MaskReveal from "./MaskReveal";
 import { posts, slidesOf } from "@/lib/config";
+import { trackEvent } from "@/lib/analytics";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 const vslPost = posts.find((p) => p.id === "vsl")!;
 const slides = slidesOf(vslPost);
 const AUTOPLAY = 4200;
+
+// Real VSL slot — intentionally empty until the actual video is filmed.
+// Set NEXT_PUBLIC_VSL_VIDEO_SRC (and optionally NEXT_PUBLIC_VSL_POSTER_SRC)
+// in Vercel → Settings → Environment Variables once the file/URL exists;
+// this section switches from the frame carousel to a real <video> player
+// automatically, no other code change needed.
+const VSL_VIDEO_SRC = process.env.NEXT_PUBLIC_VSL_VIDEO_SRC;
+const VSL_POSTER_SRC = process.env.NEXT_PUBLIC_VSL_POSTER_SRC || "/vsl-poster.jpg";
 
 const chapters = [
   "Problema pe care n-o vezi",
@@ -106,7 +115,31 @@ export default function Vsl() {
           </div>
         </div>
 
-        {/* right — premium carousel frame */}
+        {/* right — real VSL video when available, premium carousel until then */}
+        {VSL_VIDEO_SRC ? (
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "0px 0px -10% 0px" }}
+            transition={{ duration: 1, ease: EASE }}
+            className="relative mx-auto w-full max-w-[440px]"
+          >
+            <div className="pointer-events-none absolute -inset-8 -z-10 rounded-[40px] bg-white/[0.05] blur-[60px]" />
+            <div className="relative aspect-[9/16] w-full overflow-hidden rounded-[26px] border border-line-strong bg-[#0E0E10] shadow-[0_50px_140px_rgba(0,0,0,0.6)]">
+              <video
+                src={VSL_VIDEO_SRC}
+                poster={VSL_POSTER_SRC}
+                controls
+                preload="metadata"
+                playsInline
+                className="h-full w-full object-cover"
+                onPlay={() => trackEvent("vsl_interacted", { action: "play" })}
+                onPause={() => trackEvent("vsl_interacted", { action: "pause" })}
+                onEnded={() => trackEvent("vsl_interacted", { action: "ended" })}
+              />
+            </div>
+          </motion.div>
+        ) : (
         <motion.div
           ref={ref}
           onMouseMove={onMove}
@@ -179,14 +212,20 @@ export default function Vsl() {
           {/* controls */}
           <div className="mt-6 flex items-center justify-center gap-4">
             <button
-              onClick={prev}
+              onClick={() => {
+                prev();
+                trackEvent("vsl_interacted", { action: "prev" });
+              }}
               aria-label="Cadrul anterior"
               className="grid h-11 w-11 place-items-center rounded-full border border-line-strong text-muted transition-colors hover:border-white/35 hover:text-ink"
             >
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 3l-5 5 5 5" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" /></svg>
             </button>
             <button
-              onClick={() => setPaused((p) => !p)}
+              onClick={() => {
+                setPaused((p) => !p);
+                trackEvent("vsl_interacted", { action: paused ? "resume" : "pause" });
+              }}
               aria-label={paused ? "Pornește" : "Pauză"}
               className="grid h-11 w-11 place-items-center rounded-full border border-line-strong text-muted transition-colors hover:border-white/35 hover:text-ink"
             >
@@ -197,7 +236,10 @@ export default function Vsl() {
               )}
             </button>
             <button
-              onClick={next}
+              onClick={() => {
+                next();
+                trackEvent("vsl_interacted", { action: "next" });
+              }}
               aria-label="Cadrul următor"
               className="grid h-11 w-11 place-items-center rounded-full border border-line-strong text-muted transition-colors hover:border-white/35 hover:text-ink"
             >
@@ -205,6 +247,7 @@ export default function Vsl() {
             </button>
           </div>
         </motion.div>
+        )}
       </div>
     </section>
   );
