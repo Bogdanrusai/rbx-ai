@@ -8,10 +8,13 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
 
-    const profileUrl = body.instagram?.trim()
-      ? body.instagram.trim().startsWith("http")
-        ? body.instagram.trim()
-        : `https://${body.instagram.trim()}`
+    const rawProfile = body.instagram?.trim() || "";
+    const profileUrl = rawProfile
+      ? rawProfile.startsWith("http")
+        ? rawProfile
+        : rawProfile.startsWith("@")
+          ? `https://instagram.com/${rawProfile.slice(1)}`
+          : `https://${rawProfile}`
       : "";
 
     const confirmationHtml = await render(

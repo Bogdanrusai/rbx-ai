@@ -1,6 +1,13 @@
 "use client";
 
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import {
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+  type ClipboardEvent,
+  type HTMLAttributes,
+} from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useWizard } from "./WizardContext";
 import { trackEvent } from "@/lib/analytics";
@@ -66,6 +73,51 @@ type Answers = {
 
 const TOTAL = 5;
 
+// --- Field-level validation & sanitization -------------------------------
+// Kept deliberately simple and forgiving: we validate shape, not identity —
+// the goal is to stop obviously-wrong input (letters in a phone number, a
+// malformed email) without ever feeling like a form fighting the visitor.
+
+const NAME_REGEX = /^[A-Za-zÀ-ÖØ-öø-ÿĂăÂâÎîȘșŞşȚțŢţ' -]+$/;
+
+function isNameValid(v: string | undefined) {
+  const t = (v || "").trim();
+  return t.length >= 2 && NAME_REGEX.test(t);
+}
+
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+function isEmailValid(v: string | undefined) {
+  return !!v && EMAIL_REGEX.test(v.trim());
+}
+
+// Keep only digits and a single leading "+" — applied on every keystroke and
+// on paste, so invalid characters never make it into the field at all.
+function sanitizePhone(raw: string) {
+  const hasLeadingPlus = raw.trim().startsWith("+");
+  const digits = raw.replace(/[^\d]/g, "");
+  return (hasLeadingPlus ? "+" : "") + digits;
+}
+
+function isPhoneValid(v: string | undefined) {
+  const digits = (v || "").replace(/\+/g, "");
+  return digits.length >= 7 && digits.length <= 15;
+}
+
+function isCompanyValid(v: string | undefined) {
+  return (v || "").trim().length >= 2;
+}
+
+// Accepts: @handle, instagram.com/handle, a bare domain (rbxagency.com), or
+// a full https:// URL — anything a real business would actually type.
+const WEBSITE_REGEX =
+  /^(@[a-zA-Z0-9._]{1,30}|(https?:\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/\S*)?)$/;
+
+function isWebsiteValid(v: string | undefined) {
+  const t = (v || "").trim();
+  return t.length > 0 && WEBSITE_REGEX.test(t);
+}
+
 // Booking slot — intentionally empty until a real calendar provider
 // (Calendly/Cal.com) and API key are connected. Set NEXT_PUBLIC_BOOKING_URL
 // in Vercel to add a "Programează un apel" button to the success screen; no
@@ -98,6 +150,8 @@ export default function Wizard() {
   const [i, setI] = useState(0);
   const [done, setDone] = useState(false);
   const [a, setA] = useState<Answers>({});
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
+  const touch = (field: string) => setTouched((prev) => ({ ...prev, [field]: true }));
 
   useEffect(() => {
     if (!isOpen) return;
@@ -135,15 +189,14 @@ export default function Wizard() {
     setTimeout(() => setI((n) => Math.min(n + 1, TOTAL - 1)), 240);
   };
 
-  const emailValid =
-    !!a.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(a.email);
+  const nameValid = isNameValid(a.name);
+  const emailValid = isEmailValid(a.email);
+  const phoneValid = isPhoneValid(a.phone);
+  const companyValid = isCompanyValid(a.company);
+  const websiteValid = isWebsiteValid(a.instagram);
 
   const detailsValid =
-    !!a.name?.trim() &&
-    emailValid &&
-    !!a.phone?.trim() &&
-    !!a.company?.trim() &&
-    !!a.instagram?.trim();
+    nameValid && emailValid && phoneValid && companyValid && websiteValid;
 
   const canContinue = useMemo(() => {
     switch (i) {
@@ -405,22 +458,83 @@ export default function Wizard() {
                       </p>
 
                       <div className="mt-6 grid grid-cols-1 gap-2.5 sm:grid-cols-2">
-                        <Field label="Nume" value={a.name || ""} onChange={(v) => set({ name: v })} autoFocus />
-                        <Field label="Companie" value={a.company || ""} onChange={(v) => set({ company: v })} />
+                        <Field
+                          label="Nume"
+                          value={a.name || ""}
+                          onChange={(v) => set({ name: v })}
+                          onBlur={() => touch("name")}
+                          autoFocus
+                          autoComplete="name"
+                          invalid={touched.name && !!a.name && !nameValid}
+                          error={
+                            touched.name && !!a.name && !nameValid
+                              ? "Scrie un nume valid, fără cifre."
+                              : undefined
+                          }
+                        />
+                        <Field
+                          label="Companie"
+                          value={a.company || ""}
+                          onChange={(v) => set({ company: v })}
+                          onBlur={() => touch("company")}
+                          autoComplete="organization"
+                          invalid={touched.company && !!a.company && !companyValid}
+                          error={
+                            touched.company && !!a.company && !companyValid
+                              ? "Scrie numele companiei."
+                              : undefined
+                          }
+                        />
                         <Field
                           label="Email"
                           type="email"
+                          inputMode="email"
+                          autoComplete="email"
                           value={a.email || ""}
                           onChange={(v) => set({ email: v })}
-                          invalid={!!a.email && !emailValid}
+                          onBlur={() => touch("email")}
+                          invalid={touched.email && !!a.email && !emailValid}
+                          error={
+                            touched.email && !!a.email && !emailValid
+                              ? "Adresa de email nu pare validă."
+                              : undefined
+                          }
                           className="sm:col-span-2"
                         />
-                        <Field label="Telefon" value={a.phone || ""} onChange={(v) => set({ phone: v })} />
+                        <Field
+                          label="Telefon"
+                          type="tel"
+                          inputMode="tel"
+                          autoComplete="tel"
+                          value={a.phone || ""}
+                          onChange={(v) => set({ phone: sanitizePhone(v) })}
+                          onPaste={(e) => {
+                            e.preventDefault();
+                            const pasted = e.clipboardData.getData("text");
+                            set({ phone: sanitizePhone((a.phone || "") + pasted) });
+                          }}
+                          onBlur={() => touch("phone")}
+                          invalid={touched.phone && !!a.phone && !phoneValid}
+                          error={
+                            touched.phone && !!a.phone && !phoneValid
+                              ? "Verifică numărul de telefon."
+                              : undefined
+                          }
+                        />
                         <Field
                           label="Website sau Instagram"
+                          inputMode="url"
+                          autoComplete="url"
                           value={a.instagram || ""}
                           onChange={(v) => set({ instagram: v })}
-                          placeholder="https://instagram.com/... sau https://site.ro"
+                          onBlur={() => touch("instagram")}
+                          placeholder="rbxagency.com sau @business"
+                          invalid={touched.instagram && !!a.instagram && !websiteValid}
+                          error={
+                            touched.instagram && !!a.instagram && !websiteValid
+                              ? "Scrie un website sau un @cont valid."
+                              : undefined
+                          }
                         />
                       </div>
 
@@ -567,18 +681,28 @@ function Field({
   label,
   value,
   onChange,
+  onBlur,
+  onPaste,
   type = "text",
+  inputMode,
+  autoComplete,
   autoFocus,
   invalid,
+  error,
   className = "",
   placeholder = "",
 }: {
   label: string;
   value: string;
   onChange: (v: string) => void;
+  onBlur?: () => void;
+  onPaste?: (e: ClipboardEvent<HTMLInputElement>) => void;
   type?: string;
+  inputMode?: HTMLAttributes<HTMLInputElement>["inputMode"];
+  autoComplete?: string;
   autoFocus?: boolean;
   invalid?: boolean;
+  error?: string;
   className?: string;
   placeholder?: string;
 }) {
@@ -589,14 +713,32 @@ function Field({
       </span>
       <input
         type={type}
+        inputMode={inputMode}
+        autoComplete={autoComplete}
         value={value}
         autoFocus={autoFocus}
         placeholder={placeholder}
         onChange={(e) => onChange(e.target.value)}
+        onBlur={onBlur}
+        onPaste={onPaste}
+        aria-invalid={invalid || undefined}
         className={`w-full rounded-xl border bg-white/[0.03] px-4 py-3 text-[15.5px] text-ink outline-none transition-colors placeholder:text-faint focus:border-white/40 ${
           invalid ? "border-red-400/50" : "border-line-strong"
         }`}
       />
+      <AnimatePresence>
+        {error && (
+          <motion.span
+            initial={{ opacity: 0, y: -4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -4 }}
+            transition={{ duration: 0.2 }}
+            className="mt-1.5 block text-[12px] leading-[1.4] text-red-300/80"
+          >
+            {error}
+          </motion.span>
+        )}
+      </AnimatePresence>
     </label>
   );
 }

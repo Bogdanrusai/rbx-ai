@@ -64,14 +64,24 @@ export function looksLikeHandoffRequest(message: string): boolean {
 // Ultimă plasă de siguranță pe textul de răspuns — dacă (dintr-un motiv
 // oarecare) un răspuns ajunge să conțină un preț concret sau un cuvânt de
 // tip „garantat”/„garanție”, NU e trimis ca atare; se înlocuiește.
-const PRICE_PATTERN = /\d[\d.,]*\s*(eur|€|lei|ron|\$|usd)/i;
+const PRICE_PATTERN =
+  /\d[\d.,]*\s*(eur|€|lei|ron|\$|usd)|(eur|€|lei|ron|\$|usd)\s*\d[\d.,]*/i;
 const GUARANTEE_PATTERN = /garant([aă]m|ez|at|ie)|garantee|guaranteed/i;
 
+// Same wording as kb.pricingPolicy in knowledgeBase.ts — kept as a literal
+// string here (not imported) so this last-resort guard never depends on the
+// knowledge base being in a valid state to do its job.
+const PRICE_REDIRECT =
+  "Costul depinde de ce trebuie construit și de complexitatea proiectului. Înainte să discutăm o ofertă, analizăm procesul și ce are nevoie afacerea ta. Poți completa analiza gratuită, iar apoi discutăm soluția potrivită.";
+
 export function guardResponseText(text: string): { text: string; wasBlocked: boolean } {
-  if (PRICE_PATTERN.test(text) || GUARANTEE_PATTERN.test(text)) {
+  if (PRICE_PATTERN.test(text)) {
+    return { text: PRICE_REDIRECT, wasBlocked: true };
+  }
+  if (GUARANTEE_PATTERN.test(text)) {
     return {
       text:
-        "Nu pot da o cifră fixă aici — depinde de situația ta concretă. Cel mai bun pas e formularul de analiză gratuită de pe site; Bogdan revine personal cu o soluție potrivită.",
+        "Nu dau garanții de rezultat aici — depinde de situația ta concretă. Cel mai bun pas e formularul de analiză gratuită de pe site; Bogdan revine personal cu o soluție potrivită.",
       wasBlocked: true,
     };
   }

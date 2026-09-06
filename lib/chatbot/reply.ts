@@ -49,9 +49,43 @@ const kb = RBX_KNOWLEDGE_BASE;
 
 const topics: Topic[] = [
   {
+    id: "pret",
+    // Verificat PRIMUL, dinaintea oricărui topic de servicii — o întrebare
+    // ca „Cât costă un website?” trebuie să primească mereu răspunsul de
+    // preț, nu descrierea generică a serviciului de website. Prinde
+    // intenționat orice formă de întrebare despre cost, tarif sau
+    // "pachete" — vezi kb.pricingPolicy pentru singurul răspuns permis.
+    // NU adăuga niciodată cifre aici, sub nicio formă.
+    test: (l) => /(pre[tț]|cost[aă]|cat cost|c[aâ]t cost|tarif|pachet|ofert[aă]|reducer[ei])/.test(l),
+    answer: () => ({
+      text: kb.pricingPolicy,
+      handoff: false,
+      suggestedAction: FORM_ACTION,
+    }),
+  },
+  {
+    id: "durata",
+    test: (l) => /(cat dureaz[aă]|cât dureaz[aă]|termen de livrare|in cat timp|în cât timp)/.test(l),
+    answer: () => ({
+      text:
+        "Durata depinde de complexitatea sistemului — nu dau un termen fix fără să înțeleg mai întâi afacerea. Cel mai bun pas e formularul de analiză gratuită.",
+      handoff: false,
+      suggestedAction: FORM_ACTION,
+    }),
+  },
+  {
+    id: "pentru-cine",
+    test: (l) => /(pentru cine|se potrive[sș]te|afacerea mea mic[aă]|orice afacere|orice domeniu)/.test(l),
+    answer: () => ({ text: kb.pentruCine, handoff: false, suggestedAction: FORM_ACTION }),
+  },
+  {
     id: "ce-e-rbx",
     test: (l) => /(ce (e|este|face)(\s+rbx)?\??$|rbx\.?ai|cine (e[sș]ti|sunte[tț]i)|despre (rbx|tine|voi))/.test(l),
-    answer: () => ({ text: `${kb.cePresupune} ${kb.filosofie}`, handoff: false }),
+    answer: () => ({
+      text: `${kb.cePresupune} ${kb.filosofie}`,
+      handoff: false,
+      suggestedAction: FORM_ACTION,
+    }),
   },
   {
     id: "servicii-website",
@@ -59,6 +93,7 @@ const topics: Topic[] = [
     answer: () => ({
       text: `${kb.servicii.find((s) => s.nume === "Website-uri")?.descriere}`,
       handoff: false,
+      suggestedAction: FORM_ACTION,
     }),
   },
   {
@@ -67,6 +102,7 @@ const topics: Topic[] = [
     answer: () => ({
       text: `${kb.servicii.find((s) => s.nume.includes("captare"))?.descriere}`,
       handoff: false,
+      suggestedAction: FORM_ACTION,
     }),
   },
   {
@@ -75,6 +111,7 @@ const topics: Topic[] = [
     answer: () => ({
       text: `${kb.servicii.find((s) => s.nume === "Automatizări AI")?.descriere} ${kb.servicii.find((s) => s.nume === "Automatizări de proces")?.descriere}`,
       handoff: false,
+      suggestedAction: FORM_ACTION,
     }),
   },
   {
@@ -83,6 +120,7 @@ const topics: Topic[] = [
     answer: () => ({
       text: `${kb.servicii.find((s) => s.nume.includes("mesagerie"))?.descriere}`,
       handoff: false,
+      suggestedAction: FORM_ACTION,
     }),
   },
   {
@@ -91,6 +129,7 @@ const topics: Topic[] = [
     answer: () => ({
       text: `${kb.servicii.find((s) => s.nume.includes("Integr"))?.descriere}`,
       handoff: false,
+      suggestedAction: FORM_ACTION,
     }),
   },
   {
@@ -99,17 +138,23 @@ const topics: Topic[] = [
     answer: () => ({
       text: `RBX.AI lucrează pe: ${kb.servicii.map((s) => s.nume).join(", ")}. Despre care vrei mai multe detalii?`,
       handoff: false,
+      suggestedAction: FORM_ACTION,
     }),
   },
   {
     id: "proces",
     test: (l) => /(proces|cum lucrezi|cum funcționeaz[aă]|cum functioneaz[aă]|pa[sș]ii)/.test(l),
-    answer: () => ({ text: kb.proces.join(" "), handoff: false }),
+    answer: () => ({ text: kb.proces.join(" "), handoff: false, suggestedAction: FORM_ACTION }),
   },
   {
     id: "cum-incep",
     test: (l) => /(cum incep|cum încep|de unde incep|de unde încep|primul pas)/.test(l),
     answer: () => ({ text: kb.cumInceperea, handoff: false, suggestedAction: FORM_ACTION }),
+  },
+  {
+    id: "analiza-gratuita",
+    test: (l) => /(ce (e|este|inseamna|înseamn[aă]).*(analiz[aă])|analiza gratuit[aă])/.test(l),
+    answer: () => ({ text: kb.ceEsteAnalizaGratuita, handoff: false, suggestedAction: FORM_ACTION }),
   },
   {
     id: "dupa-formular",
@@ -133,26 +178,6 @@ const topics: Topic[] = [
       text: kb.proiecte.map((p) => `${p.nume}: ${p.status}`).join(" "),
       handoff: false,
       suggestedAction: PROJECTS_ACTION,
-    }),
-  },
-  {
-    id: "pret",
-    test: (l) => /(pre[tț]|cost[aă]|cat cost|c[aâ]t cost|tarif)/.test(l),
-    answer: () => ({
-      text:
-        "Prețul depinde de situația concretă a afacerii — nu am o listă fixă de dat aici. Completezi formularul de analiză gratuită și Bogdan revine cu o propunere potrivită.",
-      handoff: false,
-      suggestedAction: FORM_ACTION,
-    }),
-  },
-  {
-    id: "durata",
-    test: (l) => /(cat dureaz[aă]|cât dureaz[aă]|termen de livrare|in cat timp|în cât timp)/.test(l),
-    answer: () => ({
-      text:
-        "Durata depinde de complexitatea sistemului — nu dau un termen fix fără să înțeleg mai întâi afacerea. Cel mai bun pas e formularul de analiză gratuită.",
-      handoff: false,
-      suggestedAction: FORM_ACTION,
     }),
   },
   {

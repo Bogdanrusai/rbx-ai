@@ -1,12 +1,30 @@
-// Baza de cunoștințe a asistentului RBX.AI.
+// ============================================================================
+// RBX.AI — Baza de cunoștințe a asistentului (sursa unică de adevăr)
+// ============================================================================
 //
 // REGULĂ ABSOLUTĂ: acest fișier conține DOAR fapte reale, deja publice pe
-// website. Niciun preț, termen de livrare, client, testimonial, cifră de
-// rezultat sau garanție nu apare aici — intenționat. Dacă vrei să adaugi o
-// afirmație nouă, adaug-o DOAR dacă e deja verificată/publicată pe site.
-// Asistentul răspunde exclusiv pe baza acestui context (vezi guard.ts).
+// website. Niciun preț, termen de livrare, client nou, testimonial, cifră de
+// rezultat sau garanție nu apare aici — intenționat, niciodată.
+//
+// De ce arată așa fișierul:
+// - Fiecare secțiune de mai jos corespunde unui subiect din reply.ts
+//   (identitate, servicii, proces, proiecte etc.) — găsești rapid ce
+//   actualizezi și nu trebuie să atingi logica de răspuns (reply.ts) pentru
+//   a schimba o informație.
+// - Adaugi o afirmație nouă DOAR dacă e deja adevărată și verificabilă pe
+//   site chiar acum. Dacă nu există încă (un rezultat, un testimonial, un
+//   preț), NU se inventează — se lasă în afara bazei, iar asistentul
+//   folosește fallback-ul + îndrumarea spre formular.
+// - `PRICING_POLICY` e citit direct de reply.ts pentru orice întrebare
+//   despre cost — nu adăuga cifre nicăieri în acest fișier, sub nicio formă.
+//
+// Cum adaugi un nou proiect în Selected Work / chatbot:
+//   1. Adaugă intrarea în `proiecte` mai jos (nume + status onest).
+//   2. Adaugă cardul corespunzător în components/SelectedWork.tsx.
+//   Cele două rămân sincronizate manual — nu există generare automată.
 
 export const RBX_KNOWLEDGE_BASE = {
+  // --- Identitate & filosofie ------------------------------------------
   identitate:
     "RBX.AI e construit de Bogdan Rus, un antreprenor român care documentează procesul public, pe Instagram (@bogdanrus.ai). RBX.AI e la început de drum — nu pretinde ani de experiență sau un portofoliu mare de clienți.",
 
@@ -16,6 +34,10 @@ export const RBX_KNOWLEDGE_BASE = {
   filosofie:
     "Nu se pune AI peste un proces prost. Primul pas e mereu să se înțeleagă cum lucrează afacerea; abia apoi se construiește sistemul, se testează și se documentează.",
 
+  pentruCine:
+    "RBX.AI e potrivit pentru afaceri mici și mijlocii din România care primesc cereri de la clienți (mesaje, telefoane, formulare) și simt că pierd lead-uri sau timp din cauza unui proces manual — clinici, saloane, imobiliare, restaurante, ecommerce sau servicii, indiferent de domeniu, atât timp cât există un flux real de clienți de gestionat.",
+
+  // --- Servicii -----------------------------------------------------------
   servicii: [
     {
       nume: "Website-uri",
@@ -49,6 +71,7 @@ export const RBX_KNOWLEDGE_BASE = {
     },
   ],
 
+  // --- Cum funcționează procesul -------------------------------------------
   proces: [
     "1. Analiză gratuită — completezi formularul de pe site cu câteva informații despre afacerea ta.",
     "2. Bogdan analizează personal fiecare răspuns — nu e o analiză automată.",
@@ -59,15 +82,26 @@ export const RBX_KNOWLEDGE_BASE = {
   cumInceperea:
     "Se începe prin formularul „Vreau o analiză gratuită” de pe site (butonul principal). Nu presupune niciun cost sau obligație în acest pas.",
 
+  ceEsteAnalizaGratuita:
+    "Analiza gratuită e un formular scurt (câteva întrebări despre tipul afacerii, provocarea principală, volumul de lead-uri și dacă folosești deja AI). Pe baza răspunsurilor, Bogdan analizează personal situația și revine cu recomandările și soluția potrivite — nu e un raport generat automat.",
+
   dupaFormular:
-    "După ce formularul e trimis, Bogdan analizează personal informațiile primite — nu e un proces automat — și revine cu soluția potrivită pentru afacerea respectivă. Nu există momentan o programare automată de apel (nu e integrat un calendar) — următorul pas e stabilit direct, personal, în urma analizei.",
+    "După ce formularul e trimis, Bogdan analizează personal informațiile primite — nu e un proces automat — și revine cu soluția potrivită pentru afacerea respectivă.",
 
+  // --- Programare / booking -------------------------------------------------
+  // Când NEXT_PUBLIC_BOOKING_URL e setat (Calendly), ecranul final al
+  // formularului arată butonul „Programează un apel”. Textul de mai jos
+  // rămâne corect indiferent dacă acel buton e vizibil sau nu — programarea
+  // se întâmplă mereu DUPĂ formular, niciodată înainte.
   programare:
-    "În acest moment nu există o funcție de programare automată a unui apel pe site. Pasul următor, după formular, e stabilit direct de Bogdan, personal — de obicei printr-un mesaj sau un apel scurt de descoperire. Dacă vizitatorul vrea să vorbească direct cu el, cea mai sigură cale e tot formularul de analiză.",
+    "Pasul de programare a unui apel apare abia după ce completezi formularul de analiză gratuită — pe ecranul de confirmare. Până atunci, cea mai sigură cale de a ajunge la Bogdan e tot formularul.",
 
+  // --- VSL / prezentare -------------------------------------------------
   vsl:
     "Secțiunea „Cadru cu cadru, povestea completă” de pe homepage (ancora #vsl) prezintă, prin cadre reale — format carusel, nu video — problema pe care o rezolvă RBX.AI și cum funcționează soluția.",
 
+  // --- Proiecte / Selected Work ------------------------------------------
+  // Ține sincronizat manual cu components/SelectedWork.tsx.
   proiecte: [
     {
       nume: "Expert Instal Serv.",
@@ -77,13 +111,22 @@ export const RBX_KNOWLEDGE_BASE = {
     {
       nume: "RBX.AI — website-ul propriu",
       status:
-        "Acest website e el însuși un proiect intern RBX.AI: strategie, arhitectură, copywriting, design, sistem de calificare a lead-urilor și asistentul cu care vorbești acum au fost construite și documentate ca sistem, nu doar ca site de prezentare.",
+        "Studiu de caz intern: acest website e el însuși un proiect RBX.AI — strategie, arhitectură, copywriting, design, sistem de calificare a lead-urilor și asistentul cu care vorbești acum au fost construite și documentate ca sistem, nu doar ca site de prezentare.",
     },
   ],
 
+  // --- Politica de preț ---------------------------------------------------
+  // NU adăuga niciodată o cifră, un interval sau un exemplu de preț aici sau
+  // oriunde altundeva în baza de cunoștințe. reply.ts citește STRICT acest
+  // text pentru orice întrebare despre cost.
+  pricingPolicy:
+    "Costul depinde de ce trebuie construit și de complexitatea proiectului. Înainte să discutăm o ofertă, analizăm procesul și ce are nevoie afacerea ta. Poți completa analiza gratuită, iar apoi discutăm soluția potrivită.",
+
+  // --- Reguli stricte (documentare internă, nu se afișează direct) --------
   reguliStricte: [
     "Nu inventează niciodată clienți, testimoniale, cifre de rezultate, venituri sau creșteri de conversie.",
     "Nu promite niciodată timp exact de livrare, preț fix sau garanții de rezultat.",
+    "Nu dă niciodată o cifră sau un interval de preț, sub nicio formă — vezi pricingPolicy.",
     "Dacă nu știe un răspuns, spune clar că nu știe și îndrumă spre formularul de analiză gratuită, în loc să inventeze.",
   ],
 } as const;
@@ -95,13 +138,16 @@ export function knowledgeBaseAsPromptContext(): string {
   return [
     `Ce este RBX.AI: ${kb.cePresupune}`,
     `Filosofie: ${kb.filosofie}`,
+    `Pentru cine: ${kb.pentruCine}`,
     `Identitate: ${kb.identitate}`,
     `Servicii:\n${servicii}`,
     `Proces:\n${kb.proces.join("\n")}`,
     `Cum se începe: ${kb.cumInceperea}`,
+    `Ce este analiza gratuită: ${kb.ceEsteAnalizaGratuita}`,
     `Ce se întâmplă după formular: ${kb.dupaFormular}`,
     `Programare/apel: ${kb.programare}`,
     `VSL: ${kb.vsl}`,
     `Proiecte:\n${proiecte}`,
+    `Politica de preț (folosește mereu exact acest răspuns pentru orice întrebare despre cost): ${kb.pricingPolicy}`,
   ].join("\n\n");
 }
