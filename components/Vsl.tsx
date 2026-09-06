@@ -67,15 +67,22 @@ export default function Vsl() {
       <div className="relative grid grid-cols-1 items-center gap-[clamp(32px,6vw,80px)] lg:grid-cols-[0.9fr_1.1fr]">
         {/* left — narrative */}
         <div>
+          {/* Previous framing ("Prezentarea RBX.AI" / "Cadru cu cadru,
+              povestea completă") read fine on its own but didn't tell a
+              cold visitor "this IS the explainer, go through it" — it could
+              pass as one more carousel among several on the page. This is
+              still the same frame-by-frame format (it stays that way on
+              purpose, see the comment on VSL_VIDEO_SRC above), just framed
+              so the visitor knows exactly why to engage with it. */}
           <div className="eyebrow mb-8">
             <span className="tabular-nums text-muted">01</span>
             <span aria-hidden="true">·</span>
-            Prezentarea RBX.AI
+            Cum funcționează RBX.AI
           </div>
           <h2 className="max-w-[15ch] text-[clamp(30px,4.6vw,52px)] font-semibold leading-[1.06] tracking-[-0.025em]">
-            <MaskReveal>Cadru cu cadru,</MaskReveal>
+            <MaskReveal>Patru cadre.</MaskReveal>
             <MaskReveal delay={0.1}>
-              <span className="mark">povestea completă</span>.
+              <span className="mark">Atât ai nevoie să înțelegi</span>.
             </MaskReveal>
           </h2>
           <motion.p
@@ -85,9 +92,9 @@ export default function Vsl() {
             transition={{ duration: 0.8, ease: EASE, delay: 0.2 }}
             className="mt-8 max-w-[42ch] text-[clamp(15.5px,1.6vw,18px)] leading-[1.65] text-muted"
           >
-            Fără termeni tehnici. Doar povestea reală: unde pierzi bani acum și
-            cum îi recuperezi. Patru cadre, în ordine. Derulează-le sau lasă-le
-            să curgă singure.
+            Parcurge-le în ordine: unde pierzi bani acum, ce se schimbă și cum
+            arată un proces care nu mai depinde de tine să-l ții minte.
+            Derulează-le sau lasă-le să curgă singure.
           </motion.p>
 
           {/* chapter list, synced to carousel */}

@@ -56,13 +56,21 @@ export default function Hero() {
           Infrastructură AI pentru afaceri
         </motion.div>
 
+        {/* Previous headline ("Clienții tăi primesc răspuns instant. Chiar
+            și la 3 noaptea.") tested strong visually but too narrow
+            strategically — a cold visitor's most likely takeaway was
+            "RBX.AI = chatbot," when the actual offer spans the whole
+            lead→răspuns→calificare→programare→follow-up process. This
+            keeps the same visual rhythm (two emphasized lines + one muted
+            line) but leads with the full process instead of one channel;
+            "instant" now lives in the (unchanged) subhead below. */}
         <h1 className="max-w-[19ch] text-[clamp(40px,7.4vw,92px)] font-semibold leading-[1.01] tracking-[-0.035em]">
-          <MaskReveal delay={0.15}>Clienții tăi primesc</MaskReveal>
+          <MaskReveal delay={0.15}>De la primul mesaj</MaskReveal>
           <MaskReveal delay={0.28}>
-            răspuns <span className="mark">instant</span>.
+            până la <span className="mark">programare</span>.
           </MaskReveal>
           <MaskReveal delay={0.41} className="text-muted">
-            Chiar și la 3 noaptea.
+            Un singur sistem, nu pași separați.
           </MaskReveal>
         </h1>
 
