@@ -13,11 +13,12 @@ const vslPost = posts.find((p) => p.id === "vsl")!;
 const slides = slidesOf(vslPost);
 const AUTOPLAY = 4200;
 
-// Real VSL slot — intentionally empty until the actual video is filmed.
-// Set NEXT_PUBLIC_VSL_VIDEO_SRC (and optionally NEXT_PUBLIC_VSL_POSTER_SRC)
-// in Vercel → Settings → Environment Variables once the file/URL exists;
-// this section switches from the frame carousel to a real <video> player
-// automatically, no other code change needed.
+// The production VSL is the frame carousel below — built from real assets,
+// not a placeholder. Optional future upgrade path: set
+// NEXT_PUBLIC_VSL_VIDEO_SRC (and optionally NEXT_PUBLIC_VSL_POSTER_SRC) in
+// Vercel if a video version is ever produced, and this section switches to
+// a real <video> player automatically — no code change needed, and no
+// video is required for launch.
 const VSL_VIDEO_SRC = process.env.NEXT_PUBLIC_VSL_VIDEO_SRC;
 const VSL_POSTER_SRC = process.env.NEXT_PUBLIC_VSL_POSTER_SRC || "/vsl-poster.jpg";
 

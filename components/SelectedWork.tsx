@@ -1,10 +1,13 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 import MaskReveal from "./MaskReveal";
 import { trackEvent } from "@/lib/analytics";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
+
+type Testimonial = { quote: string; author: string };
 
 type Project = {
   id: string;
@@ -12,6 +15,13 @@ type Project = {
   status: string;
   summary: string;
   points: string[];
+  // Upgrade slots — all optional, all unset today. Fill in when the real
+  // asset/result exists (a screenshot, the live client URL, a verified
+  // quote) and the card upgrades automatically — no redesign needed, no
+  // fabricated placeholder rendered in the meantime.
+  image?: string;
+  liveUrl?: string;
+  testimonial?: Testimonial;
 };
 
 // Honest, real projects only — no invented clients, results or numbers.
@@ -40,6 +50,7 @@ const projects: Project[] = [
       "Formular de calificare în mai mulți pași, cu confirmare clară a pașilor următori",
       "Asistent AI grounded, fără informații inventate",
     ],
+    liveUrl: "https://www.rbxagency.com",
   },
 ];
 
@@ -72,21 +83,49 @@ export default function SelectedWork() {
             viewport={{ once: true, margin: "0px 0px -12% 0px" }}
             transition={{ duration: 0.9, ease: EASE, delay: i * 0.1 }}
             onViewportEnter={() => trackEvent("project_viewed", { project: p.id })}
-            className="card flex flex-col rounded-[24px] p-8"
+            className="card flex flex-col overflow-hidden rounded-[24px]"
           >
-            <span className="mb-5 inline-block w-fit rounded-full border border-line px-3 py-1.5 text-[10.5px] uppercase tracking-[0.16em] text-faint">
-              {p.status}
-            </span>
-            <h3 className="text-[22px] font-semibold tracking-[-0.015em]">{p.name}</h3>
-            <p className="mt-3 text-[14.5px] leading-[1.6] text-muted">{p.summary}</p>
-            <ul className="mt-6 flex flex-col gap-2.5">
-              {p.points.map((pt) => (
-                <li key={pt} className="flex items-start gap-2.5 text-[13.5px] leading-[1.5] text-faint">
-                  <span className="mt-[7px] h-1 w-1 flex-none rounded-full bg-faint" />
-                  {pt}
-                </li>
-              ))}
-            </ul>
+            {p.image && (
+              <div className="relative aspect-[16/10] w-full overflow-hidden border-b border-line">
+                <Image src={p.image} alt={`${p.name} — captură de ecran`} fill className="object-cover" />
+              </div>
+            )}
+
+            <div className="flex flex-1 flex-col p-8">
+              <span className="mb-5 inline-block w-fit rounded-full border border-line px-3 py-1.5 text-[10.5px] uppercase tracking-[0.16em] text-faint">
+                {p.status}
+              </span>
+              <h3 className="text-[22px] font-semibold tracking-[-0.015em]">{p.name}</h3>
+              <p className="mt-3 text-[14.5px] leading-[1.6] text-muted">{p.summary}</p>
+              <ul className="mt-6 flex flex-col gap-2.5">
+                {p.points.map((pt) => (
+                  <li key={pt} className="flex items-start gap-2.5 text-[13.5px] leading-[1.5] text-faint">
+                    <span className="mt-[7px] h-1 w-1 flex-none rounded-full bg-faint" />
+                    {pt}
+                  </li>
+                ))}
+              </ul>
+
+              {p.testimonial && (
+                <blockquote className="mt-6 border-l-2 border-line-strong pl-4 text-[13.5px] italic leading-[1.6] text-muted">
+                  “{p.testimonial.quote}”
+                  <footer className="mt-2 not-italic text-[12px] text-faint">— {p.testimonial.author}</footer>
+                </blockquote>
+              )}
+
+              {p.liveUrl && (
+                <a
+                  href={p.liveUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => trackEvent("project_viewed", { project: p.id, action: "live_link" })}
+                  className="mt-7 inline-flex w-fit items-center gap-2 text-[13.5px] font-medium text-ink transition-colors hover:text-muted"
+                >
+                  Vezi live
+                  <span aria-hidden>→</span>
+                </a>
+              )}
+            </div>
           </motion.article>
         ))}
       </div>

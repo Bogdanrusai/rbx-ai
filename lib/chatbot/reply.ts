@@ -50,7 +50,7 @@ const kb = RBX_KNOWLEDGE_BASE;
 const topics: Topic[] = [
   {
     id: "ce-e-rbx",
-    test: (l) => /(ce (e|este|face)|cine (e[sș]ti|sunte[tț]i)|despre rbx)/.test(l),
+    test: (l) => /(ce (e|este|face)(\s+rbx)?\??$|rbx\.?ai|cine (e[sș]ti|sunte[tț]i)|despre (rbx|tine|voi))/.test(l),
     answer: () => ({ text: `${kb.cePresupune} ${kb.filosofie}`, handoff: false }),
   },
   {

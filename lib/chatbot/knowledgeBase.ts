@@ -66,7 +66,7 @@ export const RBX_KNOWLEDGE_BASE = {
     "În acest moment nu există o funcție de programare automată a unui apel pe site. Pasul următor, după formular, e stabilit direct de Bogdan, personal — de obicei printr-un mesaj sau un apel scurt de descoperire. Dacă vizitatorul vrea să vorbească direct cu el, cea mai sigură cale e tot formularul de analiză.",
 
   vsl:
-    "Secțiunea „Cadru cu cadru, povestea completă” de pe homepage (ancora #vsl) prezintă, prin imagini/cadre reale, problema pe care o rezolvă RBX.AI și cum funcționează soluția — versiunea video completă (VSL) e în lucru.",
+    "Secțiunea „Cadru cu cadru, povestea completă” de pe homepage (ancora #vsl) prezintă, prin cadre reale — format carusel, nu video — problema pe care o rezolvă RBX.AI și cum funcționează soluția.",
 
   proiecte: [
     {
