@@ -37,6 +37,20 @@ export const RBX_KNOWLEDGE_BASE = {
   pentruCine:
     "RBX.AI e potrivit pentru afaceri mici și mijlocii din România care primesc cereri de la clienți (mesaje, telefoane, formulare) și simt că pierd lead-uri sau timp din cauza unui proces manual — clinici, saloane, imobiliare, restaurante, ecommerce sau servicii, indiferent de domeniu, atât timp cât există un flux real de clienți de gestionat.",
 
+  leaduriPutine:
+    "Da, poate avea sens și cu un volum mic de lead-uri — ideea nu e neapărat să aduc mai multe, ci să nu se piardă niciunul din cele care vin deja și să răspunzi rapid și organizat. Cel mai simplu e să vedem concret prin analiza gratuită.",
+
+  // --- Fondator -------------------------------------------------------------
+  // Public, verificabil pe site (secțiunea „Despre mine”) și pe Instagram.
+  // NU adăuga vârstă, venituri, clienți, credite, premii, presă sau mărimea
+  // echipei — nimic din toate astea nu e verificat/public.
+  founder:
+    "RBX.AI a fost fondat de Bogdan Rus. El e persoana din spatele agenției — analizează personal fiecare situație de afacere înainte să propună ce sistem ar avea sens să fie construit și documentează procesul public pe Instagram (@bogdanrus.ai).",
+
+  // --- Poziționare: nu doar un chatbot ---------------------------------------
+  nuDoarChatbot:
+    "Nu, RBX.AI nu e doar un chatbot — un chatbot poate fi doar o piesă din sistem. De obicei construiesc și partea de calificare, programare, organizare a lead-urilor și follow-up din jurul lui, ca tot procesul să fie conectat, nu bucăți separate.",
+
   // --- Servicii -----------------------------------------------------------
   servicii: [
     {
@@ -109,9 +123,14 @@ export const RBX_KNOWLEDGE_BASE = {
         "Studiu de caz intern, live. Acest website e el însuși un proiect RBX.AI: strategie, arhitectură, copywriting, design, sistem de calificare a lead-urilor și asistentul cu care vorbești acum au fost construite și documentate ca sistem, nu doar ca site de prezentare.",
     },
     {
+      // CORECTAT: varianta anterioară afirma greșit că acest sistem
+      // gestionează automat lead-urile venite din formularul de pe site —
+      // fals, verificat direct în app/api/lead/route.ts (doar email, fără
+      // niciun apel către un CRM/bază de date). Textul de mai jos e
+      // sincronizat cu `crmStatus` de mai jos și cu realitatea din cod.
       nume: "RBX.AI CRM",
       status:
-        "Sistem intern, privat. Gestionează lead-urile venite din formularul de analiză gratuită, de la primul mesaj până la programare. Nu are login public, demo public sau acces din exterior — prezentat pe site doar ca exemplu de ce se poate construi.",
+        "Proiect intern, privat, pentru organizarea lead-urilor și a pipeline-ului RBX.AI — fără login public. Formularul de pe site NU trimite automat lead-uri în acest sistem în acest moment; notificările merg direct la Bogdan, prin email. Pe site există separat un demo interactiv de CRM, prezentat clar ca simulare, nu ca sistemul real.",
     },
     {
       nume: "Expert Instal Serv.",
@@ -126,6 +145,16 @@ export const RBX_KNOWLEDGE_BASE = {
   // text pentru orice întrebare despre cost.
   pricingPolicy:
     "Costul depinde de ce trebuie construit și de complexitatea proiectului. Înainte să discutăm o ofertă, analizăm procesul și ce are nevoie afacerea ta. Poți completa analiza gratuită, iar apoi discutăm soluția potrivită.",
+
+  // --- CRM: ce poate face conceptul + statusul real al integrării -----------
+  // A NU se combina niciodată invers: capabilitatea generică e adevărată
+  // pentru orice sistem CRM construit ca parte dintr-un proiect de client;
+  // statusul e specific despre rbxagency.com și formularul lui de lead.
+  crmCapabilitate:
+    "Un CRM poate ajuta la organizarea lead-urilor, a stadiului fiecăruia și a follow-up-ului, ca să nu se piardă oportunități — e una dintre componentele pe care le pot integra într-un sistem, dacă are sens pentru afacerea ta.",
+
+  crmStatus:
+    "În acest moment, formularul de pe rbxagency.com nu trimite lead-uri automat într-un CRM live — notificarea ajunge direct la Bogdan, care analizează personal fiecare cerere. Pe site există și un demo interactiv de CRM, dar e doar o simulare, nu sistemul real.",
 
   // --- Reguli stricte (documentare internă, nu se afișează direct) --------
   reguliStricte: [
@@ -142,10 +171,15 @@ export function knowledgeBaseAsPromptContext(): string {
   const proiecte = kb.proiecte.map((p) => `- ${p.nume}: ${p.status}`).join("\n");
   return [
     `Ce este RBX.AI: ${kb.cePresupune}`,
+    `Nu e doar un chatbot: ${kb.nuDoarChatbot}`,
     `Filosofie: ${kb.filosofie}`,
     `Pentru cine: ${kb.pentruCine}`,
+    `Dacă are puține lead-uri: ${kb.leaduriPutine}`,
+    `Fondator: ${kb.founder}`,
     `Identitate: ${kb.identitate}`,
     `Servicii:\n${servicii}`,
+    `CRM — ce poate face conceptul: ${kb.crmCapabilitate}`,
+    `CRM — status real al integrării cu site-ul: ${kb.crmStatus}`,
     `Proces:\n${kb.proces.join("\n")}`,
     `Cum se începe: ${kb.cumInceperea}`,
     `Ce este analiza gratuită: ${kb.ceEsteAnalizaGratuita}`,

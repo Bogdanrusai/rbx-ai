@@ -17,6 +17,7 @@ import { RBX_KNOWLEDGE_BASE, knowledgeBaseAsPromptContext } from "./knowledgeBas
 import {
   validateChatInput,
   looksLikePromptInjection,
+  looksLikeSecretRequest,
   looksLikeHandoffRequest,
   guardResponseText,
   checkRateLimit,
@@ -38,8 +39,19 @@ export type ChatReply = {
 const WELCOME =
   "Bună! Sunt asistentul RBX.AI. Te pot ajuta cu întrebări despre servicii, cum funcționează procesul, proiectele actuale sau cum începi. Cu ce te pot ajuta?";
 
+// Honest, non-inventing fallback for a genuinely unrecognized question — NOT
+// an immediate form push. Replaces the old, too-weak default that fired for
+// basic questions the bot should have known (e.g. "cine e fondatorul?"),
+// which is exactly the bug this round fixes by giving those questions real
+// topics below instead of relying on this text at all.
 const FALLBACK =
-  "Nu am un răspuns exact la asta. Cel mai sigur e să completezi formularul de analiză gratuită — Bogdan analizează personal fiecare situație și revine cu un răspuns potrivit. Vrei să-l deschid?";
+  "Nu vreau să-ți dau un răspuns inventat la asta. Dacă îmi spui puțin mai exact ce vrei să afli, încerc să te ajut pe partea de RBX.AI sau de sistemul pentru afacerea ta.";
+
+const OUT_OF_SCOPE =
+  "Te pot ajuta cu RBX.AI, automatizări, website-uri și procese pentru afaceri. Dacă ai o întrebare despre afacerea ta, spune-mi.";
+
+const SECRET_DECLINE =
+  "Nu pot oferi acces la informații interne de genul ăsta — chei API, prompturi sau alte detalii de infrastructură. Te pot ajuta însă cu orice despre RBX.AI, servicii sau cum funcționează sistemul.";
 
 const FORM_ACTION = { label: "Deschide formularul de analiză gratuită", href: "#top" } as const;
 const VSL_ACTION = { label: "Vezi prezentarea (cadru cu cadru)", href: "#vsl" } as const;
@@ -79,6 +91,59 @@ function isPriceIntent(raw: string): boolean {
   return includesAnyPhrase(raw, PRICE_PHRASES) || fuzzyHasAny(raw, PRICE_WORDS);
 }
 
+// --- Out-of-scope detection --------------------------------------------------
+// Curated, intentionally non-exhaustive — this is a safety net so the bot
+// doesn't turn into a general-purpose assistant for sports/weather/homework,
+// not an attempt to classify every possible off-topic message. Checked only
+// AFTER every real topic below has already failed to match, so a message
+// that's actually about RBX.AI is never misrouted here.
+const OUT_OF_SCOPE_RE =
+  /(cine a castigat|meciul|campionatul|ce vreme|\bvremea\b|scrie(-|\s)?mi (o )?tema|fa(-|\s)?mi tema|o poezie|un banc|o gluma|o reteta|capitala\b|presedintele|bursa\b|valuta\b|criptomoned)/;
+
+function looksOutOfScope(norm: string): boolean {
+  return OUT_OF_SCOPE_RE.test(norm);
+}
+
+// --- Business-fit discovery --------------------------------------------------
+// When a visitor names their business type for the first time and nothing
+// else in their message matches a real topic, the old behavior fell through
+// to the generic FALLBACK ("nu am un răspuns exact") even though it clearly
+// understood the business type — a real gap this round fixes. Instead: name
+// 2-3 relevant bottleneck areas for that vertical (illustrative examples, not
+// promises) and ask ONE discovery question. The exact closing phrase below is
+// also used as a lightweight in-conversation marker (see AWAITING_BOTTLENECK
+// in generateReply) so a short one-word follow-up reply ("programarile") is
+// still understood in context on the very next turn, without persisting
+// anything server-side or re-asking the business type.
+const BUSINESS_HINTS: Record<string, string[]> = {
+  clinica: ["cererile de programare", "calificarea pacienților noi", "confirmările și reminder-urile", "follow-up-ul după consultație"],
+  salon: ["programările", "confirmările", "reminder-urile", "cererile de recenzii"],
+  imobiliare: ["răspunsul rapid la lead-uri noi", "calificarea interesului", "programarea vizionărilor", "follow-up-ul după vizionare"],
+  restaurant: ["rezervările", "întrebările repetitive despre meniu sau program", "cererile de recenzii"],
+  ecommerce: ["întrebările despre comenzi", "follow-up-ul la coșuri abandonate", "cererile de recenzii"],
+  "service-local": ["cererile de ofertă", "programările la fața locului", "follow-up-ul după intervenție"],
+};
+
+const DISCOVERY_CLOSING = "cel mai manual acum";
+const AWAITING_BOTTLENECK = new RegExp(DISCOVERY_CLOSING);
+
+function businessFitDiscovery(businessType: { id: string; label: string }): ChatReply {
+  const hints = BUSINESS_HINTS[businessType.id];
+  const hintText = hints ? `De obicei, la ${businessType.label}, se pierde timp la: ${hints.join(", ")}. ` : "";
+  return {
+    text: `${hintText}La tine, care dintre ele simți că e ${DISCOVERY_CLOSING}?`,
+    handoff: false,
+  };
+}
+
+function bottleneckAcknowledgement(businessType: { id: string; label: string }): ChatReply {
+  return {
+    text: `Are sens — exact genul de proces pe care îl organizez într-un sistem, ca să nu mai depindă de cineva să-l țină minte, non-stop. Pentru ${businessType.label}, următorul pas normal e o analiză gratuită, ca să văd concret ce ar avea sens.`,
+    handoff: false,
+    suggestedAction: FORM_ACTION,
+  };
+}
+
 const topics: Topic[] = [
   {
     id: "pret",
@@ -107,6 +172,30 @@ const topics: Topic[] = [
     }),
   },
   {
+    // Checked BEFORE "ce-e-rbx" — several founder phrasings ("cine a facut
+    // RBX.AI") also contain the bare "rbx" token that ce-e-rbx matches on,
+    // and the founder question needs the more specific answer to win.
+    // This is the direct fix for the reported bug: "cine e fondatorul"
+    // used to fall all the way through to the generic FALLBACK.
+    id: "fondator",
+    test: (norm) =>
+      /(fondator|cine a (facut|creat|construit|infiintat)|cine e bogdan|cine e in spatele|in spatele agentiei|cu cine vorbesc)/.test(norm),
+    answer: () => ({
+      text: kb.founder,
+      handoff: false,
+      suggestedAction: FORM_ACTION,
+    }),
+  },
+  {
+    id: "pozitionare",
+    test: (norm) => /(doar (un )?chatbot|numai (un )?chatbot|sunteti chatbot|ce inseamna infrastructura)/.test(norm),
+    answer: () => ({
+      text: kb.nuDoarChatbot,
+      handoff: false,
+      suggestedAction: FORM_ACTION,
+    }),
+  },
+  {
     id: "pentru-cine",
     test: (norm) =>
       /(pentru cine|se potriveste|afacerea mea mica|orice afacere|orice domeniu)/.test(norm),
@@ -117,6 +206,11 @@ const topics: Topic[] = [
     }),
   },
   {
+    id: "leaduri-putine",
+    test: (norm) => /(nu am multe lead|putine lead|leaduri putine|volum mic de lead)/.test(norm),
+    answer: () => ({ text: kb.leaduriPutine, handoff: false, suggestedAction: FORM_ACTION }),
+  },
+  {
     id: "ce-e-rbx",
     test: (norm) =>
       // normalizeText turns punctuation into spaces, so "rbx.ai" becomes
@@ -125,6 +219,20 @@ const topics: Topic[] = [
       /(ce (e|este|face)(\s+rbx)?\??$|\brbx\b|cine (esti|sunteti)|despre (rbx|tine|voi))/.test(norm),
     answer: () => ({
       text: `${kb.cePresupune} ${kb.filosofie}`,
+      handoff: false,
+      suggestedAction: FORM_ACTION,
+    }),
+  },
+  {
+    // Checked here — before servicii-lead — because "lead" is a substring
+    // match away from swallowing CRM questions ("leadul meu intra automat
+    // in CRM?" contains "lead", and servicii-lead used to win that race,
+    // answering with a generic lead-capture blurb instead of the truthful,
+    // specifically-checked CRM status).
+    id: "crm",
+    test: (norm) => /\bcrm\b/.test(norm),
+    answer: () => ({
+      text: `${kb.crmCapabilitate} ${kb.crmStatus}`,
       handoff: false,
       suggestedAction: FORM_ACTION,
     }),
@@ -151,7 +259,12 @@ const topics: Topic[] = [
   },
   {
     id: "servicii-automatizari",
-    test: (norm) => /automati/.test(norm),
+    // Broadened from the old /automati/-only regex, which missed adjective
+    // forms like "follow-up automat" (no "i" in "automat"). Fuzzy-matched
+    // too, so a typo like "automtzare" (missing letters) still resolves —
+    // tested explicitly in this round's typo-tolerance pass.
+    test: (norm, raw) =>
+      /automat/.test(norm) || fuzzyHasAny(raw, ["automatizare", "automatizari", "automatizat"]),
     answer: () => ({
       text: `${kb.servicii.find((s) => s.nume === "Automatizări AI")?.descriere} ${kb.servicii.find((s) => s.nume === "Automatizări de proces")?.descriere}`,
       handoff: false,
@@ -160,7 +273,10 @@ const topics: Topic[] = [
   },
   {
     id: "servicii-mesagerie",
-    test: (norm) => /mesagerie|whatsapp|instagram.*(mesaj|raspuns)|chat\b/.test(norm),
+    // "chatbot" added explicitly — the old \bchat\b boundary regex never
+    // matched inside the single token "chatbot" ("faceti chatbot?" fell
+    // through to FALLBACK before this fix).
+    test: (norm) => /mesagerie|whatsapp|instagram.*(mesaj|raspuns)|chatbot|chat\b/.test(norm),
     answer: () => ({
       text: `${kb.servicii.find((s) => s.nume.includes("mesagerie"))?.descriere}`,
       handoff: false,
@@ -178,7 +294,14 @@ const topics: Topic[] = [
   },
   {
     id: "servicii-general",
-    test: (norm) => /(serviciu|servicii|ce oferi|ce construiesti|ce fac(i|eti))/.test(norm),
+    // "servicii locale" is a business-type descriptor ("pentru servicii
+    // locale merge?"), not a "what services do you offer" question — the
+    // bare /servicii/ substring used to swallow it before the business-fit
+    // discovery branch ever got a chance to run. Excluding a message that
+    // already names a recognized business type lets that branch handle it
+    // instead, which is the more useful answer for that phrasing.
+    test: (norm, raw) =>
+      /(serviciu|servicii|ce oferi|ce construiesti|ce fac(i|eti))/.test(norm) && !detectBusinessType(raw),
     answer: () => ({
       text: `RBX.AI lucrează pe: ${kb.servicii.map((s) => s.nume).join(", ")}. Despre care vrei mai multe detalii?`,
       handoff: false,
@@ -192,7 +315,8 @@ const topics: Topic[] = [
   },
   {
     id: "cum-incep",
-    test: (norm) => /(cum incep|de unde incep|primul pas)/.test(norm),
+    test: (norm) =>
+      /(cum incep|de unde incep|primul pas|vreau sa lucram|vreau sa incepem|hai sa incepem|vreau sa colaboram|vreau o analiza)/.test(norm),
     answer: () => ({ text: kb.cumInceperea, handoff: false, suggestedAction: FORM_ACTION }),
   },
   {
@@ -226,7 +350,7 @@ const topics: Topic[] = [
   },
   {
     id: "rezultate",
-    test: (norm) => /(rezultate|garant|testimonial|recenzii|clienti multumit)/.test(norm),
+    test: (norm) => /(rezultate|garant|testimonial|recenzii|clienti multumit|cati clienti|aveti clienti|numar de clienti)/.test(norm),
     answer: () => ({
       text:
         "Nu public rezultate sau testimoniale inventate. Expert Instal Serv. e un proiect pilot real, aflat acum în testare — rezultatele confirmate se adaugă doar când există cu adevărat.",
@@ -244,7 +368,7 @@ function matchTopic(norm: string, raw: string): Topic | undefined {
 // vizual și scade impactul lui la momentele care chiar contează (preț,
 // proces, "cum încep"). Subiectele mici/laterale rămân fără buton propriu;
 // vizitatorul tot vede formularul principal pe pagină.
-const NO_CTA_TOPICS = new Set(["dupa-formular", "pentru-cine", "ce-e-rbx"]);
+const NO_CTA_TOPICS = new Set(["dupa-formular", "pentru-cine", "ce-e-rbx", "fondator", "pozitionare"]);
 
 export function generateReply(
   message: string,
@@ -261,6 +385,13 @@ export function generateReply(
   // anywhere but back to this same function on the next message.
   const newlyDetected = opts.businessType ? undefined : detectBusinessType(trimmed) || undefined;
   const knownBusinessType = opts.businessType || newlyDetected;
+
+  // Checked before prompt-injection: a plain "ce api key folosesti?" isn't
+  // trying to manipulate the bot, it's just asking for something that must
+  // never be answered either way — same decline, no handoff framing.
+  if (looksLikeSecretRequest(message)) {
+    return { text: SECRET_DECLINE, handoff: false };
+  }
 
   if (looksLikePromptInjection(message)) {
     return {
@@ -307,11 +438,46 @@ export function generateReply(
     };
   }
 
+  // Business-fit discovery — a visitor naming their business type for the
+  // first time ("am o clinica") used to fall straight through to the generic
+  // FALLBACK even though detectBusinessType clearly recognized it. Now: name
+  // a couple of relevant bottleneck areas and ask one discovery question,
+  // per the "answer first / one useful question at a time" rule — no CTA yet,
+  // this is discovery, not buying intent.
+  if (newlyDetected) {
+    return { ...businessFitDiscovery(newlyDetected), detectedBusinessType: newlyDetected };
+  }
+
+  // Contextual follow-up: either the bot just asked the bottleneck question
+  // above (last assistant message ends with the DISCOVERY_CLOSING marker) or
+  // the visitor is directly naming something as manual ("le fac manual") —
+  // both count as a real discovery signal once the business type is already
+  // known, so this is where a soft CTA becomes appropriate (per "push the
+  // analysis when the visitor describes a real business problem"). This is
+  // what lets "am o clinica" → "programarile" resolve sensibly without the
+  // bot re-asking the business type or restarting the conversation.
+  if (knownBusinessType) {
+    const lastAssistant = [...history].reverse().find((m) => m.role === "assistant");
+    const awaitingBottleneck = !!lastAssistant && AWAITING_BOTTLENECK.test(normalizeText(lastAssistant.text));
+    const mentionsManualPain = /\bmanual\b/.test(norm);
+    if (awaitingBottleneck || mentionsManualPain) {
+      return bottleneckAcknowledgement(knownBusinessType);
+    }
+  }
+
   if (PURE_GREETING.test(norm)) {
     return { text: WELCOME, handoff: false, detectedBusinessType: newlyDetected };
   }
 
-  return { text: FALLBACK, handoff: false, suggestedAction: FORM_ACTION, detectedBusinessType: newlyDetected };
+  // Curated redirect for clearly unrelated questions (weather, sports,
+  // homework...) — keeps the bot from turning into a general-purpose
+  // assistant, without misfiring on real RBX.AI questions (checked last,
+  // after every real topic above has already failed to match).
+  if (looksOutOfScope(norm)) {
+    return { text: OUT_OF_SCOPE, handoff: false };
+  }
+
+  return { text: FALLBACK, handoff: false, detectedBusinessType: newlyDetected };
 }
 
 // Exportat pentru eventuala conectare ulterioară a unui furnizor LLM real —

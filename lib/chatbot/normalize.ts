@@ -117,12 +117,20 @@ export function includesAnyPhrase(text: string, phrases: string[]): boolean {
 // past the current browser session (see ChatbotWidget.tsx — kept in React
 // state only, sent back on each request, never written to a database).
 const BUSINESS_TYPES: { id: string; label: string; words: string[] }[] = [
-  { id: "clinica", label: "o clinică", words: ["clinica", "cabinet medical", "dentist", "stomatologie"] },
+  { id: "clinica", label: "o clinică", words: ["clinica", "clinici", "cabinet medical", "dentist", "stomatologie"] },
   { id: "salon", label: "un salon", words: ["salon", "coafor", "frizerie", "barbershop"] },
   { id: "imobiliare", label: "o agenție imobiliară", words: ["imobiliare", "imobiliara", "agentie imobiliara"] },
-  { id: "restaurant", label: "un restaurant", words: ["restaurant", "cafenea", "local"] },
+  // "local" was previously a trigger word here too ("un local" is common
+  // Romanian slang for a restaurant/venue), but it's too generic on its own
+  // — it was matching inside "servicii locale", misdetecting a service-local
+  // business as a restaurant. Dropped in favor of the two unambiguous words.
+  { id: "restaurant", label: "un restaurant", words: ["restaurant", "cafenea"] },
   { id: "ecommerce", label: "un magazin online", words: ["ecommerce", "magazin online", "shop online"] },
-  { id: "service-local", label: "o firmă de servicii", words: ["service", "instalatii", "constructii", "firma de servicii"] },
+  {
+    id: "service-local",
+    label: "o firmă de servicii",
+    words: ["service", "instalatii", "constructii", "firma de servicii", "servicii locale", "service local"],
+  },
 ];
 
 export function detectBusinessType(text: string): { id: string; label: string } | null {

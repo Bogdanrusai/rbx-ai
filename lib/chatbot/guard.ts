@@ -45,6 +45,25 @@ export function looksLikePromptInjection(message: string): boolean {
   return INJECTION_PATTERNS.some((p) => p.test(message));
 }
 
+// Separate from prompt-injection detection above: this catches direct
+// requests for internal infrastructure details (API keys, env vars,
+// credentials) even when phrased as an innocent question rather than a
+// jailbreak attempt ("ce api key folosesti?" isn't trying to manipulate the
+// bot, it's just asking for something that must never be answered).
+const SECRET_REQUEST_PATTERNS: RegExp[] = [
+  /api[\s_-]*key/i,
+  /cheia?\s*api/i,
+  /environment\s*variable/i,
+  /variabil[ăa]\s*de\s*mediu/i,
+  /\.env\b/i,
+  /credential/i,
+  /parola\s*(de\s*)?(admin|server|baza\s*de\s*date|database)/i,
+];
+
+export function looksLikeSecretRequest(message: string): boolean {
+  return SECRET_REQUEST_PATTERNS.some((p) => p.test(message));
+}
+
 const HANDOFF_KEYWORDS = [
   "vreau sa vorbesc cu cineva",
   "vreau să vorbesc cu cineva",
