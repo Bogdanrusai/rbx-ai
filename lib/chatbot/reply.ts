@@ -43,7 +43,7 @@ const FALLBACK =
 
 const FORM_ACTION = { label: "Deschide formularul de analiză gratuită", href: "#top" } as const;
 const VSL_ACTION = { label: "Vezi prezentarea (cadru cu cadru)", href: "#vsl" } as const;
-const PROJECTS_ACTION = { label: "Vezi Selected Work", href: "#selected-work" } as const;
+const PROJECTS_ACTION = { label: "Vezi proiectele", href: "#selected-work" } as const;
 const DEMO_ACTION = { label: "Testează sistemul", href: "#demo-interactiv" } as const;
 
 // Doar un mesaj care e STRICT un salut (nimic altceva în el) primește

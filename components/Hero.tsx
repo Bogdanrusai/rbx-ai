@@ -72,9 +72,9 @@ export default function Hero() {
           transition={{ duration: 0.9, ease: EASE, delay: 0.6 }}
           className="mt-10 max-w-[44ch] text-[clamp(16px,1.7vw,19px)] leading-[1.55] text-muted"
         >
-          Sisteme AI complete care preiau clienții, automatizează procesele și
-          fac munca repetitivă în locul tău, non-stop. Tu te uiți la un
-          sistem care lucrează, nu la o listă de task-uri lăsate pe mâine.
+          Răspunsuri, lead-uri, programări și follow-up, organizate într-un
+          sistem construit în jurul afacerii tale. Mai puțină muncă manuală.
+          Mai puține lucruri lăsate pe mâine.
         </motion.p>
 
         <motion.div

@@ -294,7 +294,7 @@ const STAGE_VALUE: Record<Stage, string> = {
   Contactat: "Știi deja cine a fost contactat și cine încă nu.",
   Calificat: "Știi unde se află fiecare oportunitate.",
   Programat: "Programarea e vizibilă, nu doar într-un calendar separat.",
-  Client: "Nu fiecare lead ajunge aici — dar cei care ajung sunt vizibili clar.",
+  Client: "Nu fiecare lead ajunge aici, dar cei care ajung sunt vizibili clar.",
 };
 
 function CrmDemo() {
@@ -343,9 +343,10 @@ function CrmDemo() {
         <div>
           <h3 className="text-[17px] font-semibold tracking-[-0.01em]">CRM — demonstrație</h3>
           <p className="mt-1.5 max-w-[52ch] text-[13px] leading-[1.5] text-faint">
-            Complet separat de CRM-ul real și privat al RBX.AI. Datele de mai
-            jos sunt fictive, nu se salvează nicăieri și nu ajung la niciun
-            sistem real.
+            Un singur loc pentru lead-uri, status și următorul pas, atât
+            înseamnă CRM în practică. Ce vezi mai jos e complet separat de
+            CRM-ul real și privat al RBX.AI: date fictive, nesalvate, care nu
+            ajung la niciun sistem real.
           </p>
         </div>
         <button
@@ -472,8 +473,8 @@ function DiscoveryTool({ onSeeDemo }: { onSeeDemo: () => void }) {
 
   return (
     <div className="card rounded-[24px] p-7 sm:p-9">
-      <h3 className="text-[17px] font-semibold tracking-[-0.01em]">Ce îți consumă cel mai mult timp?</h3>
-      <p className="mt-1.5 text-[13px] text-faint">O singură întrebare — nu e un diagnostic AI complet, doar un punct de plecare.</p>
+      <h3 className="text-[17px] font-semibold tracking-[-0.01em]">Unde se pierde cel mai mult timp în afacerea ta?</h3>
+      <p className="mt-1.5 text-[13px] text-faint">O singură întrebare, nu un diagnostic complet, doar un punct de plecare.</p>
 
       <div className="mt-6 flex flex-wrap gap-2">
         {DISCOVERY_CHOICES.map((c) => (
@@ -529,23 +530,25 @@ export default function InteractiveDemo() {
   return (
     <section id="demo-interactiv" className="section">
       <div className="eyebrow mb-8">Testează sistemul</div>
-      <h2 className="max-w-[18ch] text-[clamp(30px,4.8vw,54px)] font-semibold leading-[1.06] tracking-[-0.022em]">
-        <MaskReveal>Nu-ți spun cum arată.</MaskReveal>
+      <h2 className="max-w-[20ch] text-[clamp(30px,4.8vw,54px)] font-semibold leading-[1.06] tracking-[-0.022em]">
+        <MaskReveal>Vezi ce se întâmplă</MaskReveal>
         <MaskReveal delay={0.1}>
-          <span className="mark">Poți încerca chiar acum</span>.
+          după ce un <span className="mark">client îți scrie</span>.
         </MaskReveal>
       </h2>
       <p className="mt-6 max-w-[60ch] text-[15px] leading-[1.6] text-muted">
-        Ce urmează e o simulare, nu sistemul real. Niciun mesaj, email sau
-        lead din secțiunea asta nu e trimis sau salvat undeva — totul rulează
-        local, în pagina asta, și dispare la refresh.
+        Alege un scenariu și urmărește traseul: de la primul mesaj până la
+        calificare, programare, CRM și follow-up.
+      </p>
+      <p className="mt-3 max-w-[60ch] text-[12.5px] leading-[1.5] text-faint">
+        Demo interactiv. Datele și acțiunile sunt simulate și nu sunt salvate.
       </p>
 
       <div className="mt-8 flex flex-wrap gap-2">
         {[
           { id: "sistem" as const, label: "Simulare conversație" },
           { id: "crm" as const, label: "CRM (demo)" },
-          { id: "descoperire" as const, label: "Ce îmi consumă timpul?" },
+          { id: "descoperire" as const, label: "Unde se pierde timpul?" },
         ].map((t) => (
           <button
             key={t.id}

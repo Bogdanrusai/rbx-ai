@@ -23,7 +23,7 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.rbxagency.com"
 
 const TITLE = "RBX.AI — Sisteme AI pentru afaceri";
 const DESCRIPTION =
-  "Construiesc sisteme AI care răspund, programează și fac follow-up non-stop — ca să nu mai pierzi niciun client.";
+  "Sisteme AI care preiau răspunsurile, programările și follow-up-ul non-stop, construite în jurul procesului real al afacerii tale.";
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -63,7 +63,11 @@ const organizationJsonLd = {
     "@type": "Person",
     name: "Bogdan Rus",
   },
-  sameAs: ["https://instagram.com/bogdanrus.ai"],
+  sameAs: [
+    "https://www.instagram.com/bogdanrus.ai/",
+    "https://www.tiktok.com/@bogdanrus.ai",
+    "https://www.youtube.com/@Bogdanrusai",
+  ],
 };
 
 export default function RootLayout({

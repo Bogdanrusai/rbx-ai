@@ -53,7 +53,7 @@ const projects: Project[] = [
     name: "RBX.AI CRM",
     status: "Sistem intern · privat",
     summary:
-      "CRM-ul folosit intern pentru a gestiona lead-urile care intră prin formularul de analiză gratuită: de la primul mesaj, până la calificare și programare. Un sistem privat, nu un produs public — prezentat aici doar ca exemplu de ce poate fi construit.",
+      "CRM-ul folosit intern pentru a gestiona lead-urile care intră prin formularul de analiză gratuită: de la primul mesaj, până la calificare și programare. Un sistem privat, nu un produs public, prezentat aici doar ca exemplu de ce poate fi construit.",
     points: [
       "Centralizează lead-urile venite din formular, într-un singur loc",
       "Urmărește statusul fiecărui lead, de la contact la programare",
@@ -110,7 +110,7 @@ export default function SelectedWork() {
     <section id="selected-work" className="section">
       <div className="flex flex-wrap items-end justify-between gap-6">
         <div>
-          <div className="eyebrow mb-8">Selected Work</div>
+          <div className="eyebrow mb-8">Proiecte</div>
           <h2 className="max-w-[18ch] text-[clamp(30px,4.8vw,54px)] font-semibold leading-[1.06] tracking-[-0.022em]">
             <MaskReveal>Nu portofoliu.</MaskReveal>
             <MaskReveal delay={0.1}>

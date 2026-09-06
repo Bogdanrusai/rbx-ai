@@ -13,9 +13,10 @@ const links = [
   { label: "Problema", href: "#problema" },
   { label: "Costul real", href: "#cost" },
   { label: "Soluția", href: "#solutia" },
-  { label: "Sistemele mele", href: "#sisteme" },
+  { label: "Sisteme", href: "#sisteme" },
   { label: "Demonstrație", href: "#demo" },
-  { label: "Selected Work", href: "#selected-work" },
+  { label: "Testează sistemul", href: "#demo-interactiv" },
+  { label: "Proiecte", href: "#selected-work" },
   { label: "Instagram", href: "#showcase" },
   { label: "Despre mine", href: "#poveste" },
 ];

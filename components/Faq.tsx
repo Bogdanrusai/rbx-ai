@@ -11,11 +11,11 @@ const EASE = [0.16, 1, 0.3, 1] as const;
 const items = [
   {
     q: "Trebuie să știu ceva despre tehnologie?",
-    a: "Nu. Tu îmi spui cum merge afacerea ta. Restul — construcție, conectare, întreținere — le fac eu. Tu folosești doar rezultatul.",
+    a: "Nu. Îmi spui cum merge afacerea ta, iar construcția, conectarea și întreținerea rămân treaba mea. Tu folosești doar rezultatul.",
   },
   {
     q: "În cât timp văd rezultate?",
-    a: "Depinde de sistemul construit și de cât de complex e procesul din spate. Nu promit un termen fix înainte să înțeleg afacerea ta, dar odată ce sistemul e live, îl vezi lucrând din prima zi.",
+    a: "Depinde de sistemul construit și de cât de complex e procesul din spate, așa că nu promit un termen fix înainte să înțeleg afacerea ta. Odată ce sistemul e live, îl vezi lucrând din prima zi.",
   },
   {
     q: "Merge și pentru afacerea mea mică?",
@@ -23,35 +23,35 @@ const items = [
   },
   {
     q: "Cât costă?",
-    a: "Costul depinde de ce trebuie construit și de complexitatea proiectului. Analizăm întâi procesul și ce are nevoie afacerea ta, apoi discutăm soluția potrivită. Primul pas e analiza gratuită.",
+    a: "Depinde de ce trebuie construit și de complexitatea proiectului. Analizăm întâi procesul și ce are nevoie afacerea ta, apoi discutăm soluția potrivită; primul pas e analiza gratuită.",
   },
   {
     q: "Pot construi doar un website, fără automatizări?",
-    a: "Da. Un website bun stă și singur — restul (lead capture, automatizări, CRM) se adaugă doar dacă are sens pentru afacerea ta, nu pentru că există în meniu.",
+    a: "Da, un website bun stă și singur. Restul (lead capture, automatizări, CRM) se adaugă doar dacă are sens pentru afacerea ta, nu pentru că există în meniu.",
   },
   {
     q: "Ce se întâmplă după ce trimit formularul?",
-    a: "Analizez personal fiecare răspuns — nicio analiză automată. Revin cu o soluție construită special pentru afacerea ta, nu un pachet standard.",
+    a: "Analizez personal fiecare răspuns, fără nicio analiză automată, și revin cu o soluție construită special pentru afacerea ta, nu un pachet standard.",
   },
   {
     q: "Am deja un website. Are sens să vorbim?",
-    a: "Da. Nu orice sistem înseamnă un website nou — de multe ori are mai mult sens să conectez ce ai deja (formulare, mesaje, programări) la un sistem care le preia automat.",
+    a: "Da. Nu orice sistem înseamnă un website nou; de multe ori are mai mult sens să conectez ce ai deja (formulare, mesaje, programări) la un sistem care le preia automat.",
   },
   {
     q: "Ce se întâmplă cu datele clienților mei?",
-    a: "Datele colectate prin formularul de analiză (nume, contact, informații despre afacere) sunt folosite doar pentru a pregăti analiza și soluția propusă — vezi pagina de Confidențialitate pentru detalii complete.",
+    a: "Datele colectate prin formularul de analiză (nume, contact, informații despre afacere) sunt folosite doar pentru a pregăti analiza și soluția propusă. Detaliile complete sunt pe pagina de Confidențialitate.",
   },
   {
     q: "Ce se întâmplă dacă asistentul AI de pe site greșește ceva?",
-    a: "Asistentul răspunde strict din informații reale despre RBX.AI — nu inventează prețuri, rezultate sau garanții. Dacă nu știe un răspuns, spune clar asta și te trimite spre formular, în loc să ghicească.",
+    a: "Asistentul răspunde strict din informații reale despre RBX.AI și nu inventează prețuri, rezultate sau garanții. Dacă nu știe un răspuns, spune clar asta și te trimite spre formular, în loc să ghicească.",
   },
   {
     q: "Pot renunța sau opri sistemul dacă nu mai are sens pentru mine?",
-    a: "Da. Nu există un abonament ascuns sau o obligație pe termen lung impusă tehnic — discutăm condițiile exacte când vorbim despre soluția potrivită.",
+    a: "Da. Nu există un abonament ascuns sau o obligație pe termen lung impusă tehnic; discutăm condițiile exacte când vorbim despre soluția potrivită.",
   },
   {
     q: "Nu am foarte mult trafic sau multe cereri. Are sens și pentru mine?",
-    a: "Contează mai mult cât de mult te costă fiecare cerere pierdută sau întârziată, nu volumul brut. Cel mai bun mod să afli e analiza gratuită — spun clar dacă chiar are sens sau nu.",
+    a: "Contează mai mult cât te costă fiecare cerere pierdută sau întârziată, nu volumul brut. Cel mai bun mod să afli e analiza gratuită, unde spun clar dacă chiar are sens sau nu.",
   },
 ];
 

@@ -19,9 +19,9 @@ const navCols: { title: string; links: { label: string; href: string }[] }[] = [
     title: "Site",
     links: [
       { label: "Cum funcționează", href: "#demo" },
-      { label: "Sistemele mele", href: "#sisteme" },
-      { label: "Selected Work", href: "#selected-work" },
-      { label: "Despre mine", href: "#poveste" },
+      { label: "Sisteme", href: "#sisteme" },
+      { label: "Proiecte", href: "#selected-work" },
+      { label: "Despre RBX.AI", href: "#poveste" },
       { label: "Întrebări", href: "#faq" },
     ],
   },
@@ -37,8 +37,8 @@ export default function Footer() {
           <div className="flex flex-col gap-4">
             <span className="text-[16px] font-semibold tracking-[0.14em]">RBX.AI</span>
             <p className="max-w-[36ch] text-[14px] leading-[1.6] text-faint">
-              Sisteme AI construite pentru afaceri mici și mijlocii din România — după ce înțeleg
-              cum lucrează afacerea, nu înainte.
+              Înțeleg întâi cum lucrează afacerea ta, apoi construiesc sistemul care preia
+              mesajele, lead-urile și munca repetitivă din spatele ei.
             </p>
             <button onClick={() => openWizard()} className="btn-ghost group mt-1 w-fit">
               <span className="h-[5px] w-[5px] rounded-full bg-faint" />
