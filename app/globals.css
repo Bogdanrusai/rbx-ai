@@ -13,6 +13,7 @@
   }
   html {
     scroll-behavior: smooth;
+    overflow-x: hidden;
   }
   body {
     @apply bg-bg text-ink font-sans overflow-x-hidden;

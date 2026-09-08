@@ -25,9 +25,9 @@ export default function Solutia() {
           Soluția
         </div>
         <h2 className="text-[clamp(30px,5vw,56px)] font-semibold leading-[1.05] tracking-[-0.025em]">
-          <MaskReveal>Un sistem care lucrează</MaskReveal>
+          <MaskReveal>Un sistem care preia</MaskReveal>
           <MaskReveal delay={0.1}>
-            <span className="mark">în locul tău</span>.
+            <span className="mark">munca repetitivă</span>.
           </MaskReveal>
         </h2>
         <motion.p

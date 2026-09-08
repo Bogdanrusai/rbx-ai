@@ -8,7 +8,7 @@ const EASE = [0.16, 1, 0.3, 1] as const;
 const stats = [
   { n: "1", t: "proces documentat", d: "Fiecare sistem, construit și explicat pas cu pas pe Instagram." },
   { n: "0", t: "rezultate inventate", d: "Niciun status sau proiect nu apare pe site dacă nu e real, azi." },
-  { n: "1", t: "promisiune", d: "Nimic nu ajunge pe site dacă nu funcționează cu adevărat." },
+  { n: "4", t: "statusuri explicite", d: "Live, pilot, intern sau demo — fiecare proiect este prezentat exact cum există astăzi." },
 ];
 
 export default function DovadaSociala() {

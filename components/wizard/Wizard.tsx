@@ -216,8 +216,7 @@ export default function Wizard() {
   const companyValid = isCompanyValid(a.company);
   const websiteValid = isWebsiteValid(a.instagram);
 
-  const detailsValid =
-    nameValid && emailValid && phoneValid && companyValid && websiteValid;
+  const detailsValid = nameValid && emailValid && websiteValid;
 
   const canContinue = useMemo(() => {
     switch (i) {
@@ -494,7 +493,7 @@ export default function Wizard() {
                           }
                         />
                         <Field
-                          label="Companie"
+                          label="Companie (opțional)"
                           value={a.company || ""}
                           onChange={(v) => set({ company: v })}
                           onBlur={() => touch("company")}
@@ -523,7 +522,7 @@ export default function Wizard() {
                           className="sm:col-span-2"
                         />
                         <Field
-                          label="Telefon"
+                          label="Telefon (opțional)"
                           type="tel"
                           inputMode="tel"
                           autoComplete="tel"

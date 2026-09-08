@@ -45,12 +45,12 @@ export default function Sisteme() {
                 Cel mai important
               </span>
               <h3 className="text-[clamp(26px,3.2vw,38px)] font-semibold leading-[1.1] tracking-[-0.02em]">
-                Un sistem care lucrează non-stop.
+                Un sistem care răspunde când tu ești ocupat.
               </h3>
               <p className="mt-3 max-w-[38ch] text-[14.5px] text-faint">
                 Preia cereri, califică clienți, programează, trimite în CRM și
-                pornește follow-up, automat, la orice oră. Tu vezi doar
-                rezultatul.
+                pornește follow-up, automat, la orice oră. Tu vezi statusul și
+                intervii doar unde contează.
               </p>
             </div>
             <div className="flex h-16 items-end gap-[5px]" aria-hidden="true">
@@ -102,8 +102,8 @@ export default function Sisteme() {
           >
             <path d="M4 8a8 8 0 0 1 14-3m2 3V4m0 4h-4M20 16a8 8 0 0 1-14 3m-2-3v4m0-4h4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
           </motion.svg>
-          <h3 className="text-[21px] font-semibold tracking-[-0.015em]">Îți aduce clienții înapoi.</h3>
-          <p className="mt-2.5 text-[14px] text-faint">Revine automat la cei care n-au răspuns, până cumpără.</p>
+          <h3 className="text-[21px] font-semibold tracking-[-0.015em]">Reia conversațiile rămase în așteptare.</h3>
+          <p className="mt-2.5 text-[14px] text-faint">Trimite follow-up automat, după regulile stabilite.</p>
         </motion.div>
 
         {/* 3 */}
@@ -130,8 +130,8 @@ export default function Sisteme() {
               <path d="M4.5 8.2l2.2 2.2L11.5 5.5" stroke="#0A0A0B" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" fill="none" />
             </motion.svg>
           </div>
-          <h3 className="text-[21px] font-semibold tracking-[-0.015em]">Îți umple calendarul.</h3>
-          <p className="mt-2.5 text-[14px] text-faint">Programări confirmate, fără un telefon dat.</p>
+          <h3 className="text-[21px] font-semibold tracking-[-0.015em]">Îți organizează programările.</h3>
+          <p className="mt-2.5 text-[14px] text-faint">Clienții aleg un interval și primesc confirmarea fără schimburi inutile de mesaje.</p>
         </motion.div>
 
         {/* 4 */}

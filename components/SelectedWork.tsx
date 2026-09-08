@@ -220,9 +220,9 @@ export default function SelectedWork() {
             Proiecte
           </div>
           <h2 className="max-w-[18ch] text-[clamp(30px,4.8vw,54px)] font-semibold leading-[1.06] tracking-[-0.022em]">
-            <MaskReveal>Nu portofoliu.</MaskReveal>
+            <MaskReveal>Proiecte reale.</MaskReveal>
             <MaskReveal delay={0.1}>
-              <span className="mark">Sisteme construite</span>.
+              <span className="mark">Prezentate exact cum sunt</span>.
             </MaskReveal>
           </h2>
           <motion.p
