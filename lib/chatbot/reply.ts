@@ -316,7 +316,7 @@ const topics: Topic[] = [
   {
     id: "cum-incep",
     test: (norm) =>
-      /(cum incep|de unde incep|primul pas|vreau sa lucram|vreau sa incepem|hai sa incepem|vreau sa colaboram|vreau o analiza)/.test(norm),
+      /(cum incep|de unde incep|primul pas|vreau sa lucram|vreau sa incepem|hai sa incepem|vreau sa colaboram|vreau (o )?analiza)/.test(norm),
     answer: () => ({ text: kb.cumInceperea, handoff: false, suggestedAction: FORM_ACTION }),
   },
   {
@@ -331,7 +331,7 @@ const topics: Topic[] = [
   },
   {
     id: "programare",
-    test: (norm) => /(programare|booking|apel|calendar|intalnire)/.test(norm),
+    test: (norm) => /(programare|programam|programez|booking|\bcall\b|apel|calendar|intalnire)/.test(norm),
     answer: () => ({ text: kb.programare, handoff: false, suggestedAction: FORM_ACTION }),
   },
   {
