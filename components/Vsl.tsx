@@ -92,8 +92,8 @@ export default function Vsl() {
             transition={{ duration: 0.8, ease: EASE, delay: 0.2 }}
             className="mt-8 max-w-[42ch] text-[clamp(15.5px,1.6vw,18px)] leading-[1.65] text-muted"
           >
-            Parcurge-le în ordine: unde pierzi bani acum, ce se schimbă și cum
-            arată un proces care nu mai depinde de tine să-l ții minte.
+            Parcurge-le în ordine: problema, costul ei și cum arată un sistem
+            construit în jurul procesului real al afacerii — nu un pachet standard.
             Derulează-le sau lasă-le să curgă singure.
           </motion.p>
 

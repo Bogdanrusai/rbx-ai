@@ -53,7 +53,7 @@ export default function Hero() {
           transition={{ duration: 0.8, ease: EASE, delay: 0.1 }}
           className="eyebrow mb-10 justify-center"
         >
-          Sisteme AI pentru lead-uri, programări și follow-up
+          Sisteme AI construite în jurul proceselor afacerii tale
         </motion.div>
 
         {/* Previous headline ("Clienții tăi primesc răspuns instant. Chiar

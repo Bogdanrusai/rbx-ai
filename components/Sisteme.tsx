@@ -200,7 +200,7 @@ export default function Sisteme() {
           className="col-span-1 rounded-[24px] border border-dashed border-line-strong p-8 md:col-span-6"
         >
           <p className="mb-6 text-[13px] uppercase tracking-[0.16em] text-faint">
-            Câteva dintre sistemele construite până acum
+            Ce poate include un sistem RBX.AI
           </p>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-5">
             {catalog.map((c) => (
