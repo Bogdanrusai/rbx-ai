@@ -11,7 +11,7 @@ export const site = {
   contactUrl: "https://ig.me/m/bogdanrus.ai", // secondary contact only — not wired to any CTA
   contactEmail: "contact@rbxagency.com",
 
-  ctaLabel: "Vreau o analiză gratuită",
+  ctaLabel: "Programează o analiză gratuită",
 
   // Real URLs only, ever. Leave a channel `null` until Bogdan provides the
   // real link — the social-link components below only render entries that

@@ -42,7 +42,7 @@ export default function Footer() {
             </p>
             <button onClick={() => openWizard()} className="btn-ghost group mt-1 w-fit">
               <span className="h-[5px] w-[5px] rounded-full bg-faint" />
-              Vreau o analiză gratuită
+              Programează o analiză gratuită
               <span className="transition-transform duration-300 ease-premium group-hover:translate-x-1">
                 →
               </span>

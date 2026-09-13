@@ -14,7 +14,7 @@ import { useWizard } from "./wizard/WizardContext";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
-type Testimonial = { quote: string; author: string };
+type Testimonial = { quote: string; author: string; videoUrl?: string };
 
 type Project = {
   id: string;
@@ -22,23 +22,27 @@ type Project = {
   status: string;
   summary: string;
   points: string[];
-  // Upgrade slots, all optional, all unset today. Fill in when the real
-  // asset/result exists (a screenshot, the live client URL, a verified
-  // quote) and the card upgrades automatically. No redesign needed, no
-  // fabricated placeholder rendered in the meantime.
+  // Upgrade slots, all optional. Fill in when the real asset/result exists
+  // (a screenshot, the live client/demo URL, a verified quote) and the card
+  // upgrades automatically. No redesign needed, no fabricated placeholder
+  // rendered in the meantime.
   image?: string;
   liveUrl?: string;
+  // Defaults to "Vezi live" when liveUrl is set. Override for a link that
+  // isn't "the real thing" itself — e.g. a public demo running on
+  // simulated data, distinct from a private production system.
+  liveLabel?: string;
   testimonial?: Testimonial;
 };
 
 // Honest, real projects only. No invented clients, results or numbers.
 // See lib/chatbot/knowledgeBase.ts for the same facts, kept in sync.
 //
-// RBX.AI CRM is deliberately text-only here: it's a private, internal
-// system. No screenshot is published until one has been reviewed for
-// anything sensitive (real lead names, emails, phone numbers, internal
-// URLs), and there is never a login link, a public demo, or a route into
-// the actual application from this site.
+// RBX.AI CRM: the real, production system stays private — no login link,
+// no screenshot (unreviewed for sensitive lead data), no route into the
+// actual application from this site. The liveUrl below points instead to
+// a separate, fully isolated public demo that runs entirely on simulated,
+// pre-seeded data and never touches the real system or real leads.
 const projects: Project[] = [
   {
     id: "rbx-ai-website",
@@ -65,12 +69,14 @@ const projects: Project[] = [
     name: "RBX.AI CRM",
     status: "Sistem intern · privat",
     summary:
-      "Sistem intern pentru organizarea lead-urilor și a pipeline-ului RBX.AI — un exemplu de ce poate fi construit, nu un produs public. Formularul de pe acest site NU trimite automat lead-uri aici în acest moment; notificările merg direct la Bogdan, prin email.",
+      "Sistem intern pentru organizarea lead-urilor și a pipeline-ului RBX.AI — un exemplu de ce poate fi construit, nu un produs public. Formularul de pe acest site NU trimite automat lead-uri aici în acest moment; notificările merg direct la Bogdan, prin email. Poți testa un demo public, separat complet de sistemul real și de date reale.",
     points: [
       "Organizează lead-urile și stadiul fiecăruia într-un singur loc",
       "Gândit pentru urmărirea unui lead, de la contact la programare",
-      "Sistem privat: fără login public, fără demo public, fără date reale expuse",
+      "Sistemul real e privat — demo-ul public de mai jos rulează exclusiv pe date simulate",
     ],
+    liveUrl: "https://crm.rbxagency.com/demo",
+    liveLabel: "Testează demo-ul",
   },
   {
     id: "expert-instal-serv",
@@ -81,8 +87,16 @@ const projects: Project[] = [
     points: [
       "Website live, folosit efectiv de firmă",
       "Gândit ca fundație care poate evolua odată cu afacerea, nu doar o prezență online statică",
-      "Rezultate și cifre confirmate se adaugă aici doar când există cu adevărat",
+      "Testimonial video real, de la fondatorul Expert Instal Serv",
     ],
+    image: "/projects/project-03-expert-instal-serv.png",
+    liveUrl: "https://expertinstalserv.com/",
+    liveLabel: "Vezi proiectul",
+    testimonial: {
+      quote: "Nu doar 10/10. 11/10.",
+      author: "Sergiu Zagrean, Expert Instal Serv",
+      videoUrl: "https://www.youtube.com/watch?v=NaMtx2Wlv9g",
+    },
   },
 ];
 
@@ -323,7 +337,23 @@ export default function SelectedWork() {
               {p.testimonial && (
                 <blockquote className="mt-6 border-l-2 border-line-strong pl-4 text-[13.5px] italic leading-[1.6] text-muted">
                   &ldquo;{p.testimonial.quote}&rdquo;
-                  <footer className="mt-2 not-italic text-[12px] text-faint">{p.testimonial.author}</footer>
+                  <footer className="mt-2 not-italic text-[12px] text-faint">
+                    {p.testimonial.author}
+                    {p.testimonial.videoUrl && (
+                      <>
+                        {" · "}
+                        <a
+                          href={p.testimonial.videoUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={() => trackEvent("project_viewed", { project: p.id, action: "testimonial_video" })}
+                          className="underline decoration-line-strong underline-offset-2 transition-colors hover:text-muted"
+                        >
+                          Vezi testimonialul complet
+                        </a>
+                      </>
+                    )}
+                  </footer>
                 </blockquote>
               )}
 
@@ -336,7 +366,7 @@ export default function SelectedWork() {
                     onClick={() => trackEvent("project_viewed", { project: p.id, action: "live_link" })}
                     className="inline-flex w-fit items-center gap-2 text-[13.5px] font-medium text-ink transition-colors hover:text-muted"
                   >
-                    Vezi live
+                    {p.liveLabel ?? "Vezi live"}
                     <span aria-hidden>→</span>
                   </a>
                 ) : (

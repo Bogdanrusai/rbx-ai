@@ -94,7 +94,7 @@ export const RBX_KNOWLEDGE_BASE = {
   ],
 
   cumInceperea:
-    "Se începe prin formularul „Vreau o analiză gratuită” de pe site (butonul principal). Nu presupune niciun cost sau obligație în acest pas.",
+    "Se începe prin formularul „Programează o analiză gratuită” de pe site (butonul principal). Nu presupune niciun cost sau obligație în acest pas.",
 
   ceEsteAnalizaGratuita:
     "Analiza gratuită e un formular scurt (câteva întrebări despre tipul afacerii, provocarea principală, volumul de lead-uri și dacă folosești deja AI). Pe baza răspunsurilor, Bogdan analizează personal situația și revine cu recomandările și soluția potrivite — nu e un raport generat automat.",
@@ -130,12 +130,12 @@ export const RBX_KNOWLEDGE_BASE = {
       // sincronizat cu `crmStatus` de mai jos și cu realitatea din cod.
       nume: "RBX.AI CRM",
       status:
-        "Proiect intern, privat, pentru organizarea lead-urilor și a pipeline-ului RBX.AI — fără login public. Formularul de pe site NU trimite automat lead-uri în acest sistem în acest moment; notificările merg direct la Bogdan, prin email. Pe site există separat un demo interactiv de CRM, prezentat clar ca simulare, nu ca sistemul real.",
+        "Proiect intern, privat, pentru organizarea lead-urilor și a pipeline-ului RBX.AI — fără login public. Formularul de pe site NU trimite automat lead-uri în acest sistem în acest moment; notificările merg direct la Bogdan, prin email. Pe site există un demo interactiv local (simulare, nu sistemul real) și, separat, un demo public la crm.rbxagency.com/demo — tot pe date simulate, complet izolat de sistemul real și de lead-uri reale.",
     },
     {
       nume: "Expert Instal Serv.",
       status:
-        "Website realizat pentru o firmă reală din domeniul instalațiilor, construit gratuit în etapa pilot RBX.AI. Website-ul e live și folosit efectiv de firmă; rezultate sau testimoniale confirmate se adaugă doar când sunt reale.",
+        "Website realizat pentru o firmă reală din domeniul instalațiilor (expertinstalserv.com), construit gratuit în etapa pilot RBX.AI. Website-ul e live și folosit efectiv de firmă. Există un testimonial video real de la fondator, Sergiu Zagrean — linkul e pe site, în secțiunea Proiecte.",
     },
   ],
 
@@ -154,7 +154,7 @@ export const RBX_KNOWLEDGE_BASE = {
     "Un CRM poate ajuta la organizarea lead-urilor, a stadiului fiecăruia și a follow-up-ului, ca să nu se piardă oportunități — e una dintre componentele pe care le pot integra într-un sistem, dacă are sens pentru afacerea ta.",
 
   crmStatus:
-    "În acest moment, formularul de pe rbxagency.com nu trimite lead-uri automat într-un CRM live — notificarea ajunge direct la Bogdan, care analizează personal fiecare cerere. Pe site există și un demo interactiv de CRM, dar e doar o simulare, nu sistemul real.",
+    "În acest moment, formularul de pe rbxagency.com nu trimite lead-uri automat într-un CRM live — notificarea ajunge direct la Bogdan, care analizează personal fiecare cerere. Pe site există un demo interactiv local și un demo public separat la crm.rbxagency.com/demo, ambele simulări pe date de test, nu sistemul real.",
 
   // --- Reguli stricte (documentare internă, nu se afișează direct) --------
   reguliStricte: [

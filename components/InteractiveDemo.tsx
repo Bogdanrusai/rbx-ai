@@ -510,7 +510,7 @@ function DiscoveryTool({ onSeeDemo }: { onSeeDemo: () => void }) {
                 }}
                 className="rounded-full bg-ink px-4 py-2 text-[13px] font-medium text-bg"
               >
-                Vreau o analiză gratuită
+                Programează o analiză gratuită
               </button>
             </div>
           </motion.div>

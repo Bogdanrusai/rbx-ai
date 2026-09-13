@@ -45,7 +45,7 @@ export default function PrivacyPage() {
           <section>
             <h2 className="mb-2 text-[17px] font-semibold text-ink">Ce date colectăm</h2>
             <p>
-              Când completezi formularul „Vreau o analiză gratuită”, colectăm exact informațiile pe
+              Când completezi formularul „Programează o analiză gratuită”, colectăm exact informațiile pe
               care le scrii acolo: numele tău, adresa de email, numărul de telefon, numele
               companiei, website-ul sau contul de Instagram al afacerii, tipul de afacere,
               provocarea principală, volumul aproximativ de lead-uri și dacă folosești deja
