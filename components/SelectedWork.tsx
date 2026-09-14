@@ -14,7 +14,14 @@ import { useWizard } from "./wizard/WizardContext";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
-type Testimonial = { quote: string; author: string; videoUrl?: string };
+type Testimonial = {
+  quote: string;
+  author: string;
+  videoUrl?: string;
+  // Real ~56s vertical hook clip (self-hosted, muted/looping preview).
+  // Optional upgrade slot — omit until the real asset exists.
+  hook?: { src: string; poster: string; caption: string };
+};
 
 type Project = {
   id: string;
@@ -96,6 +103,11 @@ const projects: Project[] = [
       quote: "Nu doar 10/10. 11/10.",
       author: "Sergiu Zagrean, Expert Instal Serv",
       videoUrl: "https://www.youtube.com/watch?v=NaMtx2Wlv9g",
+      hook: {
+        src: "/testimonials/sergiu-hook.mp4",
+        poster: "/testimonials/sergiu-hook-poster.jpg",
+        caption: "De la scepticism la 11/10.",
+      },
     },
   },
 ];
@@ -335,26 +347,53 @@ export default function SelectedWork() {
               </ul>
 
               {p.testimonial && (
-                <blockquote className="mt-6 border-l-2 border-line-strong pl-4 text-[13.5px] italic leading-[1.6] text-muted">
-                  &ldquo;{p.testimonial.quote}&rdquo;
-                  <footer className="mt-2 not-italic text-[12px] text-faint">
-                    {p.testimonial.author}
-                    {p.testimonial.videoUrl && (
-                      <>
-                        {" · "}
-                        <a
-                          href={p.testimonial.videoUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={() => trackEvent("project_viewed", { project: p.id, action: "testimonial_video" })}
-                          className="underline decoration-line-strong underline-offset-2 transition-colors hover:text-muted"
-                        >
-                          Vezi testimonialul complet
-                        </a>
-                      </>
-                    )}
-                  </footer>
-                </blockquote>
+                <div className="mt-6 flex gap-4">
+                  {p.testimonial.hook && (
+                    <a
+                      href={p.testimonial.videoUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => trackEvent("project_viewed", { project: p.id, action: "testimonial_hook" })}
+                      aria-label={`Vezi testimonialul complet \u2014 ${p.testimonial.author}`}
+                      className="group relative block aspect-[9/16] w-[92px] flex-none overflow-hidden rounded-[14px] border border-line-strong bg-[#0E0E10] sm:w-[104px]"
+                    >
+                      <video
+                        src={p.testimonial.hook.src}
+                        poster={p.testimonial.hook.poster}
+                        muted
+                        loop
+                        playsInline
+                        autoPlay
+                        preload="none"
+                        className="h-full w-full object-cover transition-transform duration-500 ease-premium group-hover:scale-[1.03]"
+                      />
+                      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-black/5 to-transparent" />
+                      <span className="pointer-events-none absolute inset-x-1.5 bottom-1.5 text-[9.5px] font-medium leading-tight text-white [text-shadow:0_1px_6px_rgba(0,0,0,0.7)]">
+                        {p.testimonial.hook.caption}
+                      </span>
+                    </a>
+                  )}
+                  <blockquote className="min-w-0 flex-1 border-l-2 border-line-strong pl-4 text-[13.5px] italic leading-[1.6] text-muted">
+                    &ldquo;{p.testimonial.quote}&rdquo;
+                    <footer className="mt-2 not-italic text-[12px] text-faint">
+                      {p.testimonial.author}
+                      {p.testimonial.videoUrl && (
+                        <>
+                          {" \u00b7 "}
+                          <a
+                            href={p.testimonial.videoUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={() => trackEvent("project_viewed", { project: p.id, action: "testimonial_video" })}
+                            className="underline decoration-line-strong underline-offset-2 transition-colors hover:text-muted"
+                          >
+                            Vezi testimonialul complet
+                          </a>
+                        </>
+                      )}
+                    </footer>
+                  </blockquote>
+                </div>
               )}
 
               <div className="mt-7 flex flex-1 items-end justify-between gap-4">
