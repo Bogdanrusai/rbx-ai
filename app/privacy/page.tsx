@@ -66,23 +66,41 @@ export default function PrivacyPage() {
             <h2 className="mb-2 text-[17px] font-semibold text-ink">Cum sunt trimise și păstrate</h2>
             <p>
               Formularul trimite datele prin serviciul de email Resend, direct către adresa mea de
-              contact. Dacă discuția avansează, te pot invita la o programare printr-un link Calendly
-              — în acel moment, orice informație pe care o introduci în Calendly e guvernată de
-              propria politică de confidențialitate a Calendly, nu de aceasta.
+              contact — nu ajung într-o bază de date sau un CRM public. După ce trimiți formularul,
+              ecranul de confirmare îți oferă și opțiunea de a programa direct un apel, printr-un link
+              Calendly. Dacă alegi această opțiune, orice informație introduci în Calendly (nume,
+              email, ora aleasă) e guvernată de propria politică de confidențialitate a Calendly, nu
+              de aceasta — Calendly se deschide separat, într-o filă nouă.
             </p>
             <p className="mt-3">
-              Păstrez datele din formular doar atât timp cât e nevoie ca să răspund solicitării tale.
-              Poți oricând să ceri ștergerea lor.
+              Datele trimise prin formularul de calificare sunt păstrate doar atât timp cât este
+              rezonabil necesar pentru a răspunde și gestiona cererea ta, și pot fi șterse la cerere,
+              sub rezerva oricăror obligații legale reale aplicabile.
             </p>
           </section>
 
           <section>
-            <h2 className="mb-2 text-[17px] font-semibold text-ink">Analitice</h2>
+            <h2 className="mb-2 text-[17px] font-semibold text-ink">Asistentul conversațional</h2>
+            <p>
+              Asistentul de chat de pe site rulează în prezent integral pe server propriu (nu
+              transmite conversația către un serviciu extern) — mesajele sunt procesate ca să
+              genereze un răspuns și nu sunt salvate după ce închizi conversația. Dacă bifezi explicit
+              căsuța de consimțământ din chat și scrii un email sau un telefon în discuție, acea
+              informație e folosită doar în cadrul conversației respective, ca să știe asistentul că
+              te poate contacta — nu e stocată separat și nu e trimisă prin email.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="mb-2 text-[17px] font-semibold text-ink">Analitice și cookie-uri</h2>
             <p>
               Site-ul folosește Vercel Analytics și Vercel Speed Insights pentru statistici generale
               de trafic și viteză (ex. câte persoane deschid o pagină, dacă un buton e apăsat).
               Ambele sunt fără cookie-uri de urmărire — nu construim un profil individual al tău și
-              nu folosim cookie-uri de marketing sau de terți pe acest site.
+              nu folosim cookie-uri de marketing sau de terți pe acest site. Detalii complete în{" "}
+              <Link href="/cookies" className="text-ink underline underline-offset-4">
+                Politica de cookies
+              </Link>.
             </p>
           </section>
 
@@ -97,14 +115,26 @@ export default function PrivacyPage() {
             </p>
           </section>
 
+          <section>
+            <h2 className="mb-2 text-[17px] font-semibold text-ink">Cine operează acest site</h2>
+            <p>
+              rbxagency.com este operat în prezent de Bogdan Rus, ca persoană fizică — nu printr-o
+              firmă înregistrată (SRL/PFA). Nu există, la acest moment, un CUI sau o adresă de firmă
+              de publicat, pentru că nu există o firmă înregistrată. Punctul de contact pentru orice
+              solicitare legată de date este{" "}
+              <a href={`mailto:${site.contactEmail}`} className="text-ink underline underline-offset-4">
+                {site.contactEmail}
+              </a>.
+            </p>
+          </section>
+
           <section className="rounded-2xl border border-dashed border-line-strong p-6 text-[13.5px] text-faint">
             <p className="font-medium text-muted">Notă de transparență</p>
             <p className="mt-2">
-              Această pagină descrie onest ce face site-ul astăzi. Pentru o politică complet
-              conformă legal (GDPR), mai sunt necesare datele de identificare ale operatorului —
-              denumirea legală a firmei/PFA, CUI și adresa înregistrată — pe care le adaug imediat
-              ce mi le trimiți, plus o verificare finală de către un consultant juridic dacă vrei
-              siguranță maximă.
+              Această pagină descrie onest ce face site-ul astăzi, la nivelul actual de operare
+              (persoană fizică, fără firmă înregistrată). Dacă RBX.AI devine o firmă înregistrată
+              (SRL/PFA), această secțiune și cea despre operator se actualizează imediat cu datele
+              reale — CUI, denumire legală, adresă de firmă, dacă e cerută de lege.
             </p>
           </section>
         </div>

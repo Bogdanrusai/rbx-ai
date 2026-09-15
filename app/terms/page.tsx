@@ -66,8 +66,10 @@ export default function TermsPage() {
           <section>
             <h2 className="mb-2 text-[17px] font-semibold text-ink">Linkuri către terți</h2>
             <p>
-              Site-ul poate conține linkuri către Instagram sau Calendly. Odată ce accesezi acele
-              platforme, se aplică termenii și politicile lor, nu ale rbxagency.com.
+              Site-ul conține linkuri către Instagram, TikTok și YouTube, și — pe ecranul de
+              confirmare, după trimiterea formularului de analiză — către Calendly, pentru
+              programarea unui apel. Odată ce accesezi acele platforme, se aplică termenii și
+              politicile lor, nu ale rbxagency.com.
             </p>
           </section>
 

@@ -8,6 +8,7 @@ import {
   type ClipboardEvent,
   type HTMLAttributes,
 } from "react";
+import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { useWizard } from "./WizardContext";
 import { trackEvent } from "@/lib/analytics";
@@ -564,7 +565,18 @@ export default function Wizard() {
                     </>
                   )}
 
-                  <div className="mt-9 flex items-center justify-between">
+                  {i === 4 && (
+                    <p className="mt-6 text-center text-[12px] leading-[1.5] text-faint">
+                      Trimițând formularul, ești de acord ca aceste date să fie folosite pentru a-ți
+                      răspunde — vezi{" "}
+                      <Link href="/privacy" target="_blank" className="underline decoration-line-strong underline-offset-2 hover:text-muted">
+                        Politica de confidențialitate
+                      </Link>
+                      .
+                    </p>
+                  )}
+
+                  <div className="mt-5 flex items-center justify-between">
                     <button
                       onClick={back}
                       disabled={i === 0}
