@@ -1,6 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { generateReply, type ChatMessage } from "@/lib/chatbot/reply";
-import { InvalidChatInputError, RateLimitExceededError } from "@/lib/chatbot/guard";
+import {
+  InvalidChatInputError,
+  RateLimitExceededError,
+  guardResponseText,
+  looksLikeHandoffRequest,
+  looksLikePromptInjection,
+  looksLikeSecretRequest,
+} from "@/lib/chatbot/guard";
 
 export const runtime = "nodejs";
 
@@ -13,6 +20,36 @@ function rateLimitKeyFor(req: NextRequest): string {
 }
 
 type BusinessType = { id: string; label: string };
+
+// Răspunsuri generate de un LLM (workflow n8n cu baza de cunoștințe RBX.AI).
+// Activ DOAR dacă ambele variabile de mediu sunt setate; altfel (sau la orice
+// eroare/timeout) rămâne motorul pe reguli din reply.ts — site-ul nu rămâne
+// niciodată fără asistent. Textul LLM trece mereu prin guardResponseText
+// (fără prețuri, fără garanții).
+async function llmText(
+  message: string,
+  history: ChatMessage[],
+  businessType: BusinessType | null
+): Promise<string | null> {
+  const url = process.env.N8N_CHATBOT_URL;
+  const key = process.env.N8N_CHATBOT_KEY;
+  if (!url || !key) return null;
+  try {
+    const res = await fetch(url, {
+      method: "POST",
+      headers: { "content-type": "application/json", "x-rbx-key": key },
+      body: JSON.stringify({ message, history: history.slice(-8), businessType }),
+      signal: AbortSignal.timeout(20000),
+    });
+    if (!res.ok) return null;
+    const data = (await res.json()) as { text?: unknown };
+    const text = typeof data.text === "string" ? data.text.trim() : "";
+    if (!text || text.length > 1200) return null;
+    return guardResponseText(text).text;
+  } catch {
+    return null;
+  }
+}
 
 export async function POST(req: NextRequest) {
   let body: {
@@ -41,6 +78,17 @@ export async function POST(req: NextRequest) {
       contactConsent,
       businessType,
     });
+    // Cazurile de siguranță (cerere de chei/prompt, injecție, predare către om,
+    // date de contact) rămân MEREU pe răspunsurile fixe din reply.ts.
+    const safetyCase =
+      looksLikeSecretRequest(message) ||
+      looksLikePromptInjection(message) ||
+      looksLikeHandoffRequest(message) ||
+      Boolean(reply.contactDetected);
+    if (!safetyCase) {
+      const text = await llmText(message.trim(), history, businessType ?? reply.detectedBusinessType ?? null);
+      if (text) return NextResponse.json({ ...reply, text });
+    }
     return NextResponse.json(reply);
   } catch (err) {
     if (err instanceof InvalidChatInputError) {
