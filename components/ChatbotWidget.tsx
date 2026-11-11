@@ -24,12 +24,12 @@ const EASE = [0.16, 1, 0.3, 1] as const;
 
 const WELCOME: UiMessage = {
   role: "assistant",
-  text: "Bună! Sunt asistentul RBX.AI. Te pot ajuta cu întrebări despre servicii, proces, proiecte sau cum începi. Cu ce te pot ajuta?",
+  text: "Salut! Sunt asistentul RBX.AI. Spune-mi ce afacere ai sau ce te interesează și îți răspund pe loc.",
 };
 
 // Shown only under the welcome message, to lower the barrier to the first
 // message — clicking one sends that exact text, same as typing it.
-const SUGGESTED_CHIPS = ["Cât costă?", "Cum funcționează?", "Vreau proiectele"];
+const SUGGESTED_CHIPS = ["Ce faceți concret?", "Am o clinică / un salon", "Cât costă?", "Cum începem?"];
 
 type BusinessType = { id: string; label: string };
 
@@ -42,6 +42,8 @@ export default function ChatbotWidget() {
   const [handoff, setHandoff] = useState(false);
   const [consent, setConsent] = useState(false);
   const [dimmed, setDimmed] = useState(false);
+  // Teaser discret, o singură dată pe sesiune, la 9 secunde după încărcare.
+  const [teaser, setTeaser] = useState(false);
   // Session-scoped only: kept in memory for this browser tab, sent back to
   // the API on each message so the assistant doesn't re-ask, and never
   // persisted anywhere (no localStorage, no CRM, no cookie).
@@ -67,11 +69,19 @@ export default function ChatbotWidget() {
   }, []);
 
   useEffect(() => {
+    const t = setTimeout(() => {
+      if (!startedRef.current) setTeaser(true);
+    }, 9000);
+    return () => clearTimeout(t);
+  }, []);
+
+  useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages, loading]);
 
   function openWidget() {
     setOpen(true);
+    setTeaser(false);
     if (!startedRef.current) {
       startedRef.current = true;
       trackEvent("chatbot_opened");
@@ -165,6 +175,33 @@ export default function ChatbotWidget() {
         right: "calc(1rem + env(safe-area-inset-right, 0px))",
       }}
     >
+      <AnimatePresence>
+        {!open && teaser && (
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 6 }}
+            transition={{ duration: 0.3, ease: EASE }}
+            className="absolute bottom-[4.25rem] right-0 w-[15.5rem] sm:bottom-[4.75rem]"
+          >
+            <div className="relative rounded-2xl border border-line-strong bg-surface px-3.5 py-3 text-[13px] leading-[1.45] text-ink shadow-[0_20px_60px_rgba(0,0,0,0.5)]">
+              <button
+                onClick={() => setTeaser(false)}
+                aria-label="Ascunde"
+                className="absolute right-2 top-2 grid h-5 w-5 place-items-center rounded-full text-faint hover:text-ink"
+              >
+                <svg width="10" height="10" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                </svg>
+              </button>
+              <button onClick={openWidget} className="pr-4 text-left">
+                Ai o întrebare despre afacerea ta? Îți răspund în câteva secunde.
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {!open && (
         <button
           onClick={openWidget}
@@ -192,10 +229,24 @@ export default function ChatbotWidget() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 12, scale: 0.98 }}
             transition={{ duration: 0.25, ease: EASE }}
-            className="flex h-[28rem] max-h-[70vh] w-[22rem] max-w-[88vw] flex-col overflow-hidden rounded-[20px] border border-line-strong bg-bg shadow-[0_30px_90px_rgba(0,0,0,0.6)]"
+            className="flex h-[32rem] max-h-[75vh] w-[23.5rem] max-w-[90vw] flex-col overflow-hidden rounded-[20px] border border-line-strong bg-bg shadow-[0_30px_90px_rgba(0,0,0,0.6)]"
           >
             <div className="flex items-center justify-between border-b border-line px-4 py-3">
-              <span className="text-[13.5px] font-medium tracking-[-0.01em] text-ink">Asistent RBX.AI</span>
+              <div className="flex items-center gap-2.5">
+                <span className="grid h-8 w-8 place-items-center rounded-full border border-line-strong bg-surface text-[11px] font-semibold tracking-[-0.02em] text-ink">
+                  RBX
+                </span>
+                <div className="leading-tight">
+                  <div className="text-[13.5px] font-medium tracking-[-0.01em] text-ink">Asistent RBX.AI</div>
+                  <div className="flex items-center gap-1.5 text-[11px] text-faint">
+                    <span className="relative flex h-1.5 w-1.5">
+                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-ok/60" />
+                      <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-ok" />
+                    </span>
+                    Online · răspunde în câteva secunde
+                  </div>
+                </div>
+              </div>
               <button
                 onClick={() => setOpen(false)}
                 aria-label="Închide asistentul"
@@ -209,9 +260,15 @@ export default function ChatbotWidget() {
 
             <div ref={scrollRef} className="flex-1 space-y-2.5 overflow-y-auto px-3 py-3 text-[13.5px]">
               {messages.map((m, i) => (
-                <div key={i} className={m.role === "user" ? "text-right" : "text-left"}>
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.22, ease: EASE }}
+                  className={m.role === "user" ? "text-right" : "text-left"}
+                >
                   <span
-                    className={`inline-block max-w-[86%] rounded-2xl px-3.5 py-2 leading-[1.45] ${
+                    className={`inline-block max-w-[86%] whitespace-pre-line rounded-2xl px-3.5 py-2 text-left leading-[1.5] ${
                       m.role === "user" ? "bg-ink text-bg" : "bg-surface text-ink"
                     }`}
                   >
@@ -227,7 +284,7 @@ export default function ChatbotWidget() {
                       </button>
                     </div>
                   )}
-                </div>
+                </motion.div>
               ))}
               {messages.length === 1 && (
                 <div className="flex flex-wrap gap-1.5 pt-1">
@@ -242,7 +299,20 @@ export default function ChatbotWidget() {
                   ))}
                 </div>
               )}
-              {loading && <div className="text-left text-[12px] text-faint">Scrie…</div>}
+              {loading && (
+                <div className="text-left" aria-label="Asistentul scrie">
+                  <span className="inline-flex items-center gap-1 rounded-2xl bg-surface px-3.5 py-3">
+                    {[0, 1, 2].map((d) => (
+                      <motion.span
+                        key={d}
+                        className="h-1.5 w-1.5 rounded-full bg-faint"
+                        animate={{ opacity: [0.25, 1, 0.25], y: [0, -2, 0] }}
+                        transition={{ duration: 0.9, repeat: Infinity, delay: d * 0.15 }}
+                      />
+                    ))}
+                  </span>
+                </div>
+              )}
               {handoff && (
                 <div className="pt-1 text-center text-[11.5px] text-faint">
                   Pentru continuare directă cu Bogdan, folosește formularul de analiză gratuită.
@@ -250,7 +320,16 @@ export default function ChatbotWidget() {
               )}
             </div>
 
-            <div className="border-t border-line px-3 py-2 text-[11px] text-faint">
+            <div className="border-t border-line px-3 pt-2">
+              <button
+                onClick={goToForm}
+                className="w-full rounded-full border border-line-strong py-2 text-[12.5px] font-medium text-ink transition-colors hover:border-white/35"
+              >
+                Programează o analiză gratuită →
+              </button>
+            </div>
+
+            <div className="px-3 py-2 text-[11px] text-faint">
               <label className="flex items-start gap-2">
                 <input
                   type="checkbox"
